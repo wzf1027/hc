@@ -1,0 +1,28 @@
+@layout("/common/_container.html",{bg:"bg-white"}){
+<form id="userBonusForm" lay-filter="userBonusForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付宝费用(%)</label>
+        <div class="layui-input-block">
+            <input name="alipayRatio" value="${alipayRatio}" readonly="readonly"type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信费用(%)</label>
+        <div class="layui-input-block">
+            <input name="wxRatio" value="${wxRatio}" readonly="readonly"type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行卡费用（%)</label>
+        <div class="layui-input-block">
+            <input name="cardRatio" value="${cardRatio}" readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">云闪付费用（%)</label>
+        <div class="layui-input-block">
+            <input name="cloudPayRatio" value="${cloudPayRatio}" readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+</form>
+@}

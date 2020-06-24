@@ -1,0 +1,21 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/sellerOrderTimeSetting/sellerOrderTimeSetting_edit.js"]}){
+<form id="accepterRateSettingForm" lay-filter="accepterRateSettingForm" class="layui-form model-form">
+    <input name="id" value="${id}" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">待解冻时间(分钟)<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="starTime" value="${starTime}" placeholder="请输入待解冻时间" min="0" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">确认收款失效时间(分钟)<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="endTime" value="${endTime}" placeholder="请输入确认收款失效时间" min="0" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

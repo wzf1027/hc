@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>充值</title>
+		<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/weui.css" />
+		<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/weui-jquery.css" />
+		<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/merchant.css" />
+		<style type="text/css">
+		*{margin:0; padding:0;}
+		img{max-width: 100%; height: auto;}
+		.test{height: 600px; max-width: 600px; font-size: 40px;}
+		</style>
+	</head>
+	<body>
+		<form action="${ctxPath}/app/buyCoin/testPay" method="post" onsubmit="return toVaild()">
+		<div class="container">
+			<header class="weui-bar weui-bar-nav" id="returnBtn">
+			    <div class="weui-title" style="background-color: #40aee7;color: white;">充值</div>
+			</header>
+			<div class="weui-cells weui-cells_form">
+				<p class="title">充值金额：</p>
+			  	<div class="weui-cell cashBox">
+					<div class="weui-cell__hd labelBefore"><label class="weui-label">￥</label></div>
+			    	<div class="weui-cell__bd">
+			      		<input class="weui-input" type="number"  pattern="[0-9]+$" id="money" name="price" placeholder="请输入充值金额">
+			   		 </div>
+			  	</div>
+			  	<p class="title">请选择支付方式</p>
+			  	<div class="weui-panel__bd" id="thressMethod">
+				    <a href="#" class="weui-cell weui-cell_access weui-cell_example" 
+				    	style="background: url(/assets/common/images/payway_ico1.png) no-repeat left center/18px auto;margin-left: 2%">
+				    	<div class="weui-cell__bd weui-cell_primary">
+				        	<p style="margin-left: 2%">支付宝(到账快)</p>
+				    	</div>
+				    	<input class="selectInput" type="radio" value="1" name="paytype"  checked="checked"/>
+				    </a>
+				     <a href="#" class="weui-cell weui-cell_access weui-cell_example"
+				    style="background: url(/assets/common/images/payway_ico3.png) no-repeat left center/18px auto;margin-left: 2%">
+				    	<div class="weui-cell__bd weui-cell_primary">
+				        	<p style="margin-left: 2%">银行卡（大额推荐）</p>
+				    	</div>
+				    	<input class="selectInput" type="radio" value="3" name="paytype" />
+				    </a>
+				    <a href="#" class="weui-cell weui-cell_access weui-cell_example"
+				    style="background: url(/assets/common/images/payway_ico2.png) no-repeat left center/18px auto;margin-left: 2%">
+				    	<div class="weui-cell__bd weui-cell_primary rightBox">
+				        	<p style="margin-left: 2%">微信（小额推荐）</p>
+				    	</div>
+				    	<input class="selectInput" type="radio" value="2" name="paytype" />
+				    </a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/yunshanfu.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">云闪付</p>
+						</div>
+						<input class="selectInput" type="radio" value="4" name="paytype" />
+					</a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/payway_ico1.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">支付宝账号转账</p>
+						</div>
+						<input class="selectInput" type="radio" value="5" name="paytype"  />
+					</a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/payway_ico2.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">微信手机号码转账</p>
+						</div>
+						<input class="selectInput" type="radio" value="6" name="paytype"/>
+					</a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/payway_ico1.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">支付宝转银行卡</p>
+						</div>
+						<input class="selectInput" type="radio" value="7" name="paytype"/>
+					</a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/payway_ico2.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">微信转银行卡</p>
+						</div>
+						<input class="selectInput" type="radio" value="8" name="paytype" />
+					</a>
+					<a href="#" class="weui-cell weui-cell_access weui-cell_example"
+					   style="background: url(/assets/common/images/payway_ico2.png) no-repeat left center/18px auto;margin-left: 2%">
+						<div class="weui-cell__bd weui-cell_primary">
+							<p style="margin-left: 2%">微信赞赏码</p>
+						</div>
+						<input class="selectInput" type="radio" value="9" name="paytype"/>
+					</a>
+				</div>
+
+			  	
+			  	<div style="color: #ffffff;min-height:207px">
+			  		<button class="weui-btn weui-btn_primary" style="margin-top: 50px;background: #40aee7" type="submit" id="sureBtn">充值</button>
+				</div>
+			</div>
+		</div>
+		</form>
+		<script src="${ctxPath}/assets/common/plugins/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="${ctxPath}/assets/common/plugins/jquery/jquery-weui.js" ></script>
+		<script type="text/javascript" src="${ctxPath}/assets/common/layui/layui.js"></script>
+			<script type="text/javascript"
+		src="${ctxPath}/assets/common/layui/layui.all.js"></script>
+		<script type="text/javascript">
+		function is_weixin() {
+		    var ua = navigator.userAgent.toLowerCase();
+		    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+		var isWeixin = is_weixin();
+		var winHeight = typeof window.innerHeight != 'undefined' ? window.innerHeight : document.documentElement.clientHeight;
+		function loadHtml(){
+			var div = document.createElement('div');
+			div.id = 'weixin-tip';
+			div.innerHTML = '<p><img src="${ctxPath}/assets/common/images/live_weixin.png" alt="微信打开"/></p>';
+			document.body.appendChild(div);
+		}
+		
+		function loadStyleText(cssText) {
+	        var style = document.createElement('style');
+	        style.rel = 'stylesheet';
+	        style.type = 'text/css';
+	        try {
+	            style.appendChild(document.createTextNode(cssText));
+	        } catch (e) {
+	            style.styleSheet.cssText = cssText; //ie9以下
+	        }
+            var head=document.getElementsByTagName("head")[0]; //head标签之间加上style样式
+            head.appendChild(style); 
+	    }
+	    var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80); width: 100%; height:100%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}";
+		if(isWeixin){
+			loadHtml();
+			loadStyleText(cssText);
+		}
+		function toVaild(){
+            var val = parseInt(document.getElementById("money").value);
+            if(isNaN(val)){
+            	layer.msg('请输入充值金额');
+                return false;
+            }else if(val <=0){
+            	layer.msg('充值金额不能小于等于0');
+                return false;
+            }
+            return true;
+        }
+	</script>
+</body>
+</html>

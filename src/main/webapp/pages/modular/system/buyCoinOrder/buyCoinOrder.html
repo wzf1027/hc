@@ -1,0 +1,124 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/buyCoinOrder/buyCoinOrder.js"]}){
+<style>
+  .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+</style>
+<div class="layui-body-header">
+    <span class="layui-body-header-title">商户/会员交易列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                        	<div class="layui-inline">
+	                                <input id="serialno" class="layui-input" type="text" placeholder="会员流水订单号"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="seller" class="layui-input" type="text" placeholder="会员账号"/>
+	                            </div>
+	                              <div class="layui-inline">
+	                                <input id="userOrderNo" class="layui-input" type="text" placeholder="商户流水订单号"/>
+	                            </div> 
+	                             <div class="layui-inline">
+	                                <input id="account" class="layui-input" type="text" placeholder="商户账号"/>
+	                            </div>
+								<div class="layui-inline">
+									<input id="remark" class="layui-input" type="text" placeholder="操作备注"/>
+								</div>
+	                            <div class="layui-inline">
+	                                <input id="payMethodName" class="layui-input" type="text" placeholder="收款码姓名/账户/昵称"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="payMethodType" name="payMethodType" lay-verify="">
+									  <option value="">支付通道</option>
+										 <option value="1">支付宝</option>
+										 <option value="2">微信</option>
+										 <option value="3">银行卡</option>
+										 <option value="4">云闪付</option>
+										 <option value="5">支付宝账号转账</option>
+										 <option value="6">微信账号转账</option>
+										 <option value="7">支付宝转银行卡</option>
+										 <option value="8">微信转银行卡</option>
+										 <option value="9">微信赞赏码</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="isAppeal" name="isAppeal" lay-verify="">
+									  <option value="">是否冻结</option>
+									  <option value="1">是</option>
+									  <option value="0">否</option>
+									</select> 
+	                            </div>
+								<div class="layui-inline">
+									<select id ="orderCode" name="orderCode" lay-verify="">
+										<option value="">订单类型</option>
+										<option value="1">正常订单</option>
+										<option value="2">补空单</option>
+										<option value="3">返补单</option>
+									</select>
+								</div>
+	                            <div class="layui-inline">
+	                                 <select id ="isSuccess" name="isSuccess" lay-verify="">
+									  <option value="">是否回调成功</option>
+									  <option value="1">是</option>
+									  <option value="2">否</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="status" name="status" lay-verify="">
+									  <option value="">请选择订单状态</option>
+									  <option value="1">未付订单</option>
+									  <option value="2">成功订单</option>
+									   <option value="3">取消订单</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="匹配时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                                <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+									<button id="btnAdd" class="layui-btn icon-btn">补空单</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="buyCoinOrderTable" lay-filter="buyCoinOrderTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="openProductBox" style="display: none; padding: 10px;">
+	<table id="openProductTable" lay-filter="openProductTable"></table>
+</div>
+
+<script type="text/html" id="tableBar">
+	{{#  if((d.status == 2 || d.status == 1) && d.isAppeal ==0){ }}
+		<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="appealAdd">申诉</a>
+	{{#  } }}   
+	@if(shiro.hasRole("administrator")){
+	{{#  if(d.orderCode == 1 ){ }}
+		{{#  if((d.status == 2 || d.status == 1) && d.isAppeal == 1 ){ }}
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="updateAppeal">申诉审核</a>
+		 {{#  } }}
+		{{#  if((d.status == 7)){ }}
+			<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="updateOrderStatus">重新激活订单</a>
+		{{#  } }}
+	{{#  } }}
+	{{#  if((d.status == 2 || d.status == 1) && d.isAppeal ==0){ }}
+	<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="finishStatus">确认收款</a>
+	{{#  } }}
+	{{#  if((d.status == 4 && d.orderCode == 1)){ }}
+	<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="returnBuyCoinOrder">返补空单</a>
+	{{#  } }}
+	@}
+
+</script>
+@}

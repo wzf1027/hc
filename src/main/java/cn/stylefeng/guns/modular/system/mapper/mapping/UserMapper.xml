@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.User">
+        <id column="USER_ID" property="userId"/>
+        <result column="AVATAR" property="avatar"/>
+        <result column="ACCOUNT" property="account"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="SALT" property="salt"/>
+        <result column="NAME" property="name"/>
+        <result column="BIRTHDAY" property="birthday"/>
+        <result column="SEX" property="sex"/>
+        <result column="EMAIL" property="email"/>
+        <result column="PHONE" property="phone"/>
+        <result column="ROLE_ID" property="roleId"/>
+        <result column="DEPT_ID" property="deptId"/>
+        <result column="STATUS" property="status"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="CREATE_USER" property="createUser"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="UPDATE_USER" property="updateUser"/>
+        <result column="VERSION" property="version"/>
+        <result column="IS_AUTH" property="isAuth"/>
+        <result column="CODE" property="code"/>
+        <result column="REAL_NAME" property="realName"/>
+        <result column="ID_CARD_NO" property="idCardNo"/>
+        <result column="ID_CARD_FRONT" property="idCardFront"/>
+        <result column="ID_CARD_REVERSE" property="idCardReverse"/>
+        <result column="ID_CARD_IMAGE" property="idCardImage"/>
+        <result column="CONTACT_WAY" property="contactWay"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        USER_ID AS userId,
+         AVATAR AS avatar,
+         ACCOUNT AS account,
+        NAME AS name,
+        BIRTHDAY AS birthday,
+        SEX AS sex,
+        EMAIL AS email,
+        PHONE AS phone,
+		ROLE_ID AS roleId,
+		DEPT_ID AS deptId,
+	  	STATUS AS status,
+	 	CREATE_TIME AS createTime,
+	 	CREATE_USER AS createUser,
+	 	UPDATE_TIME AS updateTime,
+		UPDATE_USER AS updateUser,
+	 	VERSION AS version,
+	  	ID_CARD_IMAGE as idCardImage,
+	  	IS_AUTH as isAuth,
+	  	CODE AS code,
+	  	REAL_NAME as realName,
+	  	ID_CARD_NO as idCardNo,
+	  	ID_CARD_FRONT as idCardFront,
+	  	ID_CARD_REVERSE as idCardReverse,
+		CONTACT_WAY as contactWay,
+		ACCOUNT_CODE accountCode,
+		BING_GOOGLE bingGoogle,
+		SELLER_ENABLED sellerEnabled,
+		WITHDRAW_ENABLED withDrawEnabled
+    </sql>
+
+    <sql id="Base_Column_List_With_Pwd">
+		 USER_ID AS userId, AVATAR AS avatar, ACCOUNT AS account, PASSWORD AS password,
+        SALT AS salt, NAME AS name, BIRTHDAY AS birthday, SEX AS sex, EMAIL AS email, PHONE AS phone,
+         ROLE_ID AS roleId, DEPT_ID AS deptId, STATUS AS status, CREATE_TIME AS createTime, CREATE_USER AS createUser,
+          UPDATE_TIME AS updateTime, UPDATE_USER AS updateUser, VERSION AS version,
+          IS_AUTH as isAuth,CODE AS code,REAL_NAME as realName,ID_CARD_NO as idCardNo,ID_CARD_FRONT as idCardFront,ID_CARD_REVERSE as idCardReverse,
+          ID_CARD_IMAGE as idCardImage, CONTACT_WAY as contactWay
+	</sql>
+
+    <select id="selectUsers" resultType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where STATUS != 'DELETED'
+        <if test="name != null and name != ''">
+            and (PHONE like CONCAT('%',#{name},'%')
+            or ACCOUNT like CONCAT('%',#{name},'%')
+            or NAME like CONCAT('%',#{name},'%'))
+        </if>
+        <if test="deptId != null and deptId != 0">
+            and (DEPT_ID = #{deptId} or DEPT_ID in ( select DEPT_ID from sys_dept where PIDS like CONCAT('%[', #{deptId}, ']%') ))
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (CREATE_TIME between #{beginTime} and #{endTime})
+        </if>
+        order by CREATE_TIME desc
+    </select>
+    
+    <select id="selectAgentMerchantUsers" resultType="map">
+    	 select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where STATUS != 'DELETED' and ROLE_ID =2
+        AND USER_ID IN (
+			SELECT
+				USER_ID
+			FROM
+				sys_user_recommend_relation
+			WHERE
+				RECOMMEND_ID = #{userId}
+		)
+        <if test="name != null and name != ''">
+            and ACCOUNT_CODE = #{name}
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (CREATE_TIME between #{beginTime} and #{endTime})
+        </if>
+        order by CREATE_TIME desc
+    </select>
+    
+    <select id="selectUsersByRoleId"  resultType="map">
+    	 select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where STATUS != 'DELETED' and ROLE_ID = 4
+        <if test="phone != null and phone != ''">
+            and (PHONE like CONCAT('%',#{phone},'%') or NAME  like CONCAT('%',#{phone},'%') or ACCOUNT_CODE= #{phone})
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (CREATE_TIME between #{beginTime} and #{endTime})
+        </if>
+        order by CREATE_TIME desc
+    </select>
+    
+    <select id="selectMerchantUsers" resultType="map">
+    	 select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where STATUS != 'DELETED'
+         and ROLE_ID  =2
+        <if test="phone != null and phone != ''">
+            and ACCOUNT_CODE like CONCAT('%',#{phone},'%')
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (CREATE_TIME between  #{beginTime} and #{endTime})
+        </if>
+         <if test="isAuth != null">
+	     	 and IS_AUTH = #{isAuth}
+	     </if>
+	     <if test="enabled != null and enabled == 1">
+	     		and STATUS = 'ENABLE'
+	     </if>
+	     <if test="enabled != null and enabled == 2">
+	     		and STATUS = 'LOCKED'
+	     </if>
+	     <if test="recommend != null and recommend !=''">
+	     	and USER_ID = (
+	     		SELECT USER_ID FROM sys_user_recommend_relation where RECOMMEND_ID = (
+				SELECT USER_ID from sys_user where ACCOUNT_CODE = #{recommend}
+			)
+			)
+	     </if>
+         order by CREATE_TIME desc
+    </select>
+
+	<!-- 获取承兑商 -->
+	<select id="selectAccepterUser" resultType="map">
+		 select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where STATUS != 'DELETED' and ROLE_ID  like CONCAT('%',3,'%')
+        <if test="name != null and name != ''">
+            and (PHONE like CONCAT('%',#{name},'%')
+            or ACCOUNT like CONCAT('%',#{name},'%')
+            or NAME like CONCAT('%',#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+         order by CREATE_TIME desc
+	</select>
+
+    <update id="setStatus">
+		update sys_user set STATUS = #{status} where USER_ID = #{userId}
+	</update>
+
+    <update id="changePwd">
+		update sys_user set PASSWORD = #{pwd} where USER_ID = #{userId}
+	</update>
+
+    <update id="setRoles">
+		update sys_user set ROLE_ID = #{roleIds} where USER_ID =
+		#{userId}
+	</update>
+
+    <select id="getByAccount" resultType="cn.stylefeng.guns.modular.system.entity.User">
+        select
+        <include refid="Base_Column_List_With_Pwd"/>
+        from sys_user where ACCOUNT = #{account} and STATUS != 'DELETED' and ROLE_ID !=3
+    </select>
+	
+	<insert id="insertUser" useGeneratedKeys="true" keyColumn="USER_ID" keyProperty="userId" parameterType="cn.stylefeng.guns.modular.system.entity.User">
+		insert into sys_user
+		(
+			ACCOUNT,
+			PASSWORD,
+			NAME,
+			PHONE,
+			ROLE_ID,
+			DEPT_ID,
+			STATUS,
+			CREATE_TIME,
+			CREATE_USER,
+			VERSION,
+			IS_AUTH,
+			SALT,
+			APP_SECRET,
+			ACCOUNT_CODE
+		)
+		values
+		(
+			#{account},
+			#{password},
+			#{name},
+			#{phone},
+			#{roleId},
+			#{deptId},
+			#{status},
+			#{createTime},
+			#{createUser},
+			#{version},
+			#{isAuth},
+			#{salt},
+			#{appSecret},
+			#{accountCode}
+		)
+	</insert>
+	<!-- 添加钱包 -->
+	<insert id="insertUserWallter" parameterType="cn.stylefeng.guns.modular.system.entity.UserWallter">
+		insert into sys_user_wallter 
+		(
+			USER_ID,
+			AVAILABLE_BALANCE,
+			TOTAL_BALANCE,
+			FROZEN_BALANCE,
+			TYPE,
+			VERSION,
+			CREATE_TIME
+		)
+		values
+		(
+			#{userId},
+			#{availableBalance},
+			#{totalBalance},
+			#{frozenBalance},
+			#{type},
+			#{version},
+			#{createTime}
+		)
+	</insert>
+	<!-- 添加推荐关系 -->
+	<insert id="insertUserRecommendRelation" parameterType="cn.stylefeng.guns.modular.system.entity.UserRecommendRelation">
+		insert into sys_user_recommend_relation 
+		(
+			USER_ID,
+			RECOMMEND_ID,
+			CREATE_TIME
+		)
+		values
+		(
+			#{userId},
+			#{recommendId},
+			#{createTime}
+		)
+	</insert>
+	
+	<select id="selectUserWallter" resultType="cn.stylefeng.guns.modular.system.entity.UserWallter">
+		select 
+			USER_WALLTER_ID userWallterId,
+			USER_ID as userId,
+			AVAILABLE_BALANCE as availableBalance,
+			TOTAL_BALANCE as totalBalance,
+			FROZEN_BALANCE as frozenBalance,
+			TYPE as type,
+			VERSION as version,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+			from sys_user_wallter
+			<where>
+				<if test="userId != null and userId !=''">
+					and USER_ID =#{userId}
+				</if>
+			</where>
+	</select>
+	
+	<select id="findPayMethodFeeByUserId" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethodFeeSetting">
+		select 
+			SETTING_ID settingId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			MIN_ALIPAY_VALUE as minAlipayValue,
+			MAX_ALIPAY_VALUE as maxAlipayValue,
+			MIN_WX_VALUE as minWxValue,
+			MAX_WX_VALUE as maxWxValue,
+			MIN_CARD_VALUE as minCardValue,
+			MAX_CARD_VALUE as maxCardValue,
+			CLOUD_PAY_RATIO as cloudPayRatio,
+			MIN_CLOUD_PAY_VALUE as minCloudPayValue,
+			MAX_CLOUD_PAY_VALUE as maxCloudPayValue,
+			CREATE_TIME as createTime,
+			UPDATE_TIME AS  updateTime
+			from user_pay_method_fee_setting
+			<where>
+				<if test="userId != null and userId !=''">
+					and USER_ID =#{userId}
+				</if>
+			</where>
+	</select>
+	
+	<select id="getUserBonusById" resultType="cn.stylefeng.guns.modular.system.entity.UserBonusSetting">
+		select 
+			BONUS_ID bonusId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			AGENT_ID as agentId,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio
+			from user_bonus_setting
+			<where>
+				<if test="bonusId != null and bonusId !=''">
+					and BONUS_ID =#{bonusId}
+				</if>
+			</where>
+	</select>
+	
+	
+	<select id="getPayMethodFeeById" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethodFeeSetting">
+		select 
+			SETTING_ID settingId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio
+			from user_pay_method_fee_setting
+			where SETTING_ID = #{settingId}
+	</select>
+	
+	<select id="selectRecommendRelation" resultType="cn.stylefeng.guns.modular.system.entity.UserRecommendRelation">
+		select 
+			RELATION_ID relationId,
+			USER_ID as userId,
+			RECOMMEND_ID as recommendId,
+			CREATE_TIME as createTime
+			from sys_user_recommend_relation
+			<where>
+				<if test="userId != null and userId !=''">
+					and USER_ID =#{userId}
+				</if>
+			</where>
+			limit 1
+	</select>
+	
+	
+	<select id="findUserBonusSettingByUserId" resultType="cn.stylefeng.guns.modular.system.entity.UserBonusSetting">
+		select 
+			 BONUS_ID bonusId,
+		 	USER_ID as userId,
+		 	AGENT_ID AS agentId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			CLOUD_PAY_RATIO AS cloudPayRatio,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+			from user_bonus_setting
+			where USER_ID =#{userId} and AGENT_ID = #{agentId}
+	</select>
+	
+	<insert id="addUserPayMethodFeeSetting">
+		insert into user_pay_method_fee_setting
+		(
+			USER_ID,
+			ALIPAY_RATIO,
+			CARD_RATIO,
+			WX_RATIO,
+			CLOUD_PAY_RATIO,
+			MIN_ALIPAY_VALUE,
+			MAX_ALIPAY_VALUE,
+			MIN_WX_VALUE,
+			MAX_WX_VALUE,
+			MIN_CARD_VALUE,
+			MAX_CARD_VALUE,
+			MIN_CLOUD_PAY_VALUE,
+			MAX_CLOUD_PAY_VALUE,
+			CREATE_TIME
+		)
+		values
+		(
+			#{userId},
+			#{alipayRatio},
+			#{cardRatio},
+			#{wxRatio},
+			#{cloudPayRatio},
+			#{minAlipayValue},
+			#{maxAlipayValue},
+			#{minWxValue},
+			#{maxWxValue},
+			#{minCardValue},
+			#{maxCardValue},
+			#{minCloudPayValue},
+			#{maxCloudPayValue},
+			#{createTime}
+		)
+	</insert>
+	
+	<insert id="addUserBonusSetting">
+		insert into user_bonus_setting
+		(
+			USER_ID,
+			AGENT_ID,
+			ALIPAY_RATIO,
+			CARD_RATIO,
+			WX_RATIO,
+			CREATE_TIME,
+			CLOUD_PAY_RATIO
+		)
+		values
+		(
+			#{userId},
+			#{agentId},
+			#{alipayRatio},
+			#{cardRatio},
+			#{wxRatio},
+			#{createTime},
+			#{cloudPayRatio}
+		)
+	</insert>
+	
+	<update id="updateUseBonusSetting">
+		update user_bonus_setting
+		<set>
+			<if test="alipayRatio != null">
+				ALIPAY_RATIO = #{alipayRatio},
+			</if>
+			<if test="cardRatio != null">
+				CARD_RATIO = #{cardRatio},
+			</if>
+			<if test="wxRatio != null">
+				WX_RATIO = #{wxRatio},
+			</if>
+			<if test="cloudPayRatio != null">
+				CLOUD_PAY_RATIO = #{cloudPayRatio},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+		</set>
+		where BONUS_ID = #{bonusId}
+	</update>
+	
+	
+	<update id="updateUserPayMethodFeeSetting">
+		update user_pay_method_fee_setting
+		<set>
+			<if test="alipayRatio != null">
+				ALIPAY_RATIO = #{alipayRatio},
+			</if>
+			<if test="cardRatio != null">
+				CARD_RATIO = #{cardRatio},
+			</if>
+			<if test="wxRatio != null">
+				WX_RATIO = #{wxRatio},
+			</if>
+			<if test="cloudPayRatio != null">
+				CLOUD_PAY_RATIO = #{cloudPayRatio},
+			</if>
+			<if test="minAlipayValue != null">
+				MIN_ALIPAY_VALUE = #{minAlipayValue},
+			</if>
+			<if test="maxAlipayValue != null">
+				MAX_ALIPAY_VALUE = #{maxAlipayValue},
+			</if>
+			<if test="minWxValue != null">
+				MIN_WX_VALUE = #{minWxValue},
+			</if>
+			<if test="maxWxValue != null">
+				MAX_WX_VALUE = #{maxWxValue},
+			</if>
+			<if test="minCardValue != null">
+				MIN_CARD_VALUE = #{minCardValue},
+			</if>
+			<if test="maxCardValue != null">
+				MAX_CARD_VALUE = #{maxCardValue},
+			</if>
+			<if test="minCloudPayValue != null">
+				MIN_CLOUD_PAY_VALUE = #{minCloudPayValue},
+			</if>
+			<if test="maxCloudPayValue != null">
+				MAX_CLOUD_PAY_VALUE = #{maxCloudPayValue},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+		</set>
+		where SETTING_ID = #{settingId}
+	</update>
+	
+	<select id="getPayMethodFeeByUserId" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethodFeeSetting">
+		select 
+			SETTING_ID as settingId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			CLOUD_PAY_RATIO AS cloudPayRatio
+		from user_pay_method_fee_setting
+		where USER_ID = #{userId}
+	</select>
+	
+	<select id="getUserRecommendRelationByUserId" resultType="cn.stylefeng.guns.modular.system.entity.UserRecommendRelation">
+		select 
+			RELATION_ID as relationId,
+			USER_ID as userId,
+			RECOMMEND_ID as recommendId,
+			CREATE_TIME as createTime
+		from sys_user_recommend_relation
+		where USER_ID = #{userId}
+	</select>
+
+	<select id="getUserBonusSetting" resultType="cn.stylefeng.guns.modular.system.entity.UserBonusSetting">
+		select
+			BONUS_ID bonusId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			CLOUD_PAY_RATIO cloudPayRatio,
+			AGENT_ID as agentId
+		from 
+			user_bonus_setting
+		 where USER_ID = #{userId} and AGENT_ID = #{agentId}
+	</select>
+
+	<select id="findPayMethodById" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethod">
+		select 
+			 PAY_METHOD_ID AS payMethodId,
+         USER_ID AS userId, 
+         TYPE AS type,
+          QR_CODE AS qrCode,
+           ACCOUNT AS account,
+           CARD_BANK as cardBank,
+           CARD_BANK_NAME as cardBankName,
+            NAME AS name,
+             USE_NUMBER AS useNumber,
+             REMARK remark,
+             CREATE_TIME createTime,
+             UPDATE_TIME updateTime
+			from sys_user_pay_method
+			where PAY_METHOD_ID = #{id}
+	</select>
+
+	<select id="getPayMethodList" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethod">
+	select 
+			PAY_METHOD_ID as payMethodId,
+			USER_ID as userId,
+			TYPE type,
+			QR_CODE as qrCode,
+			ACCOUNT as account,
+			CARD_BANK as cardBank,
+			CARD_BANK_NAME as cardBankName,
+			NAME as name,
+			REMARK as remark,
+			CREATE_TIME AS createTime
+			from sys_user_pay_method
+			where USER_ID = #{userId}
+	</select>
+	
+	<select id="getRecommendId" resultType="String">
+		SELECT
+			ACCOUNT_CODE
+		FROM
+			sys_user
+		WHERE
+			USER_ID = (
+				SELECT
+					RECOMMEND_ID
+				FROM
+					sys_user_recommend_relation
+				WHERE
+					USER_ID = #{userId}
+			)
+	</select>
+	
+	<select id="getTotalIntoMoneyByIsToday" resultType="Double">
+		SELECT
+			 SUM(t.number)
+			FROM 
+			(
+				SELECT
+				IFNULL(SUM(NUMBER), 0) number
+			FROM
+				seller_charger_coin_appeal_order
+			WHERE
+				`STATUS` = 2
+				<if test="flag != null and flag ==true">
+						AND DATE(CREATE_TIME) = CURDATE()
+				</if>
+			UNION ALL
+			SELECT 
+				IFNULL(SUM(NUMBER), 0) number
+			FROM
+			user_charger_coin_appeal_order 
+			WHERE
+				`STATUS` = 2
+				<if test="flag != null and flag ==true">
+						AND DATE(CREATE_TIME) = CURDATE()
+				</if>
+			)  t
+	</select>
+	
+	<select id="getSellerTotalOutMoneyByIsToday" resultType="Double">
+		SELECT
+			IFNULL(SUM(NUMBER), 0)
+		FROM
+			seller_withdraw_coin_appeal_order
+		WHERE
+			`STATUS` = 2
+		<if test="flag != null and flag ==true">
+			AND DATE(CREATE_TIME) = CURDATE()
+		</if>
+	</select>
+	
+	<select id="getMerchantTotalOutMoneyByIsToday" resultType="Double">
+			SELECT
+				IFNULL(SUM(NUMBER), 0)
+			FROM
+				user_withdraw_coin_appeal_order
+			WHERE
+				`STATUS` = 2
+			AND ROLE_ID = 2
+			<if test="flag != null and flag ==true">
+				AND DATE(CREATE_TIME) = CURDATE()
+			</if>
+	</select>
+	
+	<select id="getAgentTotalOutMoneyByIsToday" resultType="Double">
+			SELECT
+				IFNULL(SUM(NUMBER), 0)
+			FROM
+				user_withdraw_coin_appeal_order
+			WHERE
+				`STATUS` = 2
+			AND ROLE_ID = 4
+			<if test="flag != null and flag ==true">
+				AND DATE(CREATE_TIME) = CURDATE()
+			</if>
+	</select>
+
+	<select id="getTotalFeePriceByIsToday" resultType="Double">
+		SELECT
+			 SUM(t.feePrice)
+			FROM 
+			(
+				SELECT
+				IFNULL(SUM(FEE_PRICE), 0) feePrice
+			FROM
+				seller_withdraw_coin_appeal_order
+			WHERE
+				`STATUS` = 2
+				<if test="flag != null and flag ==true">
+					AND DATE(CREATE_TIME) = CURDATE()
+				</if>
+			UNION ALL
+			SELECT 
+				IFNULL(SUM(FEE_PRICE), 0) feePrice
+			FROM
+			user_withdraw_coin_appeal_order 
+			WHERE
+				`STATUS` = 2
+			<if test="flag != null and flag ==true">
+				AND DATE(CREATE_TIME) = CURDATE()
+			</if>
+			)  t
+	</select>
+
+	<select id="getMerchantNumberByAgentId" resultType="Long">
+		SELECT
+			COUNT(
+			RELATION_ID
+			)
+			FROM
+			sys_user_recommend_relation
+			WHERE 
+			RECOMMEND_ID = #{userId}
+	</select>
+
+	<update id="updateByGoogle">
+		update sys_user set BING_GOOGLE =0 ,GOOGLE_SECRET = NULL WHERE USER_ID = #{userId}
+	</update>
+
+</mapper>

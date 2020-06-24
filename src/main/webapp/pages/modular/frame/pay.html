@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,viewport-fit=cover"
+	name="viewport" />
+<title></title>
+<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/weui.css" />
+<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/pay.css" />
+</head>
+<body>
+	<div class="container">
+			<div class="titleBox">
+				<img class="imgTitle" src="">
+			</div>
+			<form class="layui-card-body layui-form layui-form-pane" id="userAuthForm" lay-filter="userAuthForm">
+				<p class="orderName">
+					订单号：<input class="copy-link" type="text" value="${serialno}" style="max-width: 140px;" id="qrcodeLink" readonly />
+					<img src="${ctxPath}/assets/common/images/copy.png" class="cliklinkbtn" onClick="copyUrl()" /></p>
+				<p class="tipTxt">付款${timeOut}分钟未到账 请复制☝订单号联系客服</p>
+				<p class="tip"><span class="countdown">00分 00秒</span></p>
+				<div class="qrcodeDiv hidden">
+					<div class="linkBox">
+						<span>收款码仅当次有效</span>
+						<div id="qrcode"></div>
+						<span>输错不到账不退款</span>
+					</div>
+				</div>
+				<div class="qrcodeImg hidden">
+					<p class="tipTxt">如补全姓名<span class="redColor">【${name}】</span>长按补全姓名对话框.粘贴即可</p>
+				</div>
+				<div class="alipayWxInform hidden">
+					<ul>
+						<li>
+							<span class="card">姓名：</span>
+							<input class="copy-link" type="text" value="${name}" style="max-width: 140px;" id="alipayWxLink1" readonly />
+							<img src="${ctxPath}/assets/common/images/copy.png" class="cliklink" onClick="copyUrl(1,2)" />
+						</li>
+					</ul>
+				</div>
+				<p class="inputAmount">本次转账<span class="redColor">￥${price}</span>切勿输错</p>
+				<div class="alipayzz  alipayBtn hidden">
+                <h4 class="tipTxt">点下方按钮👇打开支付宝.点击转账.完成付款👉💯秒上分</h4>
+				</div>
+				<div class="cloudPayDiv hidden">
+					<div class="linkBox">
+					<span>收款码仅当次有效</span>
+					<img class="cloudPayImage" src="" style="width: 65%;">
+					<span>输错不到账不退款</span>
+					</div>
+				</div>
+					<div class="bankInfo hidden">
+					<p class="tipTxt">打开<span class="redColor">【${cardBankName}】</span>APP扫码付款或复制下方信息转账</p>
+					<h3 class="redColor">【收款信息仅当次有效,切勿重复支付】</h3>
+				</div>
+				<div class="bankInform hidden">
+                    <ul>
+						<li>
+							<span class="card">姓名：</span> 
+							<input class="copy-link" type="text" value="${name}" style="max-width: 140px;" id="qrcodeLink1" readonly />
+							<img src="${ctxPath}/assets/common/images/copy.png" class="cliklink" onClick="copyUrl(1,1)" />
+						</li>
+						<li>
+							<span class="card">卡号：</span> 
+							<input class="copy-link" type="text" value="${account}" style="max-width: 140px;" id="qrcodeLink2" readonly />
+							<img src="${ctxPath}/assets/common/images/copy.png" class="cliklink" onClick="copyUrl(2,1)" style="margin-left: 14px;" />
+						</li>
+						<li>
+							<span class="card">银行名称： </span> 
+							<input class="copy-link" type="text" value="${cardBankName}" style="max-width: 140px;" id="qrcodeLink3" readonly />
+							<img src="${ctxPath}/assets/common/images/copy.png" class="cliklink" onClick="copyUrl(3,1)" />
+						</li>
+						<li>
+							<span class="card">开户支行：</span>
+							<input class="copy-link" type="text" value="${cardBank}" style="max-width: 140px;" id="qrcodeLink4" readonly />
+							<img src="${ctxPath}/assets/common/images/copy.png" class="cliklink" onClick="copyUrl(4,1)" style="margin-left: 14px;" />
+						</li>
+					</ul>
+				</div>
+				<div class="bankInform hidden">
+                <h4 class="redColor">完成付款💯秒上分.点击上方☝小黑点复制</h4>
+				</div>
+				<div class="alipayBtn hidden">
+					<button type="button" class="weui-btn alipay-btn" onClick="copyUrl(1,2)" id="alipayBtn">打开支付宝转账￥${price}</button>
+				</div>
+				<div class="alipayzz hidden">
+					<button type="button" class="weui-btn alipay-btn" onClick="copyUrl(1,2)" id="alipayzzios">苹果专用转账￥${price}</button>
+			        <button type="button" class="weui-btn alipay-btn" onClick="copyUrl(1,2)" id="alipayzzAndroid">点击唤起转账￥${price}</button>
+				</div>
+			</form>
+		</div>
+	<script
+		src="${ctxPath}/assets/common/plugins/jquery/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript"
+		src="${ctxPath}/assets/common/js/toast.script.js"></script>
+	<script src="${ctxPath}/assets/common/js/qrcode.min.js"></script>
+	<script type="text/javascript"
+		src="${ctxPath}/assets/common/layui/layui.js"></script>
+	<script type="text/javascript"
+		src="${ctxPath}/assets/common/layui/layui.all.js"></script>
+		<script>
+			var type = '${type}';
+			var imgSrc;
+			var date = new Date(parseInt(${createTime}) * 1000);
+			var value = date.getTime();
+			var qrValue= '${qrValue}';
+			var qrcode = new QRCode(document.getElementById('qrcode'),{
+				width:180,
+				height:180,
+				text: qrValue
+			});
+			var  qrCode = '${qrCode}';
+			countTime(value,'${timeOut}');
+			if(type == 1){
+				$('body').css('background-color','#08A1F8');
+				$('.countdown').css('background-color','#08A1F8');
+					$('.weui-title>span').text('支付宝');
+					$('#payTitles').text('请截图~保存~打开支付宝扫一扫');
+					$('.qrcodeImg').removeClass('hidden');
+					$('.qrcodeDiv').removeClass('hidden');
+					$('.alipayBtn').removeClass('hidden');
+					$('.alipayWxInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/alipay.png';
+			}else if(type == 2){
+				$('body').css('background-color','#069647');
+				$('.countdown').css('background-color','#069647');
+				$('.weui-title>span').text('微信');
+				$('#payTitles').text('请截图~保存~打开微信扫一扫');
+				$('.qrcodeDiv').removeClass('hidden');
+				$('.qrcodeImg').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/wx.png';
+			}else if (type ==3) {
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('银行卡');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.bankInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/cardbank.png';
+            }else if (type ==4) {//云闪付
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('网银转账');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.bankInfoysf').removeClass('hidden');
+				$('.cloudPayDiv').removeClass('hidden');
+				$('.bankInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/cardbank.png';
+				$('.cloudPayImage').attr('src',qrCode);
+			}else if (type ==5) {//支付宝账号转账
+				$('body').css('background-color','#08A1F8');
+				$('.countdown').css('background-color','#08A1F8');
+				$('.weui-title>span').text('支付宝账号转账');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.alipayzz').removeClass('hidden');
+				$('.alipayWxInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/zfb_zhuanzhang.png';
+			}else if (type ==6) {//微信手机号码转账
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('微信手机号码转账');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.alipayWxInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/wx_zhuangzhang.png';
+			}else if (type ==7) {//支付宝转银行卡
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('支付宝转银行卡');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.bankInform').removeClass('hidden');
+				$('.alipayyhk').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/zfb_yhk.png';
+			}else if (type ==8) {//微信转银行卡
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('微信转银行卡');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.bankInform').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/wx_yhk.png';
+			}else if (type ==9) {//微信赞赏码
+				$('body').css('background-color','#FFA11B');
+				$('.countdown').css('background-color','#FFA11B');
+				$('.weui-title>span').text('微信赞赏码');
+				$('.txtInfo').removeClass('hidden');
+				$('.bankInfo').removeClass('hidden');
+				$('.cloudPayDiv').removeClass('hidden');
+				imgSrc = '${ctxPath}/assets/common/images/wx_zanshangma.png';
+				$('.cloudPayImage').attr('src',qrCode);
+			}
+			$('.imgTitle').attr('src',imgSrc);
+			$('#alipayBtn').click(function(){
+				window.location.href = 'alipays://platformapi/startapp?appId=20000067&url=' + encodeURIComponent('${qrValue}');
+				//window.location.href='${qrValue}';
+			}); 
+			$('.imgTitle').attr('src',imgSrc);
+			$('#alipayzzios').click(function(){
+				window.location.href = 'https://ds.alipay.com/?from=mobilecodec&scheme=' + encodeURIComponent('alipays://platformapi/startapp?saId=09999988&clientVersion=3.7.0.0718&actionType=toAccount&goBack=NO&amount=${price}&account=${account}');
+				//window.location.href='alipays://platformapi/startapp?saId=09999988&clientVersion=3.7.0.0718&actionType=toAccount&goBack=NO&amount=${price}&account=${account}';
+			});
+			$('.imgTitle').attr('src',imgSrc);
+			$('#alipayzzAndroid').click(function(){
+				window.location.href = 'https://ds.alipay.com/?appId=20001003&keyword=' + encodeURIComponent('${account}');
+				//window.location.href='${account}}';
+			}); 
+			//复制邀请链接
+			function copyUrl(number,type) {
+				var Url ='';
+				if(type ==1){
+					if(number=='1'){
+						Url= document.getElementById("qrcodeLink1");
+					}else if(number =='2'){
+						Url= document.getElementById("qrcodeLink2");
+					}else if(number =='3'){
+						Url= document.getElementById("qrcodeLink3");
+					}else if(number =='4'){
+						Url= document.getElementById("qrcodeLink4");
+					}else{
+						Url= document.getElementById("qrcodeLink");
+					}
+				}else{
+					if(number=='1'){
+						Url= document.getElementById("alipayWxLink1");
+					}else if(number =='2'){
+						Url= document.getElementById("alipayWxLink2");
+					}else if(number =='3'){
+						Url= document.getElementById("alipayWxLink3");
+					}else{
+						Url= document.getElementById("qrcodeLink");
+					}
+				}
+
+
+			 Url.select(); // 选择对象
+			 document.execCommand("Copy"); // 执行浏览器复制命令
+			 layer.msg("已复制好，可贴粘。");
+			}
+
+			function countTime(value,kk) {//value下单时间
+			    //获取当前时间
+			    var date = new Date();
+			    var now = date.getTime();
+			    var end = value + (kk * 60 * 1000);
+
+			    //时间差
+			    var differTime = end - now;
+			    var h, m, s;
+			    if (differTime >= 0) {
+			        h = Math.floor(differTime / 1000 / 60 / 60);
+			        m = Math.floor(differTime / 1000 / 60 % 60);
+			        s = Math.floor(differTime / 1000 % 60);
+			        h = h < 10 ? ("0" + h) : h;
+			        m = m < 10 ? ("0" + m) : m;
+			        s = s < 10 ? ("0" + s) : s;
+			        var timeDom = m + "分" +  s + "秒";
+			        $(".countdown").text(timeDom);
+			        setTimeout(function () {
+			            countTime(value,kk)
+			        }, 1000);
+			    } else {
+			        var timeDom ="00分 00秒";
+			        $(".countdown").text(timeDom);
+					//window.location.href='/app/pay';
+			        var qrCodeClass = '${ctxPath}/assets/common/images/mengban.png';
+					// $('#qrcode').attr('src',qrCodeClass);
+					document.getElementById("qrcode").getElementsByTagName("img")[0].src =qrCodeClass;
+					$('.cloudPayImage').attr('src',qrCodeClass);
+	    	 }
+		  	}
+			
+		</script>		
+	
+</body>
+</html>

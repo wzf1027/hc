@@ -1,0 +1,31 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/sellerOrder/sellerOrder.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">会员出售列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="phone" class="layui-input" type="text" placeholder="卖家账号"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="出售时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="sellerOrderTable" lay-filter="sellerOrderTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

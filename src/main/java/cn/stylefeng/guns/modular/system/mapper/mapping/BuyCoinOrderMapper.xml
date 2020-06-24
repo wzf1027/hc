@@ -1,0 +1,3329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.BuyCoinOrderMapper">
+
+
+	<select id="selectSellerIPAndMerchantIpByCount" resultType="int">
+		select count(*) from seller_buyer_coin_order where SELLER_IP = MERCHANT_IP
+	</select>
+	
+	   <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+        <id column="ORDER_ID" property="orderId"/>
+        <result column="SERIALNO" property="serialno"/>
+         <result column="BUYER_ID" property="buyerId"/>
+        <result column="SELLER_ID" property="sellerId"/>
+        <result column="USER_ORDER_NO" property="userOrderNo"/>
+        <result column="CUID" property="cuid"/>
+         <result column="NUMBER" property="number"/>
+         <result column="STATUS" property="status"/>
+         <result column="CREATE_TIME" property="createTime"/>
+         <result column="UPDATE_TIME" property="updateTime"/>
+         <result column="CANNEL_TIME" property="cannelTime"/>
+          <result column="CLOSE_TIME" property="closeTime"/>
+          <result column="PAY_METHOD_ID" property="payMethodId"/>
+          <result column="PAY_METHOD_ACCOUNT" property="payMethodAccount"/>
+          <result column="PAY_METHOD_NAME" property="payMethodName"/>
+          <result column="PAY_METHOD_CARD_BANK" property="payMethodCardBank"/>
+          <result column="PAY_METHOD_CARD_BANK_NAME" property="payMethodCardBankName"/>
+          <result column="PAY_METHOD_TYPE" property="payMethodType"/>
+          <result column="BONUS_NUMER" property="bonusNumber"/>
+          <result column="FEE_PRICE" property="feePrice"/>
+          <result column="IS_APPEAL" property="isAppeal"/>
+          <result column="APPEAL_TIME" property="appealTime"/>
+          <result column="MATCHING_TIME" property="matchingTime"/>
+           <result column="NOTIFY_URL" property="notifyUrl"/>
+           <result column="IS_SUCCESS" property="isSuccess"/>
+           <result column="INTO_NUMBER" property="intoNumber"/>
+           <result column="AGENT_FEE_PRICE" property="agentFeePrice"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      	so.ORDER_ID as orderId,
+      	so.SERIALNO as serialno,
+      	so.BUYER_ID as buyerId,
+      	so.SELLER_ID as sellerId,
+      	so.USER_ORDER_NO as userOrderNo,
+      	so.CUID as cuid,
+      	so.NUMBER as number,
+      	so.STATUS as status,
+      	so.CREATE_TIME as createTime,
+      	so.UPDATE_TIME as updateTime,
+      	so.CANNEL_TIME as cannelTime,
+      	so.CLOSE_TIME as closeTime,
+      	so.PAY_METHOD_ID as payMethodId,
+      	so.PAY_METHOD_ACCOUNT as payMethodAccount,
+      	so.PAY_METHOD_TYPE as payMethodType,
+      	so.BONUS_NUMER as bonusNumber,
+      	so.FEE_PRICE as feePrice,
+      	so.IS_APPEAL as isAppeal,
+      	so.APPEAL_TIME as appealTime,
+      	so.MATCHING_TIME as matchingTime,
+      	so.NOTIFY_URL as notifyUrl,
+      	so.IS_SUCCESS as isSuccess,
+      	so.INTO_NUMBER as intoNumber,
+      	so.AGENT_FEE_PRICE as agentFeePrice,
+      	so.PAY_METHOD_NAME as payMethodName,
+      	so.PAY_METHOD_CARD_BANK as payMethodCardBank,
+      	so.PAY_METHOD_NICK_NAME payMethodNickName,
+      	so.PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName,
+      	sro.CREATE_TIME sroCreateTime,
+      	UPDATE_USER updateUser,
+      	REMARK remark,
+      	ORDER_CODE as orderCode,
+      	SELLER_IP sellerIp,
+      	MERCHANT_IP merchantIp,
+      	MERCHANT_CITY merchantCity,
+      	SELLER_CITY sellerCity,
+      	DEALER dealer
+     </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from seller_buyer_coin_order so
+        LEFT JOIN seller_order sro ON sro.ORDER_ID = so.SELLER_ORDER_ID
+        <where>
+		<if test="userId != null and userId !=''">
+			and so.BUYER_ID = #{userId}
+		</if>	
+		<if test="status != null and status !='' and status ==1">
+			and so.STATUS = 1
+		</if>
+		<if test="status != null and status !='' and status ==2">
+			and so.STATUS = 4
+		</if>
+		<if test="remark != null and remark !=''">
+			and so.REMARK like CONCAT('%',#{remark},'%')
+		</if>
+		<if test="status != null and status !='' and status ==3">
+			and so.STATUS = 7
+		</if>
+           <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (so.CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if>
+      		 <if test="serialno != null and serialno != ''">
+      		 	 and so.SERIALNO = #{serialno}
+      		 </if>
+      		  <if test="account != null and account != ''">
+      		 	 and so.BUYER_ID =(select USER_ID from sys_user where ACCOUNT_CODE = #{account})
+      		 </if>
+      		  <if test="userOrderNo != null and userOrderNo != ''">
+      		 	 and so.USER_ORDER_NO = #{userOrderNo}
+      		 </if>
+      		  <if test="seller != null and seller != ''">
+      		 	 and so.SELLER_ID = (SELECT SELLER_ID from seller where ACCOUNT = #{seller})
+      		 </if>
+      		 <if test="isAppeal != null">
+      		 	 and so.IS_APPEAL = #{isAppeal}
+      		 </if>
+      		 <if test="isSuccess != null and isSuccess != ''">
+      		 	 and so.IS_SUCCESS = #{isSuccess}
+      		 </if>
+      		 <if test="payMethodType != null and payMethodType != ''">
+      		 	 and so.PAY_METHOD_TYPE = #{payMethodType}
+      		 </if>
+      		  <if test="payMethodName != null and payMethodName != ''">
+				and
+				(
+					so.PAY_METHOD_ACCOUNT = #{payMethodName}
+					or (
+							so.PAY_METHOD_NAME = #{payMethodName}
+						)
+					or
+					so.PAY_METHOD_NICK_NAME =#{payMethodName}
+				)
+			 </if>
+			<if test="orderCode != null and orderCode != ''">
+				and so.ORDER_CODE = #{orderCode}
+			</if>
+        </where>
+        order by so.CREATE_TIME desc 
+    </select>
+    
+    <select id="findNumberByStatus" resultType="int">
+    	select count(*) from seller_buyer_coin_order
+    	where  date(CREATE_TIME) = curdate()
+    		<if test="userId != null and userId !=''">
+    			and BUYER_ID = #{userId}
+    		</if>
+    		<if test="status != null and status !=''">
+    			and STATUS = #{status}
+    		</if>
+    </select>
+    
+    <select id="findTotalPrice" resultType="Double">
+    	SELECT IFNULL(SUM(INTO_NUMBER),0) 
+    	FROM 
+    		seller_buyer_coin_order
+    	 WHERE BUYER_ID =#{userId} 
+    	 		AND `STATUS` =4 
+    	 		and DATE(CREATE_TIME) = CURDATE()
+   </select>
+    
+     <select id="findTotalPayPrice" resultType="Double">
+    	SELECT IFNULL(SUM(NUMBER),0) 
+    	FROM 
+    		seller_buyer_coin_order
+    	 WHERE BUYER_ID =#{userId} 
+    	 		AND `STATUS` =4 
+    	 		and DATE(CREATE_TIME) = CURDATE()
+    </select>
+    
+    <select id="findSellerBuyCoinBill" resultType="map">
+    		SELECT
+				t.createTime,
+				IFNULL(
+					SUM(
+						t.orderNumber + t.successNumber+t.nopayNumber
+					),
+					0
+				) orderTotalNumber,
+				IFNULL(SUM(t.successNumber), 0) successTotalNumber,
+				IFNULL(SUM(t.nopayNumber), 0) noPayOrderNumber,
+				SUM(t.successPrice) successTotalPrice,
+				SUM(t.number) totalPrice,
+				SUM(t.feePrice) totalFeePrice,
+				IFNULL(SUM(t.orderNumber), 0) totalCannelNumber
+			FROM
+				(
+					SELECT
+						DATE_FORMAT(s.CREATE_TIME, '%Y-%m-%d') createTime,
+						@number orderNumber,
+						COUNT(s.ORDER_ID) nopayNumber,
+						@rownum successNumber,
+						IFNULL(
+							SUM(s.FEE_PRICE*s.NUMBER/100),
+							0
+						) feePrice,
+						IFNULL(SUM(s.NUMBER), 0) number,
+						@rownum successPrice
+					FROM
+						seller_buyer_coin_order s,
+						(SELECT @rownum := 0,@number :=0) AS t
+					WHERE
+						s.`STATUS` in(1,2,3)
+					AND s.BUYER_ID = #{userId}
+					 <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          		 and (s.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		      		 </if>
+					GROUP BY
+						DAY (createTime)
+					UNION ALL
+						SELECT
+							DATE_FORMAT(s.CREATE_TIME, '%Y-%m-%d') createTime,
+							@rownum orderNumber,
+							@number nopayNumber,
+							COUNT(s.ORDER_ID) successNumber,
+							IFNULL(
+								SUM(s.FEE_PRICE*s.NUMBER/100),
+								0
+							) feePrice,
+							IFNULL(SUM(s.NUMBER), 0) number,
+							IFNULL(SUM(s.NUMBER), 0) successPrice
+						FROM
+							seller_buyer_coin_order s,
+							(SELECT @rownum := 0,@number :=0) AS t
+						WHERE
+							s.`STATUS` = 4
+						AND s.BUYER_ID = #{userId}
+						 <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          		 AND (s.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		      		 	</if>
+						GROUP BY
+							DAY (createTime)
+						UNION ALL
+							SELECT
+								DATE_FORMAT(s.CREATE_TIME, '%Y-%m-%d') createTime,
+								COUNT(s.ORDER_ID) orderNumber,
+								@number nopayNumber,
+								@rownum successNumber,
+								IFNULL(
+									SUM(s.FEE_PRICE*s.NUMBER/100),
+									0
+								) feePrice,
+								IFNULL(SUM(s.NUMBER), 0) number,
+								@rownum successPrice
+							FROM
+								seller_buyer_coin_order s,
+								(SELECT @rownum := 0,@number :=0) AS t
+							WHERE
+								s.`STATUS` IN (5,6,7)
+							AND s.BUYER_ID = #{userId}
+							<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			          		 AND (s.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+			      		 	</if>
+							GROUP BY
+								DAY (createTime)
+				) t
+			GROUP BY
+				t.createTime
+			ORDER BY
+				t.createTime DESC
+    </select>
+    
+    <select id="findSellerBuyCoinChannelInfo" resultType="map">
+    		SELECT
+				SUM(t.number) totalPrice,
+				SUM(t.cannelNumber) cannelNumber,
+				SUM(t.feePrice) totalFeePrice,
+				SUM(t.intoNumber) intoNumber,
+				SUM(
+					t.orderNumber + t.successNumber+t.nopayNumber
+				) orderTotalNumber,
+				SUM(t.successNumber) successTotalNumber,
+				SUM(t.nopayNumber) noPayOrderNumber,
+				SUM(t.successPrice) successTotalPrice,
+				t.type
+			FROM
+				(
+					SELECT
+						@number orderNumber,
+						@number cannelNumber,
+						COUNT(s.ORDER_ID) nopayNumber,
+						@rownum successNumber,
+						@number feePrice,
+						@number number,
+						@rownum successPrice,
+						s.PAY_METHOD_TYPE type,
+						IFNULL(SUM(s.INTO_NUMBER), 0) intoNumber
+					FROM
+						seller_buyer_coin_order s,
+						(SELECT @rownum := 0,@number :=0) AS t
+					WHERE
+						s.`STATUS`=1
+					AND s.BUYER_ID =#{userId}
+					GROUP BY
+						s.PAY_METHOD_TYPE
+					UNION ALL
+						SELECT
+							@rownum orderNumber,
+							@number nopayNumber,
+							@number cannelNumber,
+							COUNT(s.ORDER_ID) successNumber,
+							IFNULL(
+								SUM(s.FEE_PRICE*s.NUMBER/100),
+								0
+							) feePrice,
+							IFNULL(SUM(s.NUMBER), 0) number,
+							IFNULL(SUM(s.NUMBER), 0) successPrice,
+							s.PAY_METHOD_TYPE type,
+							IFNULL(SUM(s.INTO_NUMBER), 0) intoNumber
+						FROM
+							seller_buyer_coin_order s,
+							(SELECT @rownum := 0,@number :=0) AS t
+						WHERE
+							s.`STATUS` = 4
+						AND s.BUYER_ID = #{userId}
+						GROUP BY
+							s.PAY_METHOD_TYPE
+			UNION ALL
+				SELECT
+							COUNT(s.ORDER_ID) orderNumber,
+							@number cannelNumber,
+							@number nopayNumber,
+							@rownum  successNumber,
+							@number feePrice,
+							@number number,
+							@number successPrice,
+							s.PAY_METHOD_TYPE type,
+							IFNULL(SUM(s.INTO_NUMBER), 0) intoNumber
+						FROM
+							seller_buyer_coin_order s,
+							(SELECT @rownum := 0,@number :=0) AS t
+						WHERE
+							s.`STATUS` NOT in(1,4)
+						AND s.BUYER_ID =#{userId}
+						GROUP BY
+							s.PAY_METHOD_TYPE
+			UNION ALL
+				SELECT
+							@number orderNumber,
+							COUNT(s.ORDER_ID) cannelNumber,
+							@number nopayNumber,
+							@rownum  successNumber,
+							@number feePrice,
+							@number number,
+							@number successPrice,
+							s.PAY_METHOD_TYPE type,
+							IFNULL(SUM(s.INTO_NUMBER), 0) intoNumber
+
+						FROM
+							seller_buyer_coin_order s,
+							(SELECT @rownum := 0,@number :=0) AS t
+						WHERE
+							s.`STATUS`=7
+						AND s.BUYER_ID = #{userId}
+						GROUP BY
+							s.PAY_METHOD_TYPE
+				
+				) t
+			GROUP BY
+				t.type
+    </select>
+    
+    <select id="findSellerBuyCoinMerchant" resultType="map">
+    	 select
+        so.ORDER_ID as orderId,
+      	so.SERIALNO as serialno,
+      	so.BUYER_ID as buyerId,
+      	so.SELLER_ID as sellerId,
+      	so.USER_ORDER_NO as userOrderNo,
+      	so.CUID as cuid,
+      	so.NUMBER as number,
+      	so.STATUS as status,
+      	so.CREATE_TIME as createTime,
+      	so.UPDATE_TIME as updateTime,
+      	so.CANNEL_TIME as cannelTime,
+      	so.CLOSE_TIME as closeTime,
+      	so.PAY_METHOD_ID as payMethodId,
+      	so.PAY_METHOD_ACCOUNT as payMethodAccount,
+      	so.PAY_METHOD_TYPE as payMethodType,
+      	so.BONUS_NUMER as bonusNumber,
+      	so.FEE_PRICE as feePrice,
+      	so.IS_APPEAL as isAppeal,
+      	so.APPEAL_TIME as appealTime,
+      	so.MATCHING_TIME as matchingTime,
+      	so.NOTIFY_URL as notifyUrl,
+      	so.IS_SUCCESS as isSuccess,
+      	so.INTO_NUMBER as intoNumber,
+      	so.AGENT_FEE_PRICE as agentFeePrice,
+      	so.PAY_METHOD_NAME as payMethodName,
+      	so.PAY_METHOD_CARD_BANK as payMethodCardBank,
+      	so.PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName
+        from seller_buyer_coin_order so
+       where
+        so.BUYER_ID IN (
+			SELECT USER_ID from sys_user_recommend_relation where RECOMMEND_ID = #{userId}
+		)
+		<if test="account != null and account != ''">
+			and so.BUYER_ID = (select USER_ID FROM sys_user where ACCOUNT_CODE = #{account} )
+		</if>
+		<if test="serialno != null and serialno != ''">
+			and so.SERIALNO = #{serialno}
+		</if>
+		<if test="payMethodType != null and payMethodType != ''">
+			and so.PAY_METHOD_TYPE = #{payMethodType}
+		</if>
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          	and (so.CLOSE_TIME between #{beginTime} and #{endTime})
+      	</if>
+		order by so.CREATE_TIME desc 
+    </select>
+    
+    <select id="findPlatformRechargeStatistics" resultType="map">
+    	SELECT
+			  SUM(t.sellernumber) totalSellerNumber,
+				SUM(t.usernumber) totalUserNumber,
+				t.datatime
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.NUMBER),0) sellernumber,
+				SUM(@rownum) usernumber,
+				DATE_FORMAT(s.UPDATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+			FROM
+				seller_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2
+			 <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          	and (s.UPDATE_TIME between #{beginTime} and #{endTime})
+		     	</if>
+			GROUP BY
+				to_days (s.UPDATE_TIME)
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.NUMBER),0) usernumber,
+				DATE_FORMAT(s.UPDATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+			FROM
+				user_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2
+			  <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          	and (s.UPDATE_TIME between #{beginTime} and #{endTime})
+		     	</if>
+			GROUP BY
+				to_days (s.UPDATE_TIME)
+			) t
+			GROUP BY
+				to_days (t.datatime)
+			ORDER BY t.datatime DESC
+    </select>
+    
+    <select id="getPlatformRechargeStatisticsTotalByToday" resultType="map">
+    	SELECT
+			  SUM(t.sellernumber) totalSellerNumber,
+				SUM(t.usernumber) totalUserNumber
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.NUMBER),0) sellernumber,
+				SUM(@rownum) usernumber
+			FROM
+				seller_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 and  to_days(s.UPDATE_TIME) = to_days(NOW())
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.NUMBER),0) usernumber
+			FROM
+				user_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 and  to_days(s.UPDATE_TIME) = to_days(NOW())
+			) t
+    </select>
+    
+    <select id="getPlatformRechargeStatisticsTotal" resultType="map">
+    	SELECT
+			  SUM(t.sellernumber) totalRechargeSellerNumber,
+				SUM(t.usernumber) totalRechargeUserNumber
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.NUMBER),0) sellernumber,
+				SUM(@rownum) usernumber
+			FROM
+				seller_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.NUMBER),0) usernumber
+			FROM
+				user_charger_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 
+			) t
+    </select>
+    
+    <select id="findPlatformWithdrawStatistics" resultType="map">
+    	SELECT
+			  SUM(t.sellernumber) totalSellerNumber,
+				SUM(t.agentnumber) totalAgentNumber,
+				SUM(t.merchantnumber) totalMemrchantNumber,
+				t.datatime
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.TOTAL_NUMBER),0) sellernumber,
+				SUM(@rownum) agentnumber,
+				SUM(@rownum) merchantnumber,
+				DATE_FORMAT(s.UPDATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+			FROM
+				seller_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 
+			  <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          	and (s.UPDATE_TIME between #{beginTime} and #{endTime})
+		     	</if>
+			GROUP BY
+				DAY (s.UPDATE_TIME)
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) agentnumber,
+				SUM(@rownum) merchantnumber,
+				DATE_FORMAT(s.UPDATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 4 
+			  <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          	and (s.UPDATE_TIME between #{beginTime} and #{endTime})
+		     	</if>
+			GROUP BY
+				DAY (s.UPDATE_TIME)
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				SUM(@rownum) agentnumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) merchantnumber,
+				DATE_FORMAT(s.UPDATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 2
+			  <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+		          	and (s.UPDATE_TIME between #{beginTime}and #{endTime})
+		     	</if>
+			GROUP BY
+				DAY (s.UPDATE_TIME)
+			) t
+			GROUP BY
+				DAY (t.datatime)
+			ORDER BY t.datatime DESC
+    </select>
+    
+    <select id="getPlatformWithdrawStatisticsTotalByToday" resultType="map">
+    	SELECT
+			  IFNULL(SUM(t.sellernumber),0) totalSellerNumber,
+				IFNULL(SUM(t.agentnumber),0) totalAgentNumber,
+				IFNULL(SUM(t.merchantnumber),0) totalMemrchantNumber
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.TOTAL_NUMBER),0) sellernumber,
+				SUM(@rownum) agentnumber,
+				SUM(@rownum) merchantnumber
+			FROM
+				seller_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND to_days(s.UPDATE_TIME) = to_days(NOW())
+			GROUP BY
+				DAY (s.UPDATE_TIME)
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) agentnumber,
+				SUM(@rownum) merchantnumber
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 4 AND to_days(s.UPDATE_TIME) = to_days(NOW())
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				SUM(@rownum) agentnumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) merchantnumber
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 2 AND to_days(s.UPDATE_TIME) = to_days(NOW())
+			) t
+    </select>
+    
+    
+    <select id="getPlatformWithdrawStatisticsTotal" resultType="map">
+    	SELECT
+			  IFNULL(SUM(t.sellernumber),0) totalSellerNumberWithDraw,
+				IFNULL(SUM(t.agentnumber),0) totalAgentNumberWithDraw,
+				IFNULL(SUM(t.merchantnumber),0) totalMemrchantNumberWithDraw
+			FROM
+			(
+				SELECT
+				IFNULL(SUM(s.TOTAL_NUMBER),0) sellernumber,
+				SUM(@rownum) agentnumber,
+				SUM(@rownum) merchantnumber
+			FROM
+				seller_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 
+			GROUP BY
+				DAY (s.UPDATE_TIME)
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) agentnumber,
+				SUM(@rownum) merchantnumber
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 4 
+			UNION ALL
+				SELECT
+				SUM(@rownum) sellernumber,
+				SUM(@rownum) agentnumber,
+				IFNULL(SUM(s.TOTAL_NUMBER),0) merchantnumber
+			FROM
+				user_withdraw_coin_appeal_order s,
+				(
+					SELECT
+						@rownum := 0 
+				) AS t
+			WHERE
+			 s.`STATUS` = 2 AND s.ROLE_ID = 2
+			) t
+    </select>
+    
+    <select id="findPlatformOtcpMoneyStatistics" resultType="map">
+    	SELECT
+					IFNULL(SUM(t.sellerNumber),0) totalSellerNumber,
+					IFNULL(SUM(t.merchantNumber),0) totalMerchant,
+					IFNULL(SUM(t.agentNumber),0) totalAgent
+	FROM
+	(
+		SELECT
+		SUM(t.sellerNumber) sellerNumber,
+		SUM(t.merchantNumber) merchantNumber,
+		SUM(t.agentNumber) agentNumber
+	FROM
+	(			SELECT
+							SUM(
+									sw.AVAILABLE_BALANCE + sw.FROZEN_BALANCE 
+								) sellerNumber,
+								@rownum merchantNumber,
+								@rownum agentNumber
+							FROM
+								seller_wallter sw LEFT  JOIN seller sr ON sr.SELLER_ID = sw.SELLER_ID,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							sw.`CODE` = 'HC'
+						UNION ALL
+					SELECT
+								SUM(
+									sw.AVAILABLE_BALANCE + sw.FROZEN_BALANCE 
+								) sellerNumber,
+								@rownum merchantNumber,
+								@rownum agentNumber
+							FROM
+								sys_user_wallter sw 
+								INNER  JOIN sys_user sr ON sr.USER_ID = sw.USER_ID AND sr.ROLE_ID = 3,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							sw.TYPE = 2
+						
+	)t
+	UNION ALL
+							(
+								SELECT
+									@rownum sellerNumber,
+									SUM(
+										suw.AVAILABLE_BALANCE + suw.FROZEN_BALANCE
+									) merchantNumber,
+									@rownum agentNumber
+								FROM
+								sys_user_wallter suw	
+								INNER JOIN sys_user su ON su.USER_ID = suw.USER_ID  AND su.ROLE_ID = 2,
+								(SELECT @rownum := 0) AS t
+							WHERE
+								suw.TYPE = 2
+							)
+						UNION ALL
+							(
+								SELECT
+									@rownum sellerNumber,
+									@rownum merchantNumber,
+									SUM(
+										suw.AVAILABLE_BALANCE + suw.FROZEN_BALANCE
+									) agentNumber
+								FROM
+								sys_user_wallter suw 
+								inner JOIN sys_user su ON su.USER_ID = suw.USER_ID and su.ROLE_ID = 4,
+								(SELECT @rownum := 0) AS t
+							WHERE
+								suw.TYPE = 2
+							)
+	)t
+    </select>
+    
+    <select id="findPlatformBonusMoneyStatistics" resultType="map">
+    	SELECT
+			ROUND(
+				IFNULL(SUM(t.sellerBonusNumber), 0),
+				2
+			) totalSellerNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.accepterBonusNumber),
+					0
+				),
+				2
+			) totalAccepterNumber,
+			ROUND(
+				IFNULL(SUM(t.agentNumber), 0),
+				2
+			) totalAgentBonusNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.recommendBonusNumber),
+					0
+				),
+				2
+			) totalRecommendNumber,
+			t.datatime
+		FROM
+			(
+				SELECT
+					SUM(sbco.BONUS_NUMER) sellerBonusNumber,
+					@rownum recommendBonusNumber,
+					@rownum accepterBonusNumber,
+					@rownum agentNumber,
+					DATE_FORMAT(sbco.CREATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+				FROM
+					seller_buyer_coin_order sbco,
+					(SELECT @rownum := 0) AS t
+				WHERE
+				sbco.`STATUS` = 4
+				<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+					and (sbco.CREATE_TIME between #{beginTime} and #{endTime})
+				</if>
+				GROUP BY datatime
+				UNION ALL
+					SELECT
+						@rownum sellerBonusNumber,
+						@rownum recommendBonusNumber,
+						SUM(spafr.PRICE) accepterBonusNumber,
+						@rownum agentNumber,
+						DATE_FORMAT(spafr.CREATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+					FROM
+						seller_profit_account_flow_record spafr,
+						(SELECT @rownum := 0) AS t
+					WHERE
+						spafr.`CODE` = 2
+					AND spafr.SOURCE = '购买HC返利'
+					<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+						       and (spafr.CREATE_TIME between #{beginTime} and #{endTime})
+							</if>
+					GROUP BY datatime
+					UNION ALL
+						SELECT
+							@rownum sellerBonusNumber,
+							SUM(spafr.PRICE) recommendBonusNumber,
+							@rownum accepterBonusNumber,
+							@rownum agentNumber,
+							DATE_FORMAT(DATE_SUB(spafr.CREATE_TIME,INTERVAL 1 DAY), '%Y-%m-%d %H:%i:%S') datatime
+						FROM
+							seller_profit_account_flow_record spafr,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							spafr.`CODE` = 3
+						AND spafr.SOURCE = '团队返利'
+						<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+							and (spafr.CREATE_TIME between DATE_ADD(#{beginTime},INTERVAL 1 DAY) and DATE_ADD(#{endTime},INTERVAL 1 DAY))
+						</if>
+						GROUP BY datatime
+						UNION ALL
+							SELECT
+								@rownum sellerBonusNumber,
+								@rownum recommendBonusNumber,
+								@rownum accepterBonusNumber,
+								IFNULL(
+						SUM(
+							sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+						),
+						0
+					) agentNumber,
+						DATE_FORMAT(sbco.CREATE_TIME, '%Y-%m-%d %H:%i:%S') datatime
+							FROM
+								seller_buyer_coin_order sbco,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							sbco.`STATUS` = 4
+						<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+						      and (sbco.CREATE_TIME between #{beginTime} and #{endTime})
+						  </if>
+					GROUP BY datatime
+			) t
+		GROUP BY t.datatime
+			ORDER BY t.datatime DESC
+    </select>
+    
+    <select id="getPlatformBonusMoneyStatisticsTotalByToday" resultType="map">
+    	SELECT
+			ROUND(
+				IFNULL(SUM(t.sellerBonusNumber), 0),
+				2
+			) totalSellerBonusNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.accepterBonusNumber),
+					0
+				),
+				2
+			) totalAccepterBonusNumber,
+			ROUND(
+				IFNULL(SUM(t.agentNumber), 0),
+				2
+			) totalAgentNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.recommendBonusNumber),
+					0
+				),
+				2
+			) totalRecommendBonusNumber
+		FROM
+			(
+				SELECT
+					SUM(sbco.BONUS_NUMER) sellerBonusNumber,
+					@rownum recommendBonusNumber,
+					@rownum accepterBonusNumber,
+					@rownum agentNumber
+				FROM
+					seller_buyer_coin_order sbco,
+					(SELECT @rownum := 0) AS t
+				WHERE
+				sbco.`STATUS` = 4
+				AND to_days(sbco.CREATE_TIME) = to_days(NOW())
+				UNION ALL
+					SELECT
+						@rownum sellerBonusNumber,
+						@rownum recommendBonusNumber,
+						SUM(spafr.PRICE) accepterBonusNumber,
+						@rownum agentNumber
+					FROM
+						seller_profit_account_flow_record spafr,
+						(SELECT @rownum := 0) AS t
+					WHERE
+						spafr.`CODE` = 2
+					AND spafr.SOURCE = '购买HC返利'
+					AND to_days(spafr.CREATE_TIME) = to_days(NOW())
+					UNION ALL
+						SELECT
+							@rownum sellerBonusNumber,
+							SUM(spafr.PRICE) recommendBonusNumber,
+							@rownum accepterBonusNumber,
+							@rownum agentNumber
+						FROM
+							seller_profit_account_flow_record spafr,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							spafr.`CODE` = 3
+						AND spafr.SOURCE = '团队返利'
+						AND to_days(spafr.CREATE_TIME) = to_days(DATE_ADD(NOW(),INTERVAL 1 DAY))
+						UNION ALL
+							SELECT
+								@rownum sellerBonusNumber,
+								@rownum recommendBonusNumber,
+								@rownum accepterBonusNumber,
+								IFNULL(
+						SUM(
+							sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+						),
+						0
+					) agentNumber
+							FROM
+								seller_buyer_coin_order sbco,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							sbco.`STATUS` = 4
+					AND to_days(sbco.CREATE_TIME) = to_days(NOW())
+			) t
+    </select>
+    
+    
+     <select id="getPlatformBonusMoneyStatisticsTotal" resultType="map">
+    	SELECT
+			ROUND(
+				IFNULL(SUM(t.sellerBonusNumber), 0),
+				2
+			) totalSellerNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.accepterBonusNumber),
+					0
+				),
+				2
+			) totalAccepterNumber,
+			ROUND(
+				IFNULL(SUM(t.agentNumber), 0),
+				2
+			) totalAgentBonusNumber,
+			ROUND(
+				IFNULL(
+					SUM(t.recommendBonusNumber),
+					0
+				),
+				2
+			) totalRecommendNumber
+		FROM
+			(
+				SELECT
+					SUM(sbco.BONUS_NUMER) sellerBonusNumber,
+					@rownum recommendBonusNumber,
+					@rownum accepterBonusNumber,
+					@rownum agentNumber
+				FROM
+					seller_buyer_coin_order sbco,
+					(SELECT @rownum := 0) AS t
+				WHERE
+				sbco.`STATUS` = 4
+				UNION ALL
+					SELECT
+						@rownum sellerBonusNumber,
+						@rownum recommendBonusNumber,
+						SUM(spafr.PRICE) accepterBonusNumber,
+						@rownum agentNumber
+					FROM
+						seller_profit_account_flow_record spafr,
+						(SELECT @rownum := 0) AS t
+					WHERE
+						spafr.`CODE` = 2
+					AND spafr.SOURCE = '购买HC返利'
+					UNION ALL
+						SELECT
+							@rownum sellerBonusNumber,
+							SUM(spafr.PRICE) recommendBonusNumber,
+							@rownum accepterBonusNumber,
+							@rownum agentNumber
+						FROM
+							seller_profit_account_flow_record spafr,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							spafr.`CODE` = 3
+						AND spafr.SOURCE = '团队返利'
+						UNION ALL
+							SELECT
+								@rownum sellerBonusNumber,
+								@rownum recommendBonusNumber,
+								@rownum accepterBonusNumber,
+								IFNULL(
+						SUM(
+							sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+						),
+						0
+					) agentNumber
+							FROM
+								seller_buyer_coin_order sbco,
+							(SELECT @rownum := 0) AS t
+						WHERE
+							sbco.`STATUS` = 4
+			) t
+    </select>
+    
+    <select id="findPlatformFeeBonusStatistics" resultType="map">
+		SELECT
+		t.datatime,
+		ROUND(SUM(t.totalNumber), 2) totalNumber,
+		ROUND(
+		SUM(t.totalSellerBonusNumber),
+		2
+		) totalSellerBonusNumber,
+		ROUND(SUM(t.merchantFeeRatio), 2) totalMerchantFeeRatio,
+		ROUND(
+		SUM(t.totalAgentBounsNumber),
+		2
+		) totalAgentBounsNumber,
+		ROUND(
+		SUM(t.totalTeamBonusNumber),
+		2
+		) totalTeamBonusNumber,
+		ROUND(
+		SUM(t.totalAccepterBonusNumber),
+		2
+		) totalAccepterBonusNumber,
+		ROUND(
+		SUM(t.totalOtcFeePriceSeller),
+		2
+		) totalOtcFeePriceSeller,
+		ROUND(
+		SUM(t.totalOtcFeePriceAgent),
+		2
+		) totalOtcFeePriceAgent,
+		ROUND(
+		SUM(t.totalOtcFeePriceMerchant),
+		2
+		) totalOtcFeePriceMerchant,
+		ROUND(SUM(t.totalProfit), 2) totalProfit,
+		ROUND(
+		SUM(t.totalSupReturnNumber),
+		2
+		) totalSupReturnNumber,
+		ROUND(
+		SUM(t.totalSellerExchangeFee),
+		2
+		) totalSellerExchangeFee,
+		ROUND(
+		SUM(t.totalAgentExchangeFee),
+		2
+		) totalAgentExchangeFee,
+		ROUND(
+		SUM(t.totalMerchantExchangeFee),
+		2
+		) totalMerchantExchangeFee,
+		ROUND(
+		SUM(t.totalSellerWithdrawFee),
+		2
+		) totalSellerWithdrawFee,
+		ROUND(
+		SUM(t.totalAgentWithdrawFee),
+		2
+		) totalAgentWithdrawFee,
+		ROUND(
+		SUM(t.totalMerchantWithdrawFee),
+		2
+		) totalMerchantWithdrawFee
+		FROM
+		(
+		SELECT
+		IFNULL(SUM(sbco.NUMBER), 0) totalNumber,
+		IFNULL(SUM(sbco.BONUS_NUMER), 0) totalSellerBonusNumber,
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.FEE_PRICE / 100
+		),
+		0
+		) merchantFeeRatio,
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+		),
+		0
+		) totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.FEE_PRICE / 100
+		),
+		0
+		) - (
+		IFNULL(SUM(sbco.BONUS_NUMER), 0)
+		) - (
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+		),
+		0
+		)
+		)
+		) totalProfit,
+		DATE_FORMAT(
+		sbco.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_buyer_coin_order sbco,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		sbco.`STATUS` = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (sbco.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		IFNULL(
+		SUM(
+		soo.NUMBER * soo.FEE_RATIO / 100
+		),
+		0
+		) totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		soo.NUMBER * soo.FEE_RATIO / 100
+		),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 1,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (oo.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		) totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 3
+		AND (
+		ISNULL(soo.AUTO_MERCHANT)
+		OR soo.AUTO_MERCHANT = 0
+		),
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (oo.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		IFNULL(SUM(spafr.PRICE), 0) totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		DATE_SUB(
+		spafr.CREATE_TIME,
+		INTERVAL 1 DAY
+		),
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 3
+		AND spafr.SOURCE = '团队返利'
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (spafr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		)
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		IFNULL(SUM(spafr.PRICE), 0) totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 2
+		AND spafr.SOURCE = '购买HC返利'
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (spafr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		IFNULL(SUM(spafr.PRICE), 0) totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 3
+		AND spafr.SOURCE = '推荐返利'
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (spafr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(soo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 4
+		AND (
+		ISNULL(soo.AUTO_MERCHANT)
+		OR soo.AUTO_MERCHANT = 0
+		),
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (oo.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 1
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 2
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		SUM(
+		(
+		CASE
+		WHEN exr.COIN = 'HC' THEN
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+		0
+		)
+		ELSE
+		IFNULL(
+		exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+		0
+		)
+		END
+		)
+		) totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		user_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		AND exr.ROLE_ID = 4
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		(
+		IFNULL(
+		SUM(
+		exr.FEE_PRICE * exr.EXCHANGE_RATIO
+		),
+		0
+		)
+		) totalMerchantWithdrawFee
+		FROM
+		user_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		AND exr.ROLE_ID = 2
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			and (exr.CREATE_TIME between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		GROUP BY
+		datatime
+		) t
+		GROUP BY
+		datatime
+		ORDER BY
+		t.datatime DESC
+	</select>
+
+    <select id="getPlatformFeeBonusStatisticsTotalByToday" resultType="map">
+		SELECT
+	t.datatime,
+	ROUND(SUM(t.totalNumber), 2) totalNumber,
+	ROUND(
+		SUM(t.totalSellerBonusNumber),
+		2
+	) totalSellerBonusNumber,
+	ROUND(SUM(t.merchantFeeRatio), 2) totalMerchantFeeRatio,
+	ROUND(
+		SUM(t.totalAgentBounsNumber),
+		2
+	) totalAgentBounsNumber,
+	ROUND(
+		SUM(t.totalTeamBonusNumber),
+		2
+	) totalTeamBonusNumber,
+	ROUND(
+		SUM(t.totalAccepterBonusNumber),
+		2
+	) totalAccepterBonusNumber,
+	ROUND(
+		SUM(t.totalOtcFeePriceSeller),
+		2
+	) totalOtcFeePriceSeller,
+	ROUND(
+		SUM(t.totalOtcFeePriceAgent),
+		2
+	) totalOtcFeePriceAgent,
+	ROUND(
+		SUM(t.totalOtcFeePriceMerchant),
+		2
+	) totalOtcFeePriceMerchant,
+	ROUND(SUM(t.totalProfit), 2) totalProfit,
+	ROUND(
+		SUM(t.totalSupReturnNumber),
+		2
+	) totalSupReturnNumber,
+	ROUND(
+		SUM(t.totalSellerExchangeFee),
+		2
+	) totalSellerExchangeFee,
+	ROUND(
+		SUM(t.totalAgentExchangeFee),
+		2
+	) totalAgentExchangeFee,
+	ROUND(
+		SUM(t.totalMerchantExchangeFee),
+		2
+	) totalMerchantExchangeFee,
+	ROUND(
+		SUM(t.totalSellerWithdrawFee),
+		2
+	) totalSellerWithdrawFee,
+	ROUND(
+		SUM(t.totalAgentWithdrawFee),
+		2
+	) totalAgentWithdrawFee,
+	ROUND(
+		SUM(t.totalMerchantWithdrawFee),
+		2
+	) totalMerchantWithdrawFee
+FROM
+	(
+		SELECT
+			IFNULL(SUM(sbco.NUMBER), 0) totalNumber,
+			IFNULL(SUM(sbco.BONUS_NUMER), 0) totalSellerBonusNumber,
+			IFNULL(
+				SUM(
+					sbco.NUMBER * sbco.FEE_PRICE / 100
+				),
+				0
+			) merchantFeeRatio,
+			IFNULL(
+				SUM(
+					sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+				),
+				0
+			) totalAgentBounsNumber,
+			@rownum totalTeamBonusNumber,
+			@rownum totalAccepterBonusNumber,
+			@rownum totalOtcFeePriceSeller,
+			@rownum totalOtcFeePriceMerchant,
+			@rownum totalOtcFeePriceAgent,
+			@rownum totalSupReturnNumber,
+			(
+				IFNULL(
+					SUM(
+						sbco.NUMBER * sbco.FEE_PRICE / 100
+					),
+					0
+				) - (
+					IFNULL(SUM(sbco.BONUS_NUMER), 0)
+				) - (
+					IFNULL(
+						SUM(
+							sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+						),
+						0
+					)
+				)
+			) totalProfit,
+			DATE_FORMAT(
+				sbco.CREATE_TIME,
+				'%Y-%m-%d'
+			) datatime,
+			@rownum totalSellerExchangeFee,
+			@rownum totalAgentExchangeFee,
+			@rownum totalMerchantExchangeFee,
+			@rownum totalSellerWithdrawFee,
+			@rownum totalAgentWithdrawFee,
+			@rownum totalMerchantWithdrawFee
+		FROM
+			seller_buyer_coin_order sbco,
+			(SELECT @rownum := 0) AS t
+		WHERE
+			sbco.`STATUS` = 4
+		AND to_days(sbco.CREATE_TIME) = to_days(NOW())
+		GROUP BY
+			datatime
+		UNION ALL
+			SELECT
+				@rownum totalNumber,
+				@rownum totalSellerBonusNumber,
+				@rownum merchantFeeRatio,
+				@rownum totalAgentBounsNumber,
+				@rownum totalTeamBonusNumber,
+				@rownum totalAccepterBonusNumber,
+				IFNULL(
+					SUM(
+						soo.NUMBER * soo.FEE_RATIO / 100
+					),
+					0
+				) totalOtcFeePriceSeller,
+				@rownum totalOtcFeePriceMerchant,
+				@rownum totalOtcFeePriceAgent,
+				@rownum totalSupReturnNumber,
+				(
+					IFNULL(
+						SUM(
+							soo.NUMBER * soo.FEE_RATIO / 100
+						),
+						0
+					)
+				) totalProfit,
+				DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+				@rownum totalSellerExchangeFee,
+				@rownum totalAgentExchangeFee,
+				@rownum totalMerchantExchangeFee,
+				@rownum totalSellerWithdrawFee,
+				@rownum totalAgentWithdrawFee,
+				@rownum totalMerchantWithdrawFee
+			FROM
+				otcp_order oo
+			INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+			AND soo.TYPE = 1,
+			(SELECT @rownum := 0) AS t
+		WHERE
+			oo.`STATUS` = 4
+		AND to_days(oo.CREATE_TIME) = to_days(NOW())
+		GROUP BY
+			datatime
+		UNION ALL
+			SELECT
+				@rownum totalNumber,
+				@rownum totalSellerBonusNumber,
+				@rownum merchantFeeRatio,
+				@rownum totalAgentBounsNumber,
+				@rownum totalTeamBonusNumber,
+				@rownum totalAccepterBonusNumber,
+				@rownum totalOtcFeePriceSeller,
+				SUM(
+					IFNULL(
+						soo.NUMBER * soo.FEE_RATIO / 100,
+						0
+					)
+				) totalOtcFeePriceMerchant,
+				@rownum totalOtcFeePriceAgent,
+				@rownum totalSupReturnNumber,
+				(
+					IFNULL(
+						soo.NUMBER * soo.FEE_RATIO / 100,
+						0
+					)
+				) totalProfit,
+				DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+				@rownum totalSellerExchangeFee,
+				@rownum totalAgentExchangeFee,
+				@rownum totalMerchantExchangeFee,
+				@rownum totalSellerWithdrawFee,
+				@rownum totalAgentWithdrawFee,
+				@rownum totalMerchantWithdrawFee
+			FROM
+				otcp_order oo
+			INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+			AND soo.TYPE = 3
+			AND (
+				ISNULL(soo.AUTO_MERCHANT)
+				OR soo.AUTO_MERCHANT = 0
+			),
+			(SELECT @rownum := 0) AS t
+		WHERE
+			oo.`STATUS` = 4
+		AND to_days(oo.CREATE_TIME) = to_days(NOW())
+		GROUP BY
+			datatime
+		UNION ALL
+			SELECT
+				@rownum totalNumber,
+				@rownum totalSellerBonusNumber,
+				@rownum merchantFeeRatio,
+				@rownum totalAgentBounsNumber,
+				IFNULL(SUM(spafr.PRICE), 0) totalTeamBonusNumber,
+				@rownum totalAccepterBonusNumber,
+				@rownum totalOtcFeePriceSeller,
+				@rownum totalOtcFeePriceMerchant,
+				@rownum totalOtcFeePriceAgent,
+				@rownum totalSupReturnNumber,
+				(
+					- IFNULL(SUM(spafr.PRICE), 0)
+				) totalProfit,
+				DATE_FORMAT(
+					DATE_SUB(
+						spafr.CREATE_TIME,
+						INTERVAL 1 DAY
+					),
+					'%Y-%m-%d'
+				) datatime,
+				@rownum totalSellerExchangeFee,
+				@rownum totalAgentExchangeFee,
+				@rownum totalMerchantExchangeFee,
+				@rownum totalSellerWithdrawFee,
+				@rownum totalAgentWithdrawFee,
+				@rownum totalMerchantWithdrawFee
+			FROM
+				seller_profit_account_flow_record spafr,
+				(SELECT @rownum := 0) AS t
+			WHERE
+				spafr.`CODE` = 3
+			AND spafr.SOURCE = '团队返利'
+			AND to_days(spafr.CREATE_TIME) = to_days(
+				DATE_ADD(NOW(), INTERVAL 1 DAY)
+			)
+			GROUP BY
+				DATE_FORMAT(
+					spafr.CREATE_TIME,
+					'%Y-%m-%d'
+				)
+			UNION ALL
+				SELECT
+					@rownum totalNumber,
+					@rownum totalSellerBonusNumber,
+					@rownum merchantFeeRatio,
+					@rownum totalAgentBounsNumber,
+					@rownum totalTeamBonusNumber,
+					IFNULL(SUM(spafr.PRICE), 0) totalAccepterBonusNumber,
+					@rownum totalOtcFeePriceSeller,
+					@rownum totalOtcFeePriceMerchant,
+					@rownum totalOtcFeePriceAgent,
+					@rownum totalSupReturnNumber,
+					SUM(
+						- IFNULL(SUM(spafr.PRICE), 0)
+					) totalProfit,
+					DATE_FORMAT(
+						spafr.CREATE_TIME,
+						'%Y-%m-%d'
+					) datatime,
+					@rownum totalSellerExchangeFee,
+					@rownum totalAgentExchangeFee,
+					@rownum totalMerchantExchangeFee,
+					@rownum totalSellerWithdrawFee,
+					@rownum totalAgentWithdrawFee,
+					@rownum totalMerchantWithdrawFee
+				FROM
+					seller_profit_account_flow_record spafr,
+					(SELECT @rownum := 0) AS t
+				WHERE
+					spafr.`CODE` = 2
+				AND spafr.SOURCE = '购买HC返利'
+				AND to_days(spafr.CREATE_TIME) = to_days(NOW())
+				GROUP BY
+					datatime
+				UNION ALL
+					SELECT
+						@rownum totalNumber,
+						@rownum totalSellerBonusNumber,
+						@rownum merchantFeeRatio,
+						@rownum totalAgentBounsNumber,
+						@rownum totalTeamBonusNumber,
+						@rownum totalAccepterBonusNumber,
+						@rownum totalOtcFeePriceSeller,
+						@rownum totalOtcFeePriceMerchant,
+						@rownum totalOtcFeePriceAgent,
+						IFNULL(SUM(spafr.PRICE), 0) totalSupReturnNumber,
+						SUM(
+							- IFNULL(SUM(spafr.PRICE), 0)
+						) totalProfit,
+						DATE_FORMAT(
+							spafr.CREATE_TIME,
+							'%Y-%m-%d'
+						) datatime,
+						@rownum totalSellerExchangeFee,
+						@rownum totalAgentExchangeFee,
+						@rownum totalMerchantExchangeFee,
+						@rownum totalSellerWithdrawFee,
+						@rownum totalAgentWithdrawFee,
+						@rownum totalMerchantWithdrawFee
+					FROM
+						seller_profit_account_flow_record spafr,
+						(SELECT @rownum := 0) AS t
+					WHERE
+						spafr.`CODE` = 3
+					AND spafr.SOURCE = '推荐返利'
+					AND to_days(spafr.CREATE_TIME) = to_days(NOW())
+					GROUP BY
+						datatime
+					UNION ALL
+						SELECT
+							@rownum totalNumber,
+							@rownum totalSellerBonusNumber,
+							@rownum merchantFeeRatio,
+							@rownum totalAgentBounsNumber,
+							@rownum totalTeamBonusNumber,
+							@rownum totalAccepterBonusNumber,
+							@rownum totalOtcFeePriceSeller,
+							@rownum totalOtcFeePriceMerchant,
+							SUM(
+								IFNULL(
+									soo.NUMBER * soo.FEE_RATIO / 100,
+									0
+								)
+							) totalOtcFeePriceAgent,
+							@rownum totalSupReturnNumber,
+							SUM(
+								IFNULL(
+									soo.NUMBER * soo.FEE_RATIO / 100,
+									0
+								)
+							) totalProfit,
+							DATE_FORMAT(soo.CREATE_TIME, '%Y-%m-%d') datatime,
+							@rownum totalSellerExchangeFee,
+							@rownum totalAgentExchangeFee,
+							@rownum totalMerchantExchangeFee,
+							@rownum totalSellerWithdrawFee,
+							@rownum totalAgentWithdrawFee,
+							@rownum totalMerchantWithdrawFee
+						FROM
+							otcp_order oo
+						INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+						AND soo.TYPE = 4
+						AND (
+							ISNULL(soo.AUTO_MERCHANT)
+							OR soo.AUTO_MERCHANT = 0
+						),
+						(SELECT @rownum := 0) AS t
+					WHERE
+						oo.`STATUS` = 4
+					AND to_days(oo.CREATE_TIME) = to_days(NOW())
+					GROUP BY
+						datatime
+					UNION ALL
+						SELECT
+							@rownum totalNumber,
+							@rownum totalSellerBonusNumber,
+							@rownum merchantFeeRatio,
+							@rownum totalAgentBounsNumber,
+							@rownum totalTeamBonusNumber,
+							@rownum totalAccepterBonusNumber,
+							@rownum totalOtcFeePriceSeller,
+							@rownum totalOtcFeePriceMerchant,
+							@rownum totalOtcFeePriceAgent,
+							@rownum totalSupReturnNumber,
+							SUM(
+								(
+									CASE
+									WHEN exr.COIN = 'HC' THEN
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+											0
+										)
+									ELSE
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+											0
+										)
+									END
+								)
+							) totalProfit,
+							DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+							SUM(
+								(
+									CASE
+									WHEN exr.COIN = 'HC' THEN
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+											0
+										)
+									ELSE
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+											0
+										)
+									END
+								)
+							) totalSellerExchangeFee,
+						@rownum totalAgentExchangeFee,
+						@rownum totalMerchantExchangeFee,
+						@rownum totalSellerWithdrawFee,
+						@rownum totalAgentWithdrawFee,
+						@rownum totalMerchantWithdrawFee
+					FROM
+						exchange_order_record exr,
+						(SELECT @rownum := 0) AS t
+					WHERE
+						exr.ROLE = 1
+						AND to_days(exr.CREATE_TIME) = to_days(NOW())
+						GROUP BY
+							datatime
+						UNION ALL
+							SELECT
+							@rownum totalNumber,
+							@rownum totalSellerBonusNumber,
+							@rownum merchantFeeRatio,
+							@rownum totalAgentBounsNumber,
+							@rownum totalTeamBonusNumber,
+							@rownum totalAccepterBonusNumber,
+							@rownum totalOtcFeePriceSeller,
+							@rownum totalOtcFeePriceMerchant,
+							@rownum totalOtcFeePriceAgent,
+							@rownum totalSupReturnNumber,
+							SUM(
+								(
+									CASE
+									WHEN exr.COIN = 'HC' THEN
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+											0
+										)
+									ELSE
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+											0
+										)
+									END
+								)
+							) totalProfit,
+						DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+						@rownum totalSellerExchangeFee,
+						@rownum totalAgentExchangeFee,
+						SUM(
+								(
+									CASE
+									WHEN exr.COIN = 'HC' THEN
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+											0
+										)
+									ELSE
+										IFNULL(
+											exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+											0
+										)
+									END
+								)
+							) totalMerchantExchangeFee,
+					@rownum totalSellerWithdrawFee,
+					@rownum totalAgentWithdrawFee,
+					@rownum totalMerchantWithdrawFee
+				FROM
+					exchange_order_record exr,
+					(SELECT @rownum := 0) AS t
+				WHERE
+					exr.ROLE = 2
+							AND to_days(exr.CREATE_TIME) = to_days(NOW())
+							GROUP BY
+								datatime
+							UNION ALL
+								SELECT
+										@rownum totalNumber,
+										@rownum totalSellerBonusNumber,
+										@rownum merchantFeeRatio,
+										@rownum totalAgentBounsNumber,
+										@rownum totalTeamBonusNumber,
+										@rownum totalAccepterBonusNumber,
+										@rownum totalOtcFeePriceSeller,
+										@rownum totalOtcFeePriceMerchant,
+										@rownum totalOtcFeePriceAgent,
+										@rownum totalSupReturnNumber,
+										SUM(
+												(
+													CASE
+													WHEN exr.COIN = 'HC' THEN
+														IFNULL(
+															exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+															0
+														)
+													ELSE
+														IFNULL(
+															exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+															0
+														)
+													END
+												)
+											) totalProfit,
+									DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+									@rownum totalSellerExchangeFee,
+									SUM(
+												(
+													CASE
+													WHEN exr.COIN = 'HC' THEN
+														IFNULL(
+															exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+															0
+														)
+													ELSE
+														IFNULL(
+															exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+															0
+														)
+													END
+												)
+											) totalAgentExchangeFee,
+								@rownum totalMerchantExchangeFee,
+								@rownum totalSellerWithdrawFee,
+								@rownum totalAgentWithdrawFee,
+								@rownum totalMerchantWithdrawFee
+							FROM
+								exchange_order_record exr,
+								(SELECT @rownum := 0) AS t
+							WHERE
+								exr.ROLE = 4
+								AND to_days(exr.CREATE_TIME) = to_days(NOW())
+								GROUP BY
+									datatime
+								UNION ALL
+									SELECT
+									@rownum totalNumber,
+									@rownum totalSellerBonusNumber,
+									@rownum merchantFeeRatio,
+									@rownum totalAgentBounsNumber,
+									@rownum totalTeamBonusNumber,
+									@rownum totalAccepterBonusNumber,
+									@rownum totalOtcFeePriceSeller,
+									@rownum totalOtcFeePriceMerchant,
+									@rownum totalOtcFeePriceAgent,
+									@rownum totalSupReturnNumber,
+									(
+										IFNULL(
+											SUM(
+												exr.FEE_PRICE * exr.EXCHANGE_RATIO
+											),
+											0
+										)
+									) totalProfit,
+									DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+									@rownum totalSellerExchangeFee,
+									@rownum totalAgentExchangeFee,
+									@rownum totalMerchantExchangeFee,
+									(
+										IFNULL(
+											SUM(
+												exr.FEE_PRICE * exr.EXCHANGE_RATIO
+											),
+											0
+										)
+									) totalSellerWithdrawFee,
+									@rownum totalAgentWithdrawFee,
+									@rownum totalMerchantWithdrawFee
+								FROM
+									seller_withdraw_coin_appeal_order exr,
+									(SELECT @rownum := 0) AS t
+								WHERE
+									exr.`STATUS` = 2
+									AND to_days(exr.CREATE_TIME) = to_days(NOW())
+									GROUP BY
+										datatime
+									UNION ALL
+										SELECT
+											@rownum totalNumber,
+											@rownum totalSellerBonusNumber,
+											@rownum merchantFeeRatio,
+											@rownum totalAgentBounsNumber,
+											@rownum totalTeamBonusNumber,
+											@rownum totalAccepterBonusNumber,
+											@rownum totalOtcFeePriceSeller,
+											@rownum totalOtcFeePriceMerchant,
+											@rownum totalOtcFeePriceAgent,
+											@rownum totalSupReturnNumber,
+											(
+												IFNULL(
+													SUM(
+														exr.FEE_PRICE * exr.EXCHANGE_RATIO
+													),
+													0
+												)
+											) totalProfit,
+											DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+											@rownum totalSellerExchangeFee,
+											@rownum totalAgentExchangeFee,
+											@rownum totalMerchantExchangeFee,
+											@rownum totalSellerWithdrawFee,
+											(
+												IFNULL(
+													SUM(
+														exr.FEE_PRICE * exr.EXCHANGE_RATIO
+													),
+													0
+												)
+											) totalAgentWithdrawFee,
+											@rownum totalMerchantWithdrawFee
+										FROM
+											user_withdraw_coin_appeal_order exr,
+											(SELECT @rownum := 0) AS t
+										WHERE
+											exr.`STATUS` = 2
+										AND exr.ROLE_ID = 4
+										AND to_days(exr.CREATE_TIME) = to_days(NOW())
+										GROUP BY
+											datatime
+										UNION ALL
+										SELECT
+											@rownum totalNumber,
+											@rownum totalSellerBonusNumber,
+											@rownum merchantFeeRatio,
+											@rownum totalAgentBounsNumber,
+											@rownum totalTeamBonusNumber,
+											@rownum totalAccepterBonusNumber,
+											@rownum totalOtcFeePriceSeller,
+											@rownum totalOtcFeePriceMerchant,
+											@rownum totalOtcFeePriceAgent,
+											@rownum totalSupReturnNumber,
+											(
+												IFNULL(
+													SUM(
+														exr.FEE_PRICE * exr.EXCHANGE_RATIO
+													),
+													0
+												)
+											) totalProfit,
+											DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+											@rownum totalSellerExchangeFee,
+											@rownum totalAgentExchangeFee,
+											@rownum totalMerchantExchangeFee,
+											@rownum totalSellerWithdrawFee,
+											@rownum totalAgentWithdrawFee,
+											(
+												IFNULL(
+													SUM(
+														exr.FEE_PRICE * exr.EXCHANGE_RATIO
+													),
+													0
+												)
+											) totalMerchantWithdrawFee
+										FROM
+											user_withdraw_coin_appeal_order exr,
+											(SELECT @rownum := 0) AS t
+										WHERE
+											exr.`STATUS` = 2
+										AND exr.ROLE_ID = 2
+											AND to_days(exr.CREATE_TIME) = to_days(NOW())
+											GROUP BY
+												datatime
+	) t
+	</select>
+    
+    
+     <select id="getPlatformFeeBonusStatisticsTotal" resultType="map">
+
+		SELECT
+		t.datatime,
+		ROUND(SUM(t.totalNumber), 2) totalNumber,
+		ROUND(
+		SUM(t.totalSellerBonusNumber),
+		2
+		) totalSellerBonusNumber,
+		ROUND(SUM(t.merchantFeeRatio), 2) totalMerchantFeeRatio,
+		ROUND(
+		SUM(t.totalAgentBounsNumber),
+		2
+		) totalAgentBounsNumber,
+		ROUND(
+		SUM(t.totalTeamBonusNumber),
+		2
+		) totalTeamBonusNumber,
+		ROUND(
+		SUM(t.totalAccepterBonusNumber),
+		2
+		) totalAccepterBonusNumber,
+		ROUND(
+		SUM(t.totalOtcFeePriceSeller),
+		2
+		) totalOtcFeePriceSeller,
+		ROUND(
+		SUM(t.totalOtcFeePriceAgent),
+		2
+		) totalOtcFeePriceAgent,
+		ROUND(
+		SUM(t.totalOtcFeePriceMerchant),
+		2
+		) totalOtcFeePriceMerchant,
+		ROUND(SUM(t.totalProfit), 2) totalProfit,
+		ROUND(
+		SUM(t.totalSupReturnNumber),
+		2
+		) totalSupReturnNumber,
+		ROUND(
+		SUM(t.totalSellerExchangeFee),
+		2
+		) totalSellerExchangeFee,
+		ROUND(
+		SUM(t.totalAgentExchangeFee),
+		2
+		) totalAgentExchangeFee,
+		ROUND(
+		SUM(t.totalMerchantExchangeFee),
+		2
+		) totalMerchantExchangeFee,
+		ROUND(
+		SUM(t.totalSellerWithdrawFee),
+		2
+		) totalSellerWithdrawFee,
+		ROUND(
+		SUM(t.totalAgentWithdrawFee),
+		2
+		) totalAgentWithdrawFee,
+		ROUND(
+		SUM(t.totalMerchantWithdrawFee),
+		2
+		) totalMerchantWithdrawFee
+		FROM
+		(
+		SELECT
+		IFNULL(SUM(sbco.NUMBER), 0) totalNumber,
+		IFNULL(SUM(sbco.BONUS_NUMER), 0) totalSellerBonusNumber,
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.FEE_PRICE / 100
+		),
+		0
+		) merchantFeeRatio,
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+		),
+		0
+		) totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.FEE_PRICE / 100
+		),
+		0
+		) - (
+		IFNULL(SUM(sbco.BONUS_NUMER), 0)
+		) - (
+		IFNULL(
+		SUM(
+		sbco.NUMBER * sbco.AGENT_FEE_PRICE / 100
+		),
+		0
+		)
+		)
+		) totalProfit,
+		DATE_FORMAT(
+		sbco.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_buyer_coin_order sbco,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		sbco.`STATUS` = 4
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		IFNULL(
+		SUM(
+		soo.NUMBER * soo.FEE_RATIO / 100
+		),
+		0
+		) totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(
+		soo.NUMBER * soo.FEE_RATIO / 100
+		),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 1,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(oo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 3
+		AND (
+		ISNULL(soo.AUTO_MERCHANT)
+		OR soo.AUTO_MERCHANT = 0
+		),
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		IFNULL(SUM(spafr.PRICE), 0) totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		DATE_SUB(
+		spafr.CREATE_TIME,
+		INTERVAL 1 DAY
+		),
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 3
+		AND spafr.SOURCE = '团队返利'
+
+		GROUP BY
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		)
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		IFNULL(SUM(spafr.PRICE), 0) totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 2
+		AND spafr.SOURCE = '购买HC返利'
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		IFNULL(SUM(spafr.PRICE), 0) totalSupReturnNumber,
+		(
+		- IFNULL(SUM(spafr.PRICE), 0)
+		) totalProfit,
+		DATE_FORMAT(
+		spafr.CREATE_TIME,
+		'%Y-%m-%d'
+		) datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_profit_account_flow_record spafr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		spafr.`CODE` = 3
+		AND spafr.SOURCE = '推荐返利'
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+		IFNULL(
+		SUM(soo.NUMBER * soo.FEE_RATIO / 100),
+		0
+		)
+		) totalProfit,
+		DATE_FORMAT(soo.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		otcp_order oo
+		INNER JOIN sell_otcp_order soo ON oo.OTC_ORDER_ID = soo.ORDER_ID
+		AND soo.TYPE = 4
+		AND (
+		ISNULL(soo.AUTO_MERCHANT)
+		OR soo.AUTO_MERCHANT = 0
+		),
+		(SELECT @rownum := 0) AS t
+		WHERE
+		oo.`STATUS` = 4
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 1
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 2
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		SUM(
+			(
+				CASE
+				WHEN exr.COIN = 'HC'
+				THEN
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE * exr.`CODE` / 100,
+						0
+					)
+				ELSE
+					IFNULL(
+						exr.TOTAL_NUMBER * exr.FEE_PRICE / 100,
+						0
+					)
+				END
+			)
+			) totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		exchange_order_record exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.ROLE = 4
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		) totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		seller_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		) totalAgentWithdrawFee,
+		@rownum totalMerchantWithdrawFee
+		FROM
+		user_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		AND exr.ROLE_ID = 4
+		GROUP BY
+		datatime
+		UNION ALL
+		SELECT
+		@rownum totalNumber,
+		@rownum totalSellerBonusNumber,
+		@rownum merchantFeeRatio,
+		@rownum totalAgentBounsNumber,
+		@rownum totalTeamBonusNumber,
+		@rownum totalAccepterBonusNumber,
+		@rownum totalOtcFeePriceSeller,
+		@rownum totalOtcFeePriceMerchant,
+		@rownum totalOtcFeePriceAgent,
+		@rownum totalSupReturnNumber,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		) totalProfit,
+		DATE_FORMAT(exr.CREATE_TIME, '%Y-%m-%d') datatime,
+		@rownum totalSellerExchangeFee,
+		@rownum totalAgentExchangeFee,
+		@rownum totalMerchantExchangeFee,
+		@rownum totalSellerWithdrawFee,
+		@rownum totalAgentWithdrawFee,
+		(
+			IFNULL(
+				SUM(
+					exr.FEE_PRICE * exr.EXCHANGE_RATIO
+				),
+				0
+			)
+		)
+		 totalMerchantWithdrawFee
+		FROM
+		user_withdraw_coin_appeal_order exr,
+		(SELECT @rownum := 0) AS t
+		WHERE
+		exr.`STATUS` = 2
+		AND exr.ROLE_ID = 2
+		GROUP BY
+		datatime
+		) t
+	 </select>
+    
+    <select id="findPlatformMerchantStatistics" resultType="map">
+    	SELECT
+			SUM(t.orderTotalNumber) orderTotalNumber,
+			SUM(t.successTotalNumber) successTotalNumber,
+			SUM(t.noPayOrderNumber) noPayOrderNumber,
+			SUM(t.successTotalPrice) successTotalPrice,
+			SUM(t.totalPrice) totalPrice,
+			SUM(t.totalFeePrice) totalFeePrice,
+			SUM(t.totalCannelNumber) totalCannelNumber,
+			t.userId userId,
+			SUM(t.rechagerNumber) rechagerNumber,
+			SUM(t.availableBalance) availableBalance,
+			SUM(t.frozenBalance) frozenBalance,
+			t.account account
+			FROM
+			(
+				(
+			SELECT
+							IFNULL(
+								SUM(
+									t.orderNumber + t.successNumber+t.nopayNumber
+								),
+								0
+							) orderTotalNumber,
+							IFNULL(SUM(t.successNumber), 0) successTotalNumber,
+							IFNULL(SUM(t.nopayNumber), 0) noPayOrderNumber,
+							SUM(t.successPrice) successTotalPrice,
+							SUM(t.number) totalPrice,
+							SUM(t.feePrice) totalFeePrice,
+							IFNULL(SUM(t.orderNumber), 0) totalCannelNumber,
+							t.BUYER_ID userId,
+							@rownum rechagerNumber,
+							@rownum availableBalance,
+							@rownum frozenBalance,
+							t.account  account
+						FROM
+							(
+			SELECT
+				@number orderNumber,
+				COUNT(s.ORDER_ID) nopayNumber,
+				@rownum successNumber,
+				IFNULL(SUM(s.number*s.FEE_PRICE/100), 0) feePrice,
+				IFNULL(SUM(s.NUMBER), 0) number,
+				@rownum successPrice,
+				s.BUYER_ID,
+				sur.ACCOUNT_CODE account
+			FROM
+				seller_buyer_coin_order s
+			INNER JOIN sys_user sur ON s.BUYER_ID = sur.USER_ID
+			AND sur.ROLE_ID = 2
+			AND sur.`STATUS` != 'DELETED',
+			 (
+				SELECT
+					@rownum := 0 ,@number := 0
+			) AS t
+			WHERE
+				s.`STATUS` IN (1, 2, 3)
+				<if test="phone != null and phone !=''">
+					AND sur.ACCOUNT_CODE = #{phone}
+				</if>
+			GROUP BY sur.USER_ID
+			UNION ALL
+				SELECT
+					@rownum orderNumber,
+					@number nopayNumber,
+					COUNT(s.ORDER_ID) successNumber,
+					IFNULL(SUM(s.number*s.FEE_PRICE/100), 0) feePrice,
+					IFNULL(SUM(s.NUMBER), 0) number,
+					IFNULL(SUM(s.NUMBER), 0) successPrice,
+					s.BUYER_ID,
+					sur.ACCOUNT_CODE account
+				FROM
+					seller_buyer_coin_order s
+				INNER JOIN sys_user sur ON s.BUYER_ID = sur.USER_ID
+				AND sur.ROLE_ID = 2
+				AND sur.`STATUS` != 'DELETED'
+				
+				,
+				(
+					SELECT
+						@rownum := 0 ,@number := 0
+				) AS t
+			WHERE
+				s.`STATUS` = 4
+				<if test="phone != null and phone !=''">
+					AND sur.ACCOUNT_CODE = #{phone}
+				</if>
+			GROUP BY sur.USER_ID
+			UNION ALL
+				SELECT
+					COUNT(s.ORDER_ID) orderNumber,
+					@number nopayNumber,
+					@rownum successNumber,
+					IFNULL(SUM(s.number*s.FEE_PRICE/100), 0) feePrice,
+					IFNULL(SUM(s.NUMBER), 0) number,
+					@rownum successPrice,
+					s.BUYER_ID,
+					sur.ACCOUNT_CODE account
+				FROM
+					seller_buyer_coin_order s
+				INNER JOIN sys_user sur ON s.BUYER_ID = sur.USER_ID
+				AND sur.ROLE_ID = 2
+				AND sur.`STATUS` != 'DELETED',
+				(
+					SELECT
+						@rownum := 0 ,@number := 0
+				) AS t
+			WHERE
+				s.`STATUS` IN (5, 6, 7)
+				<if test="phone != null and phone !=''">
+					AND sur.ACCOUNT_CODE = #{phone}
+				</if>
+			GROUP BY sur.USER_ID
+			
+			) t,
+				(
+					SELECT
+						@rownum := 0 ,@number := 0
+				) AS s
+			GROUP BY t.BUYER_ID
+			)
+			UNION ALL
+			(
+				SELECT
+				@rownum orderTotalNumber,
+				@rownum successTotalNumber,
+				@rownum noPayOrderNumber,
+				@rownum successTotalPrice,
+				@rownum totalPrice,
+				@rownum totalFeePrice,
+				@rownum totalCannelNumber,
+				sur.USER_ID userId,
+				@rownum rechagerNumber,
+				suw.AVAILABLE_BALANCE availableBalance,
+				suw.FROZEN_BALANCE frozenBalance,
+				sur.ACCOUNT_CODE account
+			FROM
+			sys_user sur
+			INNER JOIN sys_user_wallter suw ON sur.USER_ID = suw.USER_ID,
+				(
+					SELECT
+						@rownum := 0 ,@number := 0
+				) AS t
+			WHERE
+			sur.ROLE_ID = 2 and TYPE = 2
+			<if test="phone != null and phone !=''">
+					AND sur.ACCOUNT_CODE = #{phone}
+				</if>
+			)
+			UNION ALL
+			(
+					SELECT
+				@rownum orderTotalNumber,
+				@rownum successTotalNumber,
+				@rownum noPayOrderNumber,
+				@rownum successTotalPrice,
+				@rownum totalPrice,
+				@rownum totalFeePrice,
+				@rownum totalCannelNumber,
+				sur.USER_ID userId,
+				IFNULL(SUM(INTO_NUMBER),0) rechagerNumber,
+				@rownum availableBalance,
+				@rownum frozenBalance,
+				sur.ACCOUNT_CODE account
+			FROM
+				seller_buyer_coin_order s
+			INNER JOIN sys_user sur ON s.BUYER_ID = sur.USER_ID
+			AND sur.ROLE_ID = 2
+			AND sur.`STATUS` != 'DELETED',
+				(
+					SELECT
+						@rownum := 0 ,@number := 0
+				) AS t
+			WHERE  s.`STATUS` =4 
+			<if test="phone != null and phone !=''">
+					AND sur.ACCOUNT_CODE = #{phone}
+			</if>
+			GROUP BY s.BUYER_ID
+			)
+			)t 
+			GROUP BY t.userId
+    </select>
+    
+    <select id="findPlatformAgentStatistics" resultType="map">
+    	SELECT
+			IFNULL(SUM(t.otcpAvailaBleBalance),0) totalOtcpAvailaBleBalance,
+			IFNULL(SUM(t.otcpFrozenBalance),0) totalOtcpFrozenBalance,
+			IFNULL(SUM(t.usdtAvailaBleBalance),0) totalUsdtAvailaBleBalance,
+			IFNULL(SUM(t.usdtFrozenBalance),0) totalUsdtFrozenBalance,
+			IFNULL(SUM(t.otcProfitNumber),0) totalOtcProfitNumber,
+			t.userId userId,
+			t.account account
+		FROM
+		(
+		(SELECT
+		 suw.AVAILABLE_BALANCE otcpAvailaBleBalance,
+		 suw.FROZEN_BALANCE otcpFrozenBalance,
+		 @rownum usdtAvailaBleBalance,
+		 @rownum usdtFrozenBalance,
+		 @rownum otcProfitNumber,
+		 suw.USER_ID userId,
+		 sur.ACCOUNT_CODE account
+		FROM
+		sys_user_wallter suw 
+		INNER JOIN sys_user sur ON suw.USER_ID = sur.USER_ID
+		AND sur.ROLE_ID = 4 and sur.`STATUS` !='DELETE',
+		(
+			SELECT
+				@rownum := 0 ,@number := 0
+		) AS t
+		WHERE
+		suw.TYPE = 2 
+		<if test="account != null and account !=''">
+			AND sur.ACCOUNT_CODE = #{account}
+		</if>
+		)
+		UNION ALL
+		(
+		SELECT
+			@rownum otcpAvailaBleBalance,
+			@rownum otcpFrozenBalance,
+			@rownum usdtAvailaBleBalance,
+			@rownum usdtFrozenBalance,
+			IFNULL(SUM(sbco.NUMBER*sbco.AGENT_FEE_PRICE/100),0) otcProfitNumber,
+			surr.RECOMMEND_ID userId,
+			sr.ACCOUNT_CODE account
+		FROM
+		seller_buyer_coin_order sbco
+		INNER JOIN sys_user sur ON sbco.BUYER_ID = sur.USER_ID AND sur.ROLE_ID = 2 AND sur.`STATUS` !='DELETE' 
+		INNER JOIN sys_user_recommend_relation surr ON surr.USER_ID = sbco.BUYER_ID
+		INNER JOIN sys_user sr ON sr.USER_ID = surr.RECOMMEND_ID,
+		(
+			SELECT
+				@rownum := 0 ,@number := 0
+		) AS t
+		WHERE
+		sbco.`STATUS` = 4
+		<if test="account != null and account !=''">
+			AND sr.ACCOUNT_CODE = #{account}
+		</if>
+		GROUP BY surr.RECOMMEND_ID
+		)
+		)t 
+		GROUP BY t.userId
+    </select>
+
+	<select id="findNoFinishSellerBuyerCoinListByPayMethodId" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select
+			 so.ORDER_ID as orderId,
+      	so.SERIALNO as serialno,
+      	so.BUYER_ID as buyerId,
+      	so.SELLER_ID as sellerId,
+      	so.USER_ORDER_NO as userOrderNo,
+      	so.CUID as cuid,
+      	so.NUMBER as number,
+      	so.STATUS as status,
+      	so.CREATE_TIME as createTime,
+      	so.UPDATE_TIME as updateTime,
+      	so.CANNEL_TIME as cannelTime,
+      	so.CLOSE_TIME as closeTime,
+      	so.PAY_METHOD_ID as payMethodId,
+      	so.PAY_METHOD_ACCOUNT as payMethodAccount,
+      	so.PAY_METHOD_TYPE as payMethodType,
+      	so.BONUS_NUMER as bonusNumber,
+      	so.FEE_PRICE as feePrice,
+      	so.IS_APPEAL as isAppeal,
+      	so.APPEAL_TIME as appealTime,
+      	so.MATCHING_TIME as matchingTime,
+      	so.NOTIFY_URL as notifyUrl,
+      	so.IS_SUCCESS as isSuccess,
+      	so.INTO_NUMBER as intoNumber,
+      	so.AGENT_FEE_PRICE as agentFeePrice,
+      	so.PAY_METHOD_NAME as payMethodName,
+      	so.PAY_METHOD_CARD_BANK as payMethodCardBank,
+      	so.PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName
+        from seller_buyer_coin_order so
+			where  so.PAY_METHOD_ID = #{payMethodId} and so.STATUS IN(1,2,3)
+	</select>
+</mapper>

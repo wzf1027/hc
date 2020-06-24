@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellerSysMapper">
+	
+	   <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.Seller">
+        <id column="SELLER_ID" property="sellerId"/>
+        <result column="PHONE" property="phone"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="IS_AUTH" property="isAuth"/>
+        <result column="ICON" property="icon"/>
+        <result column="REAL_NAME" property="realName"/>
+        <result column="ID_CARD_NO" property="idCardNo"/>
+        <result column="ID_CARD_FRONT" property="idCardFront"/>
+        <result column="ID_CARD_REVERSE" property="idCardReverse"/>
+         <result column="ID_CARD_REVERSE" property="idCardReverse"/>
+        <result column="ID_CARD_IMAGE" property="idCardImage"/>
+        <result column="TRADER_PASSWORD" property="traderPassword"/>
+        <result column="NICK_NAME" property="nickName"/>
+        <result column="STATUS" property="status"/>
+        <result column="ENABLED" property="enabled"/>
+        <result column="CODE" property="code"/>
+        <result column="REFERCE_IDS" property="referceIds"/>
+        <result column="REFERCE_ID" property="referceId"/>
+        <result column="IS_ACCEPTER" property="isAccepter"/>
+        <result column="USER_ID" property="userId"/>
+         <result column="CREATE_TIME" property="createTime"/>
+         <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      	SELLER_ID sellerId,
+      	PHONE phone,
+      	PASSWORD as password,
+      	IS_AUTH as isAuth,
+      	ICON AS icon,
+      	REAL_NAME realName,
+      	ID_CARD_NO AS idCardNo,
+      	ID_CARD_FRONT AS idCardFront,
+      	ID_CARD_REVERSE AS idCardReverse,
+      	ID_CARD_IMAGE AS idCardImage,
+      	TRADER_PASSWORD AS traderPassword,
+      	NICK_NAME AS nickName,
+      	STATUS AS status,
+      	ENABLED AS enabled,
+      	CODE AS code,
+      	REFERCE_IDS AS referceIds,
+      	REFERCE_ID AS referceId,
+      	IS_ACCEPTER AS isAccepter,
+      	USER_ID AS userId,
+      	CREATE_TIME AS createTime,
+      	UPDATE_TIME AS updateTime,
+      	GRAD_ENABLED as gradEnabled,
+      	SELLER_ENABLED sellEnabled,
+      	TRANFE_ENABLED tranferEnabled,
+      	BUY_ENABLED as buyEnabled,
+      	BING_GOOGLE bingGoogle,
+      	ACCOUNT account
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from seller
+        where STATUS = 0
+		 <if test="condition != null and condition !=''">
+			 and ACCOUNT  = #{condition}
+		 </if>
+        <if test="phone != null and phone !=''">
+        	and phone  like CONCAT('%',#{phone},'%')
+        </if>
+        <if test="isAccepter != null and isAccepter !=''">
+        	<if test="isAccepter ==1">
+        		and IS_ACCEPTER = 0
+        	</if>
+	        <if test="isAccepter ==2">
+	        	and IS_ACCEPTER = 1
+	        </if>
+	     </if>
+	     <if test="isAuth != null">
+	     	 and IS_AUTH = #{isAuth}
+	     </if>
+	     <if test="enabled != null and enabled ==1">
+	     		and ENABLED = 0
+	     </if>
+		 <if test="enabled != null and enabled ==2">
+			 and ENABLED = 1
+		 </if>
+		 <if test="enabled != null and enabled ==3">
+			 and GRAD_ENABLED = 0
+		 </if>
+		 <if test="enabled != null and enabled ==4">
+			 and GRAD_ENABLED = 1
+		 </if>
+		 <if test="enabled != null and enabled ==5">
+			 and SELLER_ENABLED = 0
+		 </if>
+		 <if test="enabled != null and enabled ==6">
+			 and SELLER_ENABLED = 1
+		 </if>
+		 <if test="enabled != null and enabled ==7">
+			 and TRANFE_ENABLED = 0
+		 </if>
+		 <if test="enabled != null and enabled ==8">
+			 and TRANFE_ENABLED = 1
+		 </if>
+		 <if test="enabled != null and enabled ==9">
+			 and BUY_ENABLED = 0
+		 </if>
+		 <if test="enabled != null and enabled ==10">
+			 and BUY_ENABLED = 1
+		 </if>
+	     <if test="recommend != null and recommend !=''">
+	     	and REFERCE_ID = (
+	     		SELECT SELLER_ID from seller where ACCOUNT =  #{recommend}
+	     	)
+	     </if>
+         <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+           and (CREATE_TIME between #{beginTime} and #{endTime})
+       </if>
+       order by CREATE_TIME desc
+    </select>
+    
+    <select id="wallterList" resultType="map">
+    	
+    	<if test="type != null and type ==1">
+    		select
+    		SELLER_WALLTER_ID sellerWallterId,
+    		AVAILABLE_BALANCE as availableBalance,
+    		FROZEN_BALANCE as frozenBalance,
+    		CODE as code
+    	from seller_wallter where SELLER_ID = #{sellerId}
+    	</if>
+    	<if test="type != null and type ==2">
+    		select
+    		AVAILABLE_BALANCE as availableBalance,
+    		FROZEN_BALANCE as frozenBalance,
+    		TYPE as type
+    	from 
+    		sys_user_wallter where USER_ID = #{sellerId}
+    	</if>
+    	<if test="type != null and type ==3">
+    		select
+    		AVAILABLE_BALANCE as availableBalance,
+    		FROZEN_BALANCE as frozenBalance,
+    		CODE as code
+    	from seller_profit_wallter where SELLER_ID = #{sellerId}
+    	</if>
+    </select>
+    
+    <select id="findSellerWallter" resultType="cn.stylefeng.guns.modular.system.entity.SellerWallter">
+    	select SELLER_WALLTER_ID sellerWallterId ,SELLER_ID as sellerId,AVAILABLE_BALANCE as availableBalance, 
+    	FROZEN_BALANCE as frozenBalance,VERSION  version ,CODE code
+    	from
+    	seller_wallter where 
+    	SELLER_WALLTER_ID = #{sellerWallterId}
+    </select>
+    
+    <update id="updteSellerWallter">
+    	update seller_wallter set 
+    	AVAILABLE_BALANCE = #{availableBalance} , 
+    	FROZEN_BALANCE = #{frozenBalance} ,
+    	TOTAL_BALANCE=#{totalBalance},
+    	VERSION = #{version}+1,
+    	UPDATE_TIME = #{updateTime}
+    	where SELLER_WALLTER_ID = #{sellerWallterId}
+    </update>
+
+	<select id="getSellerTimeSetting" resultType="cn.stylefeng.guns.modular.system.entity.SellerTimeSetting">
+		select * from seller_time_setting limit 1
+	</select>
+
+    <update id="updateSellerTimeSetting">
+		update seller_time_setting  set VALUE = #{value} where ID = #{id}
+	</update>
+
+	<select id="selectListTreeByCondition" resultType="map">
+		SELECT
+			 t.id,
+			 t.account,
+			 t.createTime,
+			<if test="condition != null and condition !=''">
+				(
+				CASE
+				WHEN
+				t.pId = (
+				SELECT REFERCE_ID from seller s WHERE s.ACCOUNT = #{condition}
+				)
+				THEN
+				0
+				ELSE
+				t.pId
+				END
+				) as pId
+			</if>
+			<if test="condition == null or condition ==''">
+				t.pId
+			</if>
+			FROM
+			(
+				SELECT
+				SELLER_ID id,
+				ACCOUNT account,
+				CREATE_TIME createTime,
+				(
+					CASE
+					WHEN (
+						REFERCE_ID = 0
+						OR REFERCE_ID IS NULL
+					) THEN
+						0
+					ELSE
+						REFERCE_ID
+					END
+				) AS pId
+			FROM
+				seller
+			<where>
+				<if test="condition != null and condition !=''">
+					REFERCE_IDS LIKE CONCAT('%,',(SELECT s.SELLER_ID FROM seller s WHERE s.ACCOUNT =#{condition}),',%') OR ACCOUNT =#{condition}
+				</if>
+			</where>
+			)
+			t
+	</select>
+
+</mapper>

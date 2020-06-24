@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellerOrderMapper">
+	
+	   <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.SellerOrder">
+        <id column="ORDER_ID" property="orderId"/>
+        <result column="SERIAL_NO" property="serialno"/>
+        <result column="SELLER_ID" property="sellerId"/>
+        <result column="NUMBER" property="number"/>
+         <result column="TYPE" property="type"/>
+        <result column="STATUS" property="status"/>
+         <result column="CREATE_TIME" property="createTime"/>
+         <result column="UPDATE_TIME" property="updateTime"/>
+         <result column="CLOSE_TIME" property="closeTime"/>
+         <result column="FINISH_TIME" property="finishTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      	so.ORDER_ID as orderId,
+      	so.SERIAL_NO as serialno,
+      	so.SELLER_ID as sellerId,
+      	so.NUMBER as number,
+      	so.TYPE as type,
+      	so.STATUS as status,
+      	so.CREATE_TIME as createTime,
+      	so.UPDATE_TIME as updateTime,
+      	so.CLOSE_TIME as closeTime,
+      	so.FINISH_TIME as finishTime
+     </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from seller_order so
+         INNER JOIN seller s ON s.SELLER_ID = so.SELLER_ID
+		where 
+        	so.STATUS =0
+        	<if test="phone != null and phone !=''">
+        		and s.ACCOUNT = #{phone}
+        	</if>
+           <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (so.CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if> 
+        order by so.CREATE_TIME desc
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/buyCoinOrder/buy_coin_order_add.js"]}){
+<form id="updateStatusForm" lay-filter="updateStatusForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付通道<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <select id ="payMethodType" name="payMethodType" lay-verify="">
+                <option value="1">支付宝</option>
+                <option value="2">微信</option>
+                <option value="3">银行卡</option>
+                <option value="4">云闪付</option>
+                <option value="5">支付宝账号转账</option>
+                <option value="6">微信账号转账</option>
+                <option value="7">支付宝转银行卡</option>
+                <option value="8">微信转银行卡</option>
+                <option value="9">微信赞赏码</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商户订单号<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="serialno" placeholder="请输入商户订单号" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">补单金额<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="number" placeholder="请输入补单余额" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商户ID<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="merchantAccount" placeholder="请输入商户ID" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">码商ID<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="sellerAccount" placeholder="请输入码商ID" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">二级密码<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="password" placeholder="请输入二级密码" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>确认补空单</button>
+    </div>
+</form>
+@}

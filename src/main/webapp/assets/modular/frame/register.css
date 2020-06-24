@@ -1,0 +1,101 @@
+body,html{
+	margin: 0;
+	padding: 0;
+	height: 100% !important;
+	font-size: 16px;
+	font-family: "微软雅黑";
+	background: -moz-linear-gradient(top, #30B4FF 0%, #4359FF 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#30B4FF), color-stop(100%,#4359FF));
+    background: -webkit-linear-gradient(top, #30B4FF 0%,#4359FF 100%);
+    background: -o-linear-gradient(top, #30B4FF 0%,#4359FF 100%);
+    background: -ms-linear-gradient(top, #30B4FF 0%,#4359FF 100%);
+    background: linear-gradient(to bottom, #30B4FF 0%,#4359FF 100%);
+	color: #333333;
+}
+input,button{
+	outline: none !important;
+}
+input::-webkit-input-placeholder {
+    color:#C8C8C8;
+}
+input:-moz-placeholder {
+   color:#C8C8C8;
+}
+input::-moz-placeholder {
+   color:#C8C8C8;
+}
+input:-ms-input-placeholder {
+   color:#C8C8C8;
+}
+.weui-cells{
+	margin: 0 1.3rem;
+	background-color:transparent;
+	background-color: #FFFFFF;
+	padding: 0 2rem;
+	border-radius: 0.9rem;
+	position: relative;
+	top: 10%;
+}
+.weui-cells .weui-cell{
+	border-bottom: 1px solid #DCDCDC;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 30px;
+}
+.weui-cells .weui-cell:nth-last-child(2){
+	margin-bottom: 0px;
+}
+.weui-cells .weui-cell>.weui-input{
+	border: none;
+}
+.weui-cell:before{
+	border: none !important;
+}
+.LoginName{
+	color: #4161FF;
+	font-size: 28px;
+	letter-spacing: 2px;
+	text-align: center;
+	margin: 2rem 0 2rem 0;
+}
+.addTxt{
+	color: #333333;
+}
+.registerB{
+	color: #666666;
+	font-size: 14px;
+	margin-top: 0.6rem;
+}
+.registerB>a{
+	color: #4161FF;
+}
+.formInput{
+	margin-bottom: 3rem;
+}
+.mybgBtn{
+	width: 100%;
+	background-color: #4161FF;
+	margin: 0.83rem 0;
+	letter-spacing: 2px;
+	border-radius: 50px;
+	margin-bottom: 2rem;
+}
+.trantImg{
+	margin:0 8px;
+}
+.weui-cell__ft>input{
+	height: 100%;
+	display: inline-block;
+	width: 100%;
+	padding: 0 10px;
+	font-size: 16px;
+	background-color: transparent !important;
+	border: none;
+	color: #4161FF;
+}
+@media (max-width: 320px) { 
+	.weui-cells{
+		top: 4%;
+	}
+
+}

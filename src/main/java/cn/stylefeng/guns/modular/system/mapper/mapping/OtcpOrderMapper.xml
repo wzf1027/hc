@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.OtcpOrderMapper">
+
+    <select id="list" resultType="map">
+		    SELECT *
+		from(
+		        SELECT
+					opo.ORDER_ID orderId,
+					opo.SERIALNO serialNo,
+					opo.BUYER_ID buyerId,
+					sr.PHONE buyerPhone,
+					opo.SELLER_ID sellerId,
+									CASE
+				WHEN soo.TYPE =1 OR soo.TYPE =2
+				THEN
+					(
+						SELECT sell.ACCOUNT FROM seller sell where opo.SELLER_ID = sell.SELLER_ID
+					)
+				WHEN soo.TYPE =3 OR soo.TYPE =4
+				THEN
+					(
+						SELECT syur.ACCOUNT_CODE  FROM sys_user syur where opo.SELLER_ID = syur.USER_ID
+					)
+				ELSE
+					''
+				END
+		sellerPhone,
+					opo.PRICE price,
+					opo.NUMBER number,
+					opo.TOTAL_PRICE totalPrice,
+					opo.`STATUS` status,
+					opo.CREATE_TIME createTime,
+					opo.UPDATE_TIME updateTime,
+					opo.CANNEL_TIME cannelTime,
+					opo.PAY_METHOD_IDS payMethodIds,
+					opo.CERTIFICATE certificate,
+					opo.APPEAL_CONTENT appealContent,
+					opo.IS_APPEAL isAppeal,
+					opo.APPEAL_TIME appealTime,
+					opo.CLOSE_TIME closeTime,
+					opo.TYPE type,
+					opo.BUY_SELL_TYPE buySellType,
+					opo.REMARK remark,
+					soo.SERIALNO sellerSerialno,
+					soo.TYPE sellerType,
+					opo.APPEALER_ID as appealerId,
+					opo.APPEALER_ROLE AS appealerRole,
+					opo.NO_APPEAL_STATUS as noAppealStatus,
+					opo.PAY_METHOD_ID AS payMethodId,
+					opo.PAY_METHOD_TYPE AS payMethodType,
+					opo.USER_ACCOUNT userAccount
+				FROM
+				otcp_order opo
+				INNER JOIN sell_otcp_order soo ON opo.OTC_ORDER_ID = soo.ORDER_ID
+				INNER JOIN seller sr ON opo.BUYER_ID = sr.SELLER_ID
+		<where>
+			<if test="userId != null and userId !=''">
+				and opo.SELLER_ID = #{userId}
+			</if>
+			<if test="buyerPhone != null and buyerPhone != ''">
+	            and sr.ACCOUNT like CONCAT('%',#{buyerPhone},'%')
+	        </if>
+	     	<if test="remark != null and remark !=''">
+				and opo.REMARK = #{remark}
+			</if>
+			<if test="status != null and status !=''">
+				and opo.`STATUS` = #{status}
+			</if>
+			<if test="isAppeal != null">
+				and opo.IS_APPEAL = #{isAppeal}
+			</if>
+			<if test="payMethodType != null">
+				and opo.PAY_METHOD_TYPE = #{payMethodType}
+			</if>
+	        	
+	        <if test="serialno != null and serialno != ''">
+	            and opo.SERIALNO =#{serialno}
+	        </if>
+	        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+	            and (opo.CREATE_TIME between #{beginTime} and #{endTime})
+	        </if>
+		</where>
+		) t
+	   <if test="sellerPhone != null and sellerPhone != ''">
+        	where t.sellerPhone =#{sellerPhone}
+        </if>
+		order by t.createTime desc        
+    </select>
+
+<!-- 查询某个OTC订单记录 -->
+	<select id="findSellerOtcpOrderById" resultType="cn.stylefeng.guns.modular.system.entity.SellOtcpOrder">
+		select 
+			ORDER_ID as orderId,
+			SERIALNO as serialNo,
+    		USER_ID as userId,
+    		NUMBER as number,
+    		SUP_NUMBER supNumber,
+    		MIN_NUMBER minNumber,
+    		MAX_NUMBER maxNumber,
+    		ROLE_ID roleId,
+    		SELLER_ID sellerId,
+    		PAY_METHOD_IDS payMethodIds,
+    		FEE_PRICE feePrice,
+    		FEE_RATIO as feeRatio,
+    		STATUS status,
+    		PRICE price,
+    		CREATE_TIME createTime,
+    		TOTAL_PRICE totalPrice,
+    		TYPE AS type
+		 from sell_otcp_order where ORDER_ID = #{otcOrderId}
+	</select>	
+	<!-- 更新OTC订单状态 -->
+	<update id="updateSellOtcpOrder">
+		update sell_otcp_order
+		<set>
+			<if test="status != null and status !=''">
+				 STATUS =#{status},
+			</if>
+			<if test="supNumber !=null">
+				SUP_NUMBER = #{supNumber},
+			</if>
+			<if test="updateTime != null">
+				 UPDATE_TIME = #{updateTime},
+			</if>
+		</set>
+		where ORDER_ID = #{orderId}
+	</update>
+	
+	<!-- 查询当天某个用户取消交易的次数 -->
+	<select id="findOtcpOrderCannelBySellerIdToday" resultType="cn.stylefeng.guns.modular.system.entity.OtcpOrderCannelNumberRecord">
+		select 
+			RECORD_ID as recordId,
+			SELLER_ID as sellerId,
+			NUMBER as number,
+			CREATE_TIME as createTime
+		 from otcp_order_cannel_number_record where date(CREATE_TIME) = curdate() AND SELLER_ID = #{sellerId};
+	</select>
+	<!-- 添加恶意取消交易记录 -->
+	<insert id="addOtcpOrderCannelNumberRecord">
+		insert into otcp_order_cannel_number_record
+		(
+			SELLER_ID,
+			NUMBER,
+			CREATE_TIME
+		)
+		values
+		(
+			#{sellerId},
+			#{number},
+			#{createTime}
+		)
+	</insert>
+	<!-- 更新恶意取消交易的次数 -->
+	<update id="updateOtcpOrderCannelNumberRecord">
+		update otcp_order_cannel_number_record 
+		<set>
+			<if test="number != null ">
+				NUMBER = #{number}
+			</if>
+		</set>
+		where RECORD_ID = #{recordId}
+	</update>
+
+	
+
+</mapper>

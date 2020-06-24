@@ -1,0 +1,21 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/seller/sellerRegisterSwitchSetting.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">注册开关设置</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-table" id="sellerRegisterSwitchTable" lay-filter="sellerRegisterSwitchTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" lay-filter="status" value="{{d.switchSettingId}}" lay-skin="switch" lay-text="开|关" {{d.isSwitch== '0' ?'checked':''}} />
+</script>
+@}

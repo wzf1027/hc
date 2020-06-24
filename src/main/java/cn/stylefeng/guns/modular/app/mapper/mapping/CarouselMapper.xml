@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.app.mapper.CarouselMapper">
+
+	<select id="selectCarouserlList" resultType="cn.stylefeng.guns.modular.system.entity.Carousel">
+		select 
+			CAROUSEL_ID carouselId,
+			CAROUSEL_NAME carouselName,
+			IMAGE image,
+			HREF href,
+			SORT sort,
+			CREATE_TIME createTime,
+			CONTENT content
+		 from carousel
+		<where>
+			<if test="carouselId != null">
+				and CAROUSEL_ID = #{carouselId}
+			</if>
+		</where>
+		 order by SORT ASC
+	</select>
+		
+</mapper>

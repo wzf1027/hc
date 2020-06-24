@@ -1,0 +1,108 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/sellerPayMethod/sellerPayMethod.js"]}){
+<style>
+    .layui-table-cell {
+        height: 100%;
+        max-width: 100%;
+    }
+</style>
+<div class="layui-body-header">
+    <span class="layui-body-header-title">会员的收款码列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="layui-form toolbar">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <input id="account" class="layui-input" type="text" placeholder="会员账号"/>
+                            </div>
+                            <div class="layui-inline">
+                                <input id="phone" class="layui-input" type="text" placeholder="会员手机号码"/>
+                            </div>
+                            <div class="layui-inline">
+                                <input id="payMethodName" class="layui-input" type="text" placeholder="真实姓名"/>
+                            </div>
+                            <div class="layui-inline">
+                                <input id="payMethodAccount" class="layui-input" type="text" placeholder="收款码账号"/>
+                            </div>
+                            <div class="layui-inline">
+                                <input id="nickName" class="layui-input" type="text" placeholder="收款码昵称"/>
+                            </div>
+                            <div class="layui-inline">
+                                <select id ="payMethodType" name="payMethodType" lay-verify="">
+                                    <option value="">支付通道</option>
+                                    <option value="1">支付宝</option>
+                                    <option value="2">微信</option>
+                                    <option value="3">银行卡</option>
+                                    <option value="4">云闪付</option>
+                                    <option value="5">支付宝账号转账</option>
+                                    <option value="6">微信账号转账</option>
+                                    <option value="7">支付宝转银行卡</option>
+                                    <option value="8">微信转银行卡</option>
+                                    <option value="9">微信赞赏码</option>
+                                </select>
+                            </div>
+                            <div class="layui-inline">
+                                <select id ="isCheck" name="isCheck" lay-verify="">
+                                    <option value="">在线状态</option>
+                                    <option value="0">离线</option>
+                                    <option value="1">在线</option>
+                                </select>
+                            </div>
+                            <div class="layui-inline">
+                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+                            </div>
+                            <div class="layui-inline" style="margin-left: 57px;">
+                                <label >在线支付宝数量：<span style="color: red;">${alipayNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线微信数量：<span style="color: red;">${wxNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线银行卡数量：<span style="color: red;">${cardNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线云闪付数量：<span style="color: red;">${cloudNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线支付宝账号转账数量：<span style="color: red;">${alipayAccountNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线支付宝转银行卡数量：<span style="color: red;">${alipayCardNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线微信账号转账数量：<span style="color: red;">${wxAccountNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线微信转银行卡数量：<span style="color: red;">${wxCardNumber}</span></label>
+                            </div>
+                            <div class="layui-inline">
+                                <label >在线微信赞赏码数量：<span style="color: red;">${wxZanNumber}</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-table" id="sellerPayMethodTable" lay-filter="sellerPayMethodTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="tableBar">
+    @if(shiro.hasPermission("/sellerPayMethodMgr/update")){
+    {{#  if(d.isSoldOut == null || d.isSoldOut == 0){ }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="frozen">封禁</a>
+    {{#  } }}
+    {{#  if(d.isSoldOut != null && d.isSoldOut == 1){ }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="unFrozen">解禁</a>
+    {{#  } }}
+    @}
+    @if(shiro.hasPermission("/sellerPayMethodMgr/delete")){
+     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+    @}
+</script>
+
+@}

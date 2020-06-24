@@ -1,0 +1,57 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/sellOtcpOrder/sellOtcpOrder.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">出售订单列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                         @if(shiro.hasPermission("/sellOtcpOrderMgr/searchRoleType")){
+	                            <div class="layui-inline">
+	                                <input id="phone" class="layui-input" type="text" placeholder="卖家账号"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="roleType" name="roleType" lay-verify="">
+									  <option value="">请选择出售角色</option>
+									  <option value="1">会员出售</option>
+									  <option value="2">承兑商出售</option>
+									  <option value="3">商户出售</option>
+										 <option value="4">代理出售</option>
+									</select> 
+	                            </div>
+	                            @}
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="出售时间" style="min-width: 300px;"/>
+	                            </div>
+	                                @if(shiro.hasPermission("/sellOtcpOrderMgr/add")){
+			                            <div class="layui-inline">
+		                                	<button id="btnAutoAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>自动提现</button>
+			                            </div>
+			                            <div class="layui-inline">
+		                                <button id="btnNoAutoAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>手动提现</button>
+			                            </div>
+	                             	@}
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="sellOtcpOrderTable" lay-filter="sellOtcpOrderTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+@if(shiro.hasPermission("/sellOtcpOrderMgr/cannelTrade")){
+	{{#  if(d.status ==1){ }}
+   	 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cannelTrade" id="cannelTrade">撤销订单</a>
+	{{#  } }} 
+@} 
+</script>
+@}

@@ -1,0 +1,68 @@
+server:
+  port: 8989
+  max-http-header-size: 102400
+
+guns:
+  swagger-open: true                #是否开启swagger (true/false)
+  kaptcha-open: false               #是否开启登录时验证码 (true/false)
+  spring-session-open: false        #是否开启spring session,如果是多机环境需要开启(true/false)
+  session-invalidate-time: 7200     #session失效时间(只在单机环境下生效，多机环境在SpringSessionConfig类中配置) 单位：秒
+  session-validation-interval: 3600  #多久检测一次失效的session(只在单机环境下生效) 单位：秒
+
+beetl:
+  resource-auto-check: true         #热加载beetl模板，开发时候用
+
+spring:
+  profiles:
+    active: @spring.active@
+  mvc:
+    view:
+      prefix: /pages
+  devtools:
+    restart:
+      enabled: false
+      additional-paths: src/main/java
+      exclude: assets/**,pages/**
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+  redis:
+    timeout: 50000
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+mybatis-plus:
+  typeAliasesPackage: cn.stylefeng.guns.modular.system.model
+  configuration:
+    log-impl:
+file:
+  #静态资源对外暴露的访问路径
+  staticAccessPath: /app/file/**
+#  imageFolder: /www/image/
+#  uploadFolder: /www/uploadFiles/
+  imageFolder: d://image/
+  uploadFolder: d://uploadFiles/
+  staticPath: /app/file
+
+platform:
+   DOMAIN: http://192.168.101.123:8080
+#   DOMAIN: http://47.52.251.185:8080
+
+sms:
+   switch: 1
+   password: lii12456
+   userName: lii12
+job:   
+    switch: 0
+    time: 180
+
+captcha:
+        timeout: 120
+log:
+  path: guns-logs

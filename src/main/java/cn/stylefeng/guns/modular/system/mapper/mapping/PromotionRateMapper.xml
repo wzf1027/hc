@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.PromotionRateMapper">
+
+  <select id="list" resultType="map">
+    select
+        RATE_ID as rateId,
+        LEVEL AS level,
+        CREATE_TIME as creatTime,
+        UPDATE_TIME as updateTime,
+        BONUS_RATIO as bonusRatio,
+        NUMBER AS number,
+        TYPE AS type
+    from promotion_rate
+    order by TYPE ASC,LEVEL ASC
+  </select>
+
+  <select id="getLastPromotionRateOne" resultType="cn.stylefeng.guns.modular.system.entity.PromotionRate">
+    select
+         RATE_ID as rateId,
+        LEVEL AS level,
+        CREATE_TIME as creatTime,
+        UPDATE_TIME as updateTime,
+        BONUS_RATIO as bonusRatio,
+        NUMBER AS number,
+         TYPE AS type
+    from promotion_rate
+     <where>
+         <if test="type != null and type !=''">
+             and TYPE = #{type}
+         </if>
+     </where>
+     order by LEVEL desc limit 1
+  </select>
+
+    <select id="selectListByLeveAsc" resultType="cn.stylefeng.guns.modular.system.entity.PromotionRate">
+    select
+        RATE_ID as rateId,
+        LEVEL AS level,
+        CREATE_TIME as creatTime,
+        UPDATE_TIME as updateTime,
+        BONUS_RATIO as bonusRatio,
+        NUMBER AS number,
+         TYPE AS type
+    from promotion_rate
+    where type = #{type}
+    order by LEVEL ASC
+  </select>
+    <select id="selectListByLeveDesc" resultType="cn.stylefeng.guns.modular.system.entity.PromotionRate">
+    select
+        RATE_ID as rateId,
+        LEVEL AS level,
+        CREATE_TIME as creatTime,
+        UPDATE_TIME as updateTime,
+        BONUS_RATIO as bonusRatio,
+        NUMBER AS number
+    from promotion_rate
+    order by LEVEL DESC
+  </select>
+
+
+</mapper>

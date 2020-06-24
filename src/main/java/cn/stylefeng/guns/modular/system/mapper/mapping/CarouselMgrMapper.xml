@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.CarouselMgrMapper">
+ 
+ <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.Carousel">
+        <id column="CAROUSEL_ID" property="carouselId" />
+        <result column="CAROUSEL_NAME" property="carouselName" />
+        <result column="IMAGE" property="image" />
+        <result column="HREF" property="href" />
+        <result column="SORT" property="sort" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+   		CAROUSEL_ID AS carouselId,
+   		CAROUSEL_NAME AS carouselName,
+   		IMAGE AS image,
+   		HREF AS href,
+   		SORT AS sort,
+   		CREATE_TIME AS createTime
+   	</sql>
+
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from carousel
+        order by CREATE_TIME DESC
+    </select>
+    
+    <insert id="addCarousel" keyColumn="CAROUSE_ID" keyProperty="carouselId" useGeneratedKeys="true">
+    	insert into carousel
+    	(
+    		CAROUSEL_NAME,
+    		IMAGE,
+    		HREF,
+    		SORT,
+    		CREATE_TIME,
+    		CONTENT
+    	)
+    	values
+    	(
+    		#{carouselName},
+    		#{image},
+    		#{href},
+    		#{sort},
+    		#{createTime},
+    		#{content}
+    	)
+    </insert>
+   
+</mapper>

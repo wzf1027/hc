@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>${systemName}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctxPath}/assets/common/layui/css/layui.css"/>
+    <link rel="stylesheet" href="${ctxPath}/assets/common/module/admin.css"/>
+    <link rel="stylesheet" href="${ctxPath}/assets/modular/frame/examine.css" />
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<div class="layui-card-body">
+     <div class="layadmin-tabsbody-item layui-show">
+      <form class="layui-card-body layui-form layui-form-pane"  id="userAuthForm" lay-filter="userAuthForm">
+     	 <div class="realName">
+			<h3>资质审核</h3>
+			<div class="real-list">
+				<ul>
+					<li>您需要先提交资料进行资格审核，审核通过后，方可使用平台全部功能</li>
+					<li>
+						<label class="layui-form-label" style="width:150px; ">经营者姓名：</label>
+						<div class="layui-input-inline">
+							<input type="text" id="realName" name="realName" lay-verify="realName"   class="layui-input" placeholder="请输入姓名" />
+						</div>
+					</li>
+					<li>
+						<label class="layui-form-label" style="width:150px; ">经营者证件号码：</label>
+						<div class="layui-input-inline">
+							<input type="text" id="idCardNo" name="idCardNo" lay-verify="idCardNo"  placeholder="请输入证件号码" class="layui-input" />
+						</div>
+					</li>
+					<li>
+						<label class="layui-form-label" style="width:150px; ">联系方式：</label>
+						<div class="layui-input-inline">
+							<input type="text" id="contactWay" name="contactWay" lay-verify="contactWay"  placeholder="请输入联系方式" class="layui-input" />
+						</div>
+					</li>
+				</ul>
+				<div class="layui-row">
+					<p>经营者证件照片</p>
+					<div class="layui-col-md4 layui-col-sm4 layui-col-xs4">
+						<div class="fluidBox">
+							<div class="fluidImg">
+								<img class="rePositive" src="${ctxPath}/assets/common/images/tainjia.png" />
+								<div class="upImg">
+									<input type="hidden" class="frontHide" value="" name="idCardFront" lay-verify="idCardFront" />
+									<input type="file" name="file" id="front"  />
+								</div>
+							</div>
+							<p>证件正面照</p>
+						</div>
+					</div>
+					<div class="layui-col-md4 layui-col-sm4 layui-col-xs4">
+						<div class="fluidBox">
+							<div class="fluidImg">
+								<img class="reBack" src="${ctxPath}/assets/common/images/tainjia.png" />
+								<div class="upImg">
+									<input type="hidden" class="fluidHide" value="" name="idCardReverse" lay-verify="idCardReverse"/>
+									<input type="file" name="file" id="reverse"  />
+								</div>
+							</div>
+							<p>证件反面照</p>
+						</div>
+					</div>
+					<div class="layui-col-md4 layui-col-sm4 layui-col-xs4">
+						<div class="fluidBox">
+							<div class="fluidImg">
+								<img class="reHold" src="${ctxPath}/assets/common/images/tainjia.png" />
+								<div class="upImg">
+									<input type="hidden" class="handHide" value="" name="idCardImage" lay-verify="idCardImage"/>
+									<input type="file" name="file" id="inHand"  />
+								</div>
+							</div>
+							<p>手持证件正面照</p>
+						</div>
+					</div>
+				</div>
+				<div class="realBtn">				
+					<button type="button" class="layui-btn realNopass" lay-filter="btnSubmit" lay-submit>提交审核</button>
+				</div>
+			</div>
+		</div>
+		</form>
+     </div>
+</div>
+
+<!-- js部分 -->
+@/* 加入contextPath属性和session超时的配置 */
+<script type="text/javascript">
+    var Feng = {
+        ctxPath: "",
+        addCtx: function (ctx) {
+            if (this.ctxPath === "") {
+                this.ctxPath = ctx;
+            }
+        }
+    };
+    Feng.addCtx("${ctxPath}");
+</script>
+<script type="text/javascript" src="${ctxPath}/assets/common/layui/layui.js"></script>
+<script type="text/javascript" src="${ctxPath}/assets/common/js/common.js"></script>
+
+<script>
+    layui.use(['layer', 'form', 'element', 'jquery', 'upload','ax'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var element = layui.element;
+    	var form = layui.form;
+    	var $ = layui.jquery;
+    	var upload = layui.upload;
+    	 var $ax = layui.ax;
+        upload.render({
+    		elem: '#front',
+    		url:Feng.ctxPath+'/image/addPhoto',
+    		before: function(obj){
+    	      //预读本地文件示例，不支持ie8
+    			obj.preview(function(index, file, result){
+    				$('.rePositive').attr('src', result); //图片链接（base64）
+    			});
+    		},
+    		done: function(res, index, upload){
+    			console.log(res)
+    			$('.frontHide').val('');
+    	    	$('.frontHide').val(res.data.src);
+    	    	layer.msg('上传成功！');
+    	  	}
+    	});
+    	upload.render({
+    		elem: '#reverse',
+    		url:Feng.ctxPath+'/image/addPhoto',
+    		before: function(obj){
+    	      //预读本地文件示例，不支持ie8
+    			obj.preview(function(index, file, result){
+    				$('.reBack').attr('src', result); //图片链接（base64）
+    			});
+    		},
+    		done: function(res, index, upload){
+    			console.log(res)
+    			$('.fluidHide').val('');
+    	    	$('.fluidHide').val(res.data.src);
+    	    	layer.msg('上传成功！');
+    	  	}
+    	});
+    	upload.render({
+    		elem: '#inHand',
+    		url:Feng.ctxPath+'/image/addPhoto',
+    		before: function(obj){
+    	      //预读本地文件示例，不支持ie8
+    			obj.preview(function(index, file, result){
+    				$('.reHold').attr('src', result); //图片链接（base64）
+    			});
+    		},
+    		done: function(res, index, upload){
+    			console.log(res)
+    			$('.handHide').val('');
+    	    	$('.handHide').val(res.data.src);
+    	    	layer.msg('上传成功！');
+    	  	}
+    	});
+       
+        
+     // 验证
+        form.verify({
+        	realName: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='realName']").focus();
+                    return '经营者姓名不能为空';
+                }
+            },
+            idCardNo: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='idCardNo']").focus();
+                    return '证件号码不能为空';
+                }
+            },
+            contactWay: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='contactWay']").focus();
+                    return '联系方式不能为空';
+                }
+            },
+            idCardFront: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='idCardFront']").focus();
+                    return '请上传证件的正面图';
+                }
+            },
+            idCardReverse: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='idCardReverse']").focus();
+                    return '请上传证件的反面图';
+                }
+                if(!/\S/.test(value)){
+                    $("input[name='idCardImage']").focus();
+                    return '请上传手持证件图';
+                }
+            },
+            idCardImage: function (value) {
+                if(!/\S/.test(value)){
+                    $("input[name='idCardImage']").focus();
+                    return '请上传手持证件图';
+                }
+            }
+        });
+        
+    		  // 表单提交事件
+            form.on('submit(btnSubmit)', function (data) {
+                var ajax = new $ax(Feng.ctxPath + "/mgr/submitAuth", function (data) {
+                	if(data.code ==200){
+                		layer.msg('提交审核成功',{icon:1,time:3000},function(){
+                			window.location.reload();
+                		});	
+                	}else{
+                		layer.msg("提交审核失败！" + data.message);
+                	}
+                }, function (data) {
+                	layer.msg("提交审核失败！" + data.responseJSON.message);
+                });
+                ajax.set(data.field);
+                ajax.start();
+                return false;
+            });
+ 
+    });
+</script>
+</body>
+
+</html>

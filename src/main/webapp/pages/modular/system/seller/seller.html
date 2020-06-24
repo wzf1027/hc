@@ -1,0 +1,107 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/seller/seller.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">用户列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+								<div class="layui-inline">
+									<input id="account" class="layui-input" type="text" placeholder="账号ID"/>
+								</div>
+	                            <div class="layui-inline">
+	                                <input id="phone" class="layui-input" type="text" placeholder="手机号码"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="注册时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="recommend" class="layui-input" type="text" placeholder="推荐人"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="isAccepter" name="isAccepter" lay-verify="">
+									  <option value="">请选择是否承兑商</option>
+									  <option value="1">否</option>
+									  <option value="2">是</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="isAuth" name="isAuth" lay-verify="">
+									  <option value="">请选择认证状态</option>
+									  <option value="0">未认证</option>
+									  <option value="1">待审核</option>
+									  <option value="2">已审核</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="enabled" name="enabled" lay-verify="">
+									  	 <option value="">请选择封禁</option>
+									  	 <option value="1">正常状态</option>
+									 	 <option value="2">禁止状态</option>
+										 <option value="3">正常接单</option>
+										 <option value="4">禁止接单</option>
+										 <option value="5">正常出售</option>
+										 <option value="6">禁止出售</option>
+										 <option value="7">正常划转</option>
+										 <option value="8">禁止划转</option>
+										 <option value="9">正常购买</option>
+										 <option value="10">禁止购买</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                                <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+									<button id="btnSellerTime" class="layui-btn icon-btn">提币/划转/出售时间设置</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="sellerTable" lay-filter="sellerTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="openProductBox" style="display: none; padding: 10px;">
+	<table id="openProductTable" lay-filter="openProductTable"></table>
+</div>
+<script type="text/html" id="enabledTpl">
+    <input type="checkbox" lay-filter="enabled" value="{{d.sellerId}}" lay-skin="switch" lay-text="正常|禁用" {{d.enabled=='0'?'checked':''}} />
+</script>
+<script type="text/html" id="gradEnabledTpl">
+	<input type="checkbox" lay-filter="gradEnabled" value="{{d.sellerId}}" lay-skin="switch" lay-text="正常|禁用" {{d.gradEnabled=='0'?'checked':''}} />
+</script><script type="text/html" id="sellEnabledTpl">
+	<input type="checkbox" lay-filter="sellEnabled" value="{{d.sellerId}}" lay-skin="switch" lay-text="正常|禁用" {{d.sellEnabled=='0'?'checked':''}} />
+</script><script type="text/html" id="tranferEnabledTpl">
+	<input type="checkbox" lay-filter="tranferEnabled" value="{{d.sellerId}}" lay-skin="switch" lay-text="正常|禁用" {{d.tranferEnabled=='0'?'checked':''}} />
+</script><script type="text/html" id="buyEnabledTpl">
+	<input type="checkbox" lay-filter="buyEnabled" value="{{d.sellerId}}" lay-skin="switch" lay-text="正常|禁用" {{d.buyEnabled=='0'?'checked':''}} />
+</script>
+
+
+
+<script type="text/html" id="tableBar2">
+    <a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="updateMoney">修改余额</a>
+</script>
+<script type="text/html" id="tableBar">
+    {{#  if(d.isAuth == 1){ }}
+        <a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="authDetail">实名认证审核</a>
+     {{#  } }}
+	{{#  if(d.isAuth == 2){ }}
+	<a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="authDetailPage">查看实名信息</a>
+	{{#  } }}
+	{{#  if(d.bingGoogle == 1){ }}
+		<a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="googleUnFrozen">解绑谷歌</a>
+	{{#  } }}
+		 {{#  if(d.isAccepter == '是'){ }}
+			<a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="accepterWallter">承兑商钱包</a>
+		 {{#  } }}
+		<a class="layui-btn layui-btn-norma layui-btn-xs " lay-event="memberWallter">会员钱包</a>
+		<a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="memberProfitWallter">会员挖矿钱包</a>
+		<a class="layui-btn layui-btn-norma layui-btn-xs" lay-event="updatePassword">重置登录密码/交易密码</a>
+</script>
+@}

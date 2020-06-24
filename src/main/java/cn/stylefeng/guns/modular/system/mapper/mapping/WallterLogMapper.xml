@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.WallterLogMapper">
+ 
+ <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.WallterLog">
+        <id column="LOG_ID" property="logId" />
+        <result column="CONTENT" property="content" />
+        <result column="LOG_USER" property="logUser" />
+        <result column="SELLER_ID" property="sellerId" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+   		LOG_ID AS logId,
+   		CONTENT AS content,
+   		LOG_USER AS logUser,
+   		SELLER_ID AS sellerId,
+   		CREATE_TIME AS createTime
+   	</sql>
+
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from wallter_log
+        <where>
+        	 <if test="phone != null and phone !=''">
+        		and SELLER_ID = (SELECT SELLER_ID FROM seller where ACCOUNT = #{phone})
+        	</if>
+        	<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if>
+        </where>
+       
+        order by CREATE_TIME DESC
+    </select>
+    
+   
+</mapper>

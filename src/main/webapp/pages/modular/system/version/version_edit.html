@@ -1,0 +1,42 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/version/version_edit.js"]}){
+<form id="versionForm" lay-filter="versionForm" class="layui-form model-form">
+    <input name="versionId" type="hidden" value="${versionId}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本号<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="version"  value="${version}" placeholder="请输入版本号" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="address"  value="${address}" placeholder="请输入地址" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">端口</label>
+        <div class="layui-input-block">
+        	 <input  type="text" id="type"  class="layui-input" readonly="readonly"/>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">内容<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <textarea name="content" placeholder="请输入内容" class="layui-textarea">${content}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+<script src="${ctxPath}/assets/common/plugins/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+	var type = ${type};
+	if(type ==1){
+		$("#type").val('安卓');
+	}else if(type ==2){
+		$("#type").val('苹果');
+	}
+</script>
+@}

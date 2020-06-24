@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellOtcpOrderMapper">
+	
+	   <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.SellOtcpOrder">
+        <id column="ORDER_ID" property="orderId"/>
+        <result column="SERIALNO" property="serialno"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="NUMBER" property="number"/>
+        <result column="SUP_NUMBER" property="supNumber"/>
+        <result column="PHONE" property="phone"/>
+        <result column="MIN_NUMBER" property="minNumber"/>
+        <result column="MAX_NUMBER" property="maxNumber"/>
+        <result column="ROLE_ID" property="roleId"/>
+        <result column="SELLER_ID" property="sellerId"/>
+         <result column="PAY_METHOD_IDS" property="payMethodIds"/>
+        <result column="FEE_PRICE" property="feePrice"/>
+        <result column="FEE_RATIO" property="feeRatio"/>
+        <result column="STATUS" property="status"/>
+        <result column="PRICE" property="price"/>
+        <result column="TOTAL_PRICE" property="totalPrice"/>
+        <result column="TYPE" property="type"/>
+         <result column="CREATE_TIME" property="createTime"/>
+         <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      	soo.ORDER_ID orderId,
+      	soo.SERIALNO serialno,
+      	soo.USER_ID as userId,
+      	soo.NUMBER as number,
+      	soo.SUP_NUMBER AS supNumber,
+      	soo.MIN_NUMBER minNumber,
+      soo.MAX_NUMBER AS maxNumber,
+      	soo.ROLE_ID AS roleId,
+      	soo.SELLER_ID AS sellerId,
+      	soo.PAY_METHOD_IDS AS payMethodIds,
+      	soo.FEE_PRICE AS feePrice,
+      	soo.FEE_RATIO AS feeRatio,
+      	STATUS AS status,
+      	soo.PRICE AS price,
+      	soo.TOTAL_PRICE AS totalPrice,
+      	soo.TYPE AS type,
+				CASE
+					WHEN soo.TYPE =1 OR soo.TYPE =2
+					then	(
+									SELECT s.PHONE FROM seller s where s.SELLER_ID =  soo.SELLER_ID
+						)
+					WHEN soo.TYPE =3 or  soo.TYPE =4
+					THEN
+							(
+									SELECT s.PHONE FROM sys_user s where s.USER_ID = soo.USER_ID
+						)
+					ELSE
+						''
+				END phone,
+      	soo.CREATE_TIME AS createTime,
+      	soo.UPDATE_TIME AS updateTime
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from sell_otcp_order soo
+        <where>
+        	<if test="phone != null and phone !=''">
+				    and  CASE
+				WHEN soo.TYPE = 1
+				OR soo.TYPE = 2 THEN
+					soo.SELLER_ID = (SELECT s.SELLER_ID from seller s where s.ACCOUNT = #{phone})
+				WHEN soo.TYPE =3 or  soo.TYPE =4 THEN
+					soo.USER_ID = (SELECT s.USER_ID FROM sys_user  s where s.ACCOUNT_CODE = #{phone})
+				END 
+       	 </if>
+       	 <if test="userId != null and userId !=''">
+       	 	and soo.USER_ID = #{userId}
+       	 </if>
+       	 <if test="roleType != null and roleType !=''">
+       	 	<if test="roleType ==1">
+       	 		and soo.TYPE = 1
+       	 	</if>
+       	 	<if test="roleType ==2">
+       	 		and soo.TYPE = 2
+       	 	</if>
+       	 	<if test="roleType ==3">
+       	 		and soo.TYPE = 3
+       	 	</if>
+			 <if test="roleType ==4">
+				 and soo.TYPE = 4
+			 </if>
+       	 </if>
+           <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (soo.CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if>
+        </where> 
+        order by soo.CREATE_TIME desc
+    </select>
+</mapper>

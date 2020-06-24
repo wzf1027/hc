@@ -1,0 +1,3458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.app.mapper.SellerMapper">
+	
+	<select id="findRegisterSwitchSetting" resultType="cn.stylefeng.guns.modular.system.entity.SellerRegisterSwitchSetting">
+		select 
+			SWITCH_SETTING_ID switchSettingId,
+			IS_SWITCH as isSwitch
+		 from seller_register_switch_setting limit 1
+	</select>
+	
+	<select id="findSellerByPhone" resultType="cn.stylefeng.guns.modular.system.entity.Seller">
+		select
+		 	SELLER_ID sellerId,
+		 PHONE phone,
+		 PASSWORD password,
+		 IS_AUTH isAuth,
+		 ACCOUNT account,
+		 ICON icon,
+		 REAL_NAME realName,
+		 ID_CARD_NO idCardNo,
+		 ID_CARD_FRONT idCardFront,
+		 ID_CARD_REVERSE idCardReverse,
+		 ID_CARD_IMAGE idCardImage,
+		 TRADER_PASSWORD traderPassword,
+		 NICK_NAME nickName,
+		 STATUS status,
+		 ENABLED enabled,
+		 GRAD_ENABLED gradEnabled,
+		 SELLER_ENABLED sellEnabled,
+		 TRANFE_ENABLED tranferEnabled,
+		 BUY_ENABLED buyEnabled,
+		 BING_GOOGLE bingGoogle,
+		 CODE code,
+		 REFERCE_IDS referceIds,
+		 REFERCE_ID referceId,
+		 USER_ID userId,
+		 CREATE_TIME createTime,
+		 UPDATE_TIME updateTime,
+		 GOOGLE_SECRET googleSecret,
+		 LOGIN_METHOD loginMethod,
+		 EMAIL email,
+		  IS_ACCEPTER isAccepter
+		 from seller where PHONE = #{phone} and STATUS = 0 limit 1
+	</select>
+
+	<select id="findSellerByAccount" resultType="cn.stylefeng.guns.modular.system.entity.Seller">
+			select
+			 	SELLER_ID sellerId,
+			 PHONE phone,
+			 PASSWORD password,
+			 IS_AUTH isAuth,
+			 ACCOUNT account,
+			 ICON icon,
+			 REAL_NAME realName,
+			 ID_CARD_NO idCardNo,
+			 ID_CARD_FRONT idCardFront,
+			 ID_CARD_REVERSE idCardReverse,
+			 ID_CARD_IMAGE idCardImage,
+			 TRADER_PASSWORD traderPassword,
+			 NICK_NAME nickName,
+			 STATUS status,
+			 ENABLED enabled,
+			 GRAD_ENABLED gradEnabled,
+			 SELLER_ENABLED sellEnabled,
+			 TRANFE_ENABLED tranferEnabled,
+			 BUY_ENABLED buyEnabled,
+			 BING_GOOGLE bingGoogle,
+			 CODE code,
+			 REFERCE_IDS referceIds,
+			 REFERCE_ID referceId,
+			 USER_ID userId,
+			 CREATE_TIME createTime,
+			 UPDATE_TIME updateTime,
+			 GOOGLE_SECRET googleSecret,
+			 LOGIN_METHOD loginMethod,
+			 EMAIL email,
+			  IS_ACCEPTER isAccepter
+			 from seller where ACCOUNT = #{account} and STATUS = 0 limit 1
+	</select>
+
+	<select id="findSellerbyId" resultType="cn.stylefeng.guns.modular.system.entity.Seller">
+		select
+		 	SELLER_ID sellerId,
+			 PHONE phone,
+			 PASSWORD password,
+			 IS_AUTH isAuth,
+			 ACCOUNT account,
+			 ICON icon,
+			 REAL_NAME realName,
+			 ID_CARD_NO idCardNo,
+			 ID_CARD_FRONT idCardFront,
+			 ID_CARD_REVERSE idCardReverse,
+			 ID_CARD_IMAGE idCardImage,
+			 TRADER_PASSWORD traderPassword,
+			 NICK_NAME nickName,
+			 STATUS status,
+			 ENABLED enabled,
+			 GRAD_ENABLED gradEnabled,
+			 SELLER_ENABLED sellEnabled,
+			 TRANFE_ENABLED tranferEnabled,
+			 BUY_ENABLED buyEnabled,
+			 BING_GOOGLE bingGoogle,
+			 CODE code,
+			 REFERCE_IDS referceIds,
+			 REFERCE_ID referceId,
+			 USER_ID userId,
+			 CREATE_TIME createTime,
+			 UPDATE_TIME updateTime,
+			 GOOGLE_SECRET googleSecret,
+			 LOGIN_METHOD loginMethod,
+			 EMAIL email,
+			  IS_ACCEPTER isAccepter
+		 from seller where SELLER_ID = #{id} and STATUS = 0 limit 1
+	</select>
+	
+	<insert id="addSeller" useGeneratedKeys="true" keyColumn="SELLER_ID" keyProperty="sellerId">
+		insert into seller 
+		(
+			PHONE,
+			PASSWORD,
+			IS_AUTH,
+			ICON,
+			NICK_NAME,
+			STATUS,
+			ENABLED,
+			IS_ACCEPTER,
+			CREATE_TIME,
+			REFERCE_ID,
+			REFERCE_IDS,
+			ACCOUNT
+		)
+		values
+		(
+			#{phone},
+			#{password},
+			#{isAuth},
+			#{icon},
+			#{nickName},
+			#{status},
+			#{enabled},
+			#{isAccepter},
+			#{createTime},
+			#{referceId},
+			#{referceIds},
+			#{account}
+		)
+	</insert>
+	<!-- 添加会员钱包 -->
+	<insert id="addSellerWallter" useGeneratedKeys="true" keyColumn="SELLER_WALLTER_ID" keyProperty="sellerWallterId">
+		insert into seller_wallter
+		(
+			SELLER_ID,
+			AVAILABLE_BALANCE,
+			TOTAL_BALANCE,
+			FROZEN_BALANCE,
+			VERSION,
+			CODE,
+			CREATE_TIME,
+			TYPE
+		)
+		values
+		(
+			#{sellerId},
+			#{availableBalance},
+			#{totalBalance},
+			#{frozenBalance},
+			#{version},
+			#{code},
+			#{createTime},
+			#{type}
+		)
+	</insert>
+	
+	<!-- 添加挖矿钱包 -->
+	<insert id="addSellerProfitWallter">
+		insert into seller_profit_wallter
+		(
+			PHONE,
+			SELLER_ID,
+			AVAILABLE_BALANCE,
+			TOTAL_BALANCE,
+			FROZEN_BALANCE,
+			VERSION,
+			CODE,
+			CREATE_TIME
+		)
+		values
+		(
+			#{phone},
+			#{sellerId},
+			#{availableBalance},
+			#{totalBalance},
+			#{frozenBalance},
+			#{version},
+			#{code},
+			#{createTime}
+		)
+	</insert>
+
+	<select id="findSellerAuthSwithSettingOne" resultType="cn.stylefeng.guns.modular.system.entity.SellerAuthSwitchSetting">
+		select
+			SWITCH_SETTING_ID as switchSettingId,
+			IS_SWITCH as isSwitch
+		from seller_auth_switch_setting
+		limit 1
+	</select>
+	
+	<!-- 获取平台的推荐码 -->
+	<select id="getPlatformRecommendSetting" resultType="cn.stylefeng.guns.modular.system.entity.PlatformRecommdSetting">
+		select 
+			PLATFORM_RECOMMD_SETTING_ID as platformRecommdSettingId,
+			CODE as code
+		 from platform_recommd_setting limit 1
+	</select>
+	<!-- 更新会员的基本信息 -->
+	<update id="updateSeller" parameterType="cn.stylefeng.guns.modular.system.entity.Seller">
+		update seller 
+		<set>
+            <if test="isAuth != null">
+                IS_AUTH = #{isAuth},
+            </if>
+            <if test="realName != null">
+                REAL_NAME = #{realName},
+            </if>
+            <if test="idCardNo != null">
+                ID_CARD_NO = #{idCardNo},
+            </if>
+            <if test="idCardFront != null">
+                ID_CARD_FRONT = #{idCardFront},
+            </if>
+            <if test="idCardReverse != null">
+                ID_CARD_REVERSE = #{idCardReverse},
+            </if>
+            <if test="idCardImage != null">
+                ID_CARD_IMAGE = #{idCardImage},
+            </if>
+             <if test="traderPassword != null">
+                TRADER_PASSWORD = #{traderPassword},
+            </if>
+             <if test="nickName != null">
+                NICK_NAME = #{nickName},
+            </if>
+            <if test="code != null">
+                CODE = #{code},
+            </if>
+             <if test="referceIds != null">
+                REFERCE_IDS = #{referceIds},
+            </if>
+               <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime},
+            </if>
+            <if test="referceId != null">
+                REFERCE_ID = #{referceId},
+            </if>
+             <if test="icon != null">
+                ICON = #{icon},
+            </if>
+             <if test="isAccepter != null">
+                IS_ACCEPTER = #{isAccepter},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId},
+            </if>
+            <if test="password != null">
+                PASSWORD = #{password},
+            </if>
+            <if test="googleSecret != null">
+				GOOGLE_SECRET = #{googleSecret},
+			</if>
+			<if test="loginMethod != null">
+				LOGIN_METHOD = #{loginMethod},
+			</if>
+			<if test="bingGoogle != null">
+				BING_GOOGLE = #{bingGoogle},
+			</if>
+
+        </set>
+		where SELLER_ID = #{sellerId}
+	</update>
+	<!-- 根据邀请码获取推荐人的信息 -->
+	<select id="findSellerByCode" resultType="cn.stylefeng.guns.modular.system.entity.Seller">
+		select * from seller where ACCOUNT = #{code} and STATUS = 0 limit 1
+	</select>
+	
+	<!-- 获取某个身份证号有多少个 -->
+	<select id="findSellerbyIdCardNoCount" resultType="int">
+		 select count(*) from seller where ID_CARD_NO = #{idCardNo}
+	</select>
+	<!-- 获取某个类型的版本号信息 -->
+	<select id="selectOneAppVersion" resultType="cn.stylefeng.guns.modular.system.entity.AppVersion">
+		select * from app_version where type = #{type} limit 1
+	</select>
+	
+	<!-- 获取某个收款方式信息 -->
+	<select id="findSellerPayMethodById" resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select 
+			PAY_METHOD_ID as payMethodId,
+			SELLER_ID as sellerId,
+			TYPE AS type,
+			QR_CODE as qrCode,
+			ACCOUNT as account,
+			CARD_BANK as cardBank,
+			CARD_BANK_NAME as cardBankName,
+			NAME as name,
+			USE_NUMBER as useNumber,
+			IS_CHECK as isCheck,
+			BUY_NUMBER as buyNumber,
+			SUCCESS_NUMBER as successNumber,
+			SUCCESS_RATIO as successRatio,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime,
+			FAIL_NUMBER failNumber,
+			FAIL_NOTICE failNotice,
+			IS_SOLD_OUT isSoldOut,
+			SOLD_OUT_TIME soldOutTime
+		from seller_pay_method
+		where 
+			PAY_METHOD_ID = #{id}
+	</select>
+	<!-- 添加收款方式 -->
+	<insert id="addPayMethod">
+		insert into seller_pay_method
+		(
+			SELLER_ID,
+			TYPE,
+			QR_CODE,
+			ACCOUNT,
+			CARD_BANK,
+			CARD_BANK_NAME,
+			NAME,
+			USE_NUMBER,
+			REMARK,
+			CREATE_TIME,
+			QR_VALUE,
+			STATUS,
+			PRICE
+		)
+		values
+		(
+			#{sellerId},
+			#{type},
+			#{qrCode},
+			#{account},
+			#{cardBank},
+			#{cardBankName},
+			#{name},
+			#{useNumber},
+			#{remark},
+			#{createTime},
+			#{qrValue},
+			#{status},
+			#{price}
+		)
+	</insert>
+	<!-- 更新收款方式 -->
+	<update id="updateSellerPayMethod" parameterType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		update seller_pay_method 
+		<set>
+			<if test="qrCode != null">
+				QR_CODE = #{qrCode},
+			</if>
+			<if test="account != null">
+				ACCOUNT = #{account},
+			</if>
+			<if test="cardBank != null">
+				CARD_BANK = #{cardBank},
+			</if>
+			<if test="cardBankName != null">
+				CARD_BANK_NAME = #{cardBankName},
+			</if>
+			<if test="useNumber != null">
+				USE_NUMBER = #{useNumber},
+			</if>
+			<if test="useNumber != null">
+				USE_NUMBER = #{useNumber},
+			</if>
+			<if test="isCheck != null">
+				IS_CHECK = #{isCheck},
+			</if>
+			<if test="buyNumber != null">
+				BUY_NUMBER = #{buyNumber},
+			</if>
+			<if test="successNumber != null">
+				SUCCESS_NUMBER = #{successNumber},
+			</if>
+			<if test="successRatio != null">
+				SUCCESS_RATIO = #{successRatio},
+			</if>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="useNumber != null">
+				USE_NUMBER = #{useNumber},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="qrValue != null">
+				QR_VALUE = #{qrValue},
+			</if>
+			<if test="failNumber != null">
+				FAIL_NUMBER = #{failNumber},
+			</if>
+			<if test="failNotice != null">
+				FAIL_NOTICE = #{failNotice},
+			</if>
+			<if test="isSoldOut != null">
+				IS_SOLD_OUT = #{isSoldOut},
+			</if>
+			<if test="soldOutTime != null">
+				SOLD_OUT_TIME = #{soldOutTime},
+			</if>
+		</set>
+		where PAY_METHOD_ID = #{payMethodId}
+	</update>
+	
+	<!-- 查询某个页数的收款方式 -->
+	<select id="getSellerPayMethodList" resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select
+        PAY_METHOD_ID payMethodId,
+        SELLER_ID as sellerId,
+        TYPE as type,
+        QR_CODE as qrCode,
+        ACCOUNT as account,
+        CARD_BANK as cardBank,
+        CARD_BANK_NAME as cardBankName,
+        NAME as name,
+        USE_NUMBER as useNumber,
+        REMARK as remark,
+        STATUS AS status,
+        PRICE AS price,
+		IS_CHECK as isCheck,
+        CREATE_TIME as createTime,
+        UPDATE_TIME as updateTime
+        from seller_pay_method
+      <where>
+      	<if test="sellerId != null and sellerId !=''">
+      		and SELLER_ID = #{sellerId}
+      	</if>
+      	<if test="type != null">
+            and type = #{type}
+        </if>
+		  <if test="isAlipayWXCard != null">
+			  and type in(1,2,3)
+		  </if>
+      </where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 分页查询我的某个收款方式的总条数 -->
+	<select id="getSellerPaymethodListCount" resultType="int">
+        select
+        count(*)
+        from seller_pay_method 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      	<if test="type != null">
+	            and type = #{type}
+	        </if>
+			<if test="isAlipayWXCard != null">
+				and type in(1,2,3)
+			</if>
+      </where>
+    </select>
+
+	<select id="getSellerBuyerCoinOrderTotalPriceByPayMethodId" resultType="double">
+		select
+		      IFNULL(SUM(NUMBER),0)
+			from seller_buyer_coin_order
+			WHERE
+			 STATUS =4
+			 <if test="payMethodId != null">
+				 and PAY_METHOD_ID = #{payMethodId}
+			 </if>
+			<if test="sellerId != null">
+				and SELLER_ID = #{sellerId}
+			</if>
+	</select>
+
+	<select id="getSuccessNumberOrderByPayMethodId" resultType="int">
+		select
+		count(*)
+		from seller_buyer_coin_order
+		WHERE
+		STATUS =4
+		and to_days(CREATE_TIME) = to_days(now())
+		<if test="payMethodId != null">
+			and PAY_METHOD_ID = #{payMethodId}
+		</if>
+		<if test="sellerId != null">
+			and SELLER_ID = #{sellerId}
+		</if>
+	</select>
+
+	<select id="getTotalNumberOrderByPayMethodId" resultType="int">
+		select
+		count(*)
+		from seller_buyer_coin_order
+		WHERE
+		 to_days(CREATE_TIME) = to_days(now())
+		<if test="payMethodId != null">
+			and PAY_METHOD_ID = #{payMethodId}
+		</if>
+		<if test="sellerId != null">
+			and SELLER_ID = #{sellerId}
+		</if>
+	</select>
+
+    
+    <select id="getSellerBuyerCoinOrderList" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select
+		       ORDER_ID orderId,
+		       SERIALNO as serialno,
+		       BUYER_ID as buyerId,
+		       SELLER_ID as sellerId,
+		       NOTIFY_URL as notifyUrl,
+		       USER_ORDER_NO as userOrderNo,
+		       CUID as cuid,
+		       NUMBER as number,
+		       STATUS as status,
+		       CREATE_TIME as createTime,
+		       UPDATE_TIME as updateTime,
+		       CANNEL_TIME as cannelTime,
+		       PAY_METHOD_ID as payMethodId,
+		       PAY_METHOD_ACCOUNT as payMethodAccount,
+		       PAY_METHOD_NAME as payMethodName,
+		       PAY_METHOD_TYPE as payMethodType,
+		       PAY_METHOD_CARD_BANK as payMethodCardBank,
+		      PAY_METHOD_CARD_BANK_NAME as  payMethodCardBankName,
+		      APPEAL_CONTENT as appealContent,
+		      CERTIFICATE as certificate,
+		      IS_APPEAL as isAppeal,
+		      APPEAL_TIME as appealTime,
+		      CLOSE_TIME as closeTime,
+		      BONUS_NUMER as bonusNumber,
+			  PAY_METHOD_NICK_NAME as payMethodNickName
+        from seller_buyer_coin_order
+      <where>
+      	<if test="sellerId != null and sellerId !=''">
+      		and SELLER_ID = #{sellerId}
+      	</if>
+		  <if test="serialno != null and serialno !=''">
+			  and SERIALNO = #{serialno}
+		  </if>
+      	<if test="type != null and type ==1">
+             <![CDATA[   and STATUS <4 and NOW() < SUBDATE(CREATE_TIME,INTERVAL -#{starTime} minute) ]]>
+        </if>
+        <if test="type != null and type ==2">
+             <if test="status != null and status ==1">
+             	and STATUS = 4
+             </if>
+              <if test="status != null and status ==2">
+             	and STATUS = 7
+             </if>
+			<if test="status != null and (status ==3 or status ==4)">
+				and STATUS IN(1,2,3)
+				<![CDATA[   and NOW() >=SUBDATE(CREATE_TIME,INTERVAL -#{starTime} minute) ]]>
+			</if>
+			<if test=" begainTime!= null and begainTime !=''">
+				<![CDATA[   DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{begainTime}, '%Y-%m-%d')	]]>
+			</if>
+			<if test=" endTime!= null and endTime !=''">
+				<![CDATA[   DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')	]]>
+			</if>
+        </if>
+      </where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	
+	<select id="getSellerBuyerCoinOrderListCount" resultType="int">
+        select
+        count(*)
+        from seller_buyer_coin_order 
+        <where>
+      	<if test="sellerId != null and sellerId !=''">
+      		and SELLER_ID = #{sellerId}
+      	</if>
+			<if test="serialno != null and serialno !=''">
+				and SERIALNO = #{serialno}
+			</if>
+      	<if test="type != null and type ==1">
+             <![CDATA[   and STATUS <4 ]]>
+        </if>
+        <if test="type != null and type ==2">
+             <if test="status != null and status ==1">
+             	and STATUS = 4
+             </if>
+              <if test="status != null and status ==2">
+             	and STATUS = 7
+             </if>
+			<if test="status != null and (status ==3 or status ==4)">
+				and STATUS IN(1,2,3)
+				<![CDATA[   and NOW() >=SUBDATE(CREATE_TIME,INTERVAL -#{starTime} minute) ]]>
+			</if>
+			<if test=" begainTime!= null and begainTime !=''">
+				<![CDATA[   DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{begainTime}, '%Y-%m-%d')	]]>
+			</if>
+			<if test=" endTime!= null and endTime !=''">
+				<![CDATA[   DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')	]]>
+			</if>
+        </if>
+      </where>
+    </select>
+    
+    
+    <!-- 删除某个收款方式 -->
+   <delete id="deletePaymethodById">
+   	 delete from seller_pay_method where  PAY_METHOD_ID = #{id}
+   </delete>
+   
+   <!-- 添加USDT地址 -->
+   <insert id="addSellerWallterAddress">
+   	 	insert into seller_wallter_address
+   	 	(
+   	 		SELLER_ID,
+   	 		ADDRESS,
+   	 		REMARK,
+   	 		CREATE_TIME
+   	 	)
+   	 	values
+   	 	(
+   	 		#{sellerId},
+   	 		#{address},
+   	 		#{remark},
+   	 		#{createTime}
+   	 	)
+   </insert>
+   
+   <!-- 删除usdt地址 -->
+   <delete id="deleteSellerWallterAddress">
+   	   delete from seller_wallter_address where ADDRESS_ID = #{id}
+   </delete>
+   
+	<!-- 查询某个USDT地址 -->
+	<select id="findSellerWallterAddressById" resultType="cn.stylefeng.guns.modular.system.entity.SellerWallterAddress">
+		select 
+			ADDRESS_ID as addressId,
+			SELLER_ID as sellerId,
+			ADDRESS as address,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		 from seller_wallter_address where ADDRESS_ID = #{id}
+	</select>
+	<!-- 获取某个页数的USDT钱包地址列表数据 -->
+	<select id="getSellerWallterAddressList" resultType="cn.stylefeng.guns.modular.system.entity.SellerWallterAddress">
+		select 
+			ADDRESS_ID as addressId,
+			SELLER_ID as sellerId,
+			ADDRESS as address,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		 from seller_wallter_address
+		<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null  and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 获取我的USDT地址总条数 -->
+	<select id="getSellerWallterAddressListCount" resultType="int">
+		 select
+        count(*)
+        from seller_wallter_address 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+	</select>
+	<!-- 获取USDT跟OTCP兑换的数据 -->
+	<select id="getOTCMarkInfo" resultType="cn.stylefeng.guns.modular.system.entity.USDTOtcpExchange">
+		 select EXCHANGE_ID exchangeId,
+		 	VALUE AS value
+		 	from usdt_otcp_exchange
+		 	limit 1
+	</select>
+	<!-- 查询我的某个币种的钱包 -->
+	<select id="findSellerWallter" resultType="cn.stylefeng.guns.modular.system.entity.SellerWallter">
+		select 
+			SELLER_WALLTER_ID as sellerWallterId,
+			SELLER_ID as sellerId,
+			AVAILABLE_BALANCE as availableBalance,
+			TOTAL_BALANCE as totalBalance,
+			FROZEN_BALANCE as frozenBalance,
+			VERSION as version,
+			CODE as code,
+			TYPE as type,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		from seller_wallter
+		<where>
+			<if test="code != null">
+				and CODE = #{code}
+			</if>
+			<if test="type != null and type !=''">
+				and TYPE = #{type}
+			</if>
+			<if test="sellerId != null">
+				and SELLER_ID = #{sellerId}
+			</if>
+			<if test="sellerWallterId != null">
+				and SELLER_WALLTER_ID = #{sellerWallterId}
+			</if>
+		</where>
+	</select>
+	<!-- 更新会员账号的钱包 -->
+	<update id="updateSellerWallter">
+		update seller_wallter
+		<set>
+			TOTAL_BALANCE = 0,
+			<if test="availableBalance != null">
+				AVAILABLE_BALANCE = #{availableBalance},
+			</if>
+			<if test="frozenBalance != null">
+				FROZEN_BALANCE =#{frozenBalance},
+			</if>
+			<if test="version != null">
+				VERSION = #{version}+1,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+		</set>
+		where SELLER_ID = #{sellerId} and CODE =#{code} and VERSION = #{version}
+	</update>
+	
+	<!-- 添加会员账号的流水记录 -->
+	<insert id="addSellerAccountFlowRecord">
+		insert into seller_account_flow_record
+		(
+			SOURCE,
+			PRICE,
+			CREATE_TIME,
+			SELLER_ID,
+			CODE,
+			SERIAL_NO,
+			REMARK,
+			TYPE,
+			WALLET_TYPE
+		)
+		values
+		(
+			#{source},
+			#{price},
+			#{createTime},
+			#{sellerId},
+			#{code},
+			#{serialno},
+			#{remark},
+			#{type},
+			#{walletType}
+		)
+	</insert>
+	<!-- 获取承兑商的信息 -->
+	<select id="findUserOne" resultType="cn.stylefeng.guns.modular.system.entity.User">
+		select 
+		USER_ID userId,
+		PHONE phone,
+		ACCOUNT account,
+		CREATE_TIME createTime,
+		APP_SECRET as appSecret,
+		ACCOUNT_CODE accountCode
+		from sys_user
+		<where>
+			<if test="userId != null">
+				and USER_ID = #{userId} 
+			</if>
+			<if test="status != null">
+				and STATUS = #{status}
+			</if>
+		</where>
+		limit 1
+	</select>
+	<!-- 获取承兑商的钱包数据 -->
+	<select id="findUserWallterList" resultType="cn.stylefeng.guns.modular.system.entity.UserWallter">
+		select 
+			USER_WALLTER_ID as userWallterId,
+			USER_ID as userId,
+			AVAILABLE_BALANCE as availableBalance,
+			TOTAL_BALANCE as totalBalance,
+			FROZEN_BALANCE as frozenBalance,
+			TYPE as type,
+			VERSION as version,
+		    CHANNEL_TYPE as channelType,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		from sys_user_wallter
+		<where>
+			<if test="userId != null">
+				and USER_ID = #{userId}
+			</if>
+			<if test="type != null">
+				and TYPE = #{type}
+			</if>
+			<if test="channelType != null and channelType !=''">
+				and CHANNEL_TYPE = #{channelType}
+			</if>
+			<if test="userWallterId != null">
+				and USER_WALLTER_ID = #{userWallterId}
+			</if>
+		</where>
+	</select>
+	<!-- 获取挖矿账号的钱包数据 -->
+	<select id="findSellerProfitWallterList" resultType="cn.stylefeng.guns.modular.system.entity.SellerProfitWallter">
+		select 
+			PROFIT_WALLTER_ID as profitWallterId,
+			PHONE as phone,
+			SELLER_ID as sellerId,
+			AVAILABLE_BALANCE as availableBalance,
+			 TOTAL_BALANCE as totalBalance,
+			 FROZEN_BALANCE as frozenBalance,
+			 VERSION as version,
+			 CODE as code,
+			 CREATE_TIME as createTime,
+			 UPDATE_TIME as updateTime
+		from seller_profit_wallter
+		<where>
+			<if test="sellerId != null">
+				and SELLER_ID = #{sellerId}
+			</if>
+			<if test="code != null">
+				and CODE = #{code}
+			</if>
+			<if test="profitWallterId != null">
+				and PROFIT_WALLTER_ID = #{profitWallterId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 获取平台充币地址 -->
+	<select id="findChargeCoinAddress" resultType="cn.stylefeng.guns.modular.system.entity.PlatformCoinAddress">
+		select * from platform_coin_address limit 1
+	</select>
+	
+	<!-- 充币审核提交订单 -->
+	<insert id="addSellerChargerCoinAppealOrder">
+		insert into seller_charger_coin_appeal_order
+		(
+			SELLER_ID,
+			SERIALNO,
+			NUMBER,
+			HASH_VALUE,
+			ADDRESS,
+			STATUS,
+			CREATE_TIME
+		)
+		values
+		(
+			#{sellerId},
+			#{serialno},
+			#{number},
+			#{hashValue},
+			#{address},
+			#{status},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 充币审核列表 -->
+	<select id="getSellerChargerCoinAppealList" resultType="cn.stylefeng.guns.modular.system.entity.SellerChargerCoinAppealOrder">
+		select 
+			APPEAL_ID as appealId,
+			SELLER_ID as sellerId,
+			NUMBER as number,
+			HASH_VALUE as hashValue,
+			ADDRESS as address,
+			STATUS as status,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		 from seller_charger_coin_appeal_order
+		<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 充币审核总条数 -->
+	<select id="getSellerChargerCoinAppealListCount" resultType="int">
+		 select
+        count(*)
+        from seller_charger_coin_appeal_order 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+	</select>
+	<!-- 获取提币手续费设置信息 -->
+	<select id="findSellerWithdrawFeeSettingOne" resultType="cn.stylefeng.guns.modular.system.entity.SellerWithdrawFeeSetting">
+		select 
+			SETTING_ID as settingId,
+			MIN_NUMBER as minNumber,
+			MAX_NUMBER as maxNumber,
+			MIN_FEE_NUMBER as minFeeNumber,
+			FEE_RATIO as feeRatio,
+			START_RATIO_NUMBER as startRatioNumber,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		 from seller_withdraw_fee_setting limit 1
+	</select>
+	<!-- 添加提币申请订单 -->
+	<insert id="addSellerWithdrawCoinAppealOrder">
+		insert into seller_withdraw_coin_appeal_order
+		(
+			NUMBER,
+			ADDRESS,
+			FEE_PRICE,
+			SELLER_ID,
+			CREATE_TIME,
+			STATUS,
+			TOTAL_NUMBER,
+			SERIAL_NO,
+			EXCHANGE_RATIO
+		)
+		values
+		(
+			#{number},
+			#{address},
+			#{feePrice},
+			#{sellerId},
+			#{createTime},
+			#{status},
+			#{totalNumber},
+			#{serialNo},
+			#{exChangeRatio}
+		)
+	</insert>
+	<!-- 提币申请订单列表 -->
+	<select id="getSellerWithdrawCoinAppealList" resultType="cn.stylefeng.guns.modular.system.entity.SellerWithdrawCoinAppealOrder">
+		select 
+			APPEAL_ID as appealId,
+			SELLER_ID as sellerId,
+			NUMBER as number,
+			ADDRESS as address,
+			STATUS as status,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime,
+			FEE_PRICE as feePrice,
+			TOTAL_NUMBER as totalNumber
+		 from seller_withdraw_coin_appeal_order
+		<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 提币申请订单总条数 -->
+	<select id="getSellerWithdrawCoinAppealListCount" resultType="int">
+		 select
+        count(*)
+        from seller_withdraw_coin_appeal_order 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+      	</where>
+	</select>
+	<!-- 添加承兑商流水记录 -->
+	<insert id="addUserAccountFlowRecord">
+		insert into user_account_flow_record
+		(
+			SOURCE,
+			PRICE,
+			CREATE_TIME,
+			SELLER_ID,
+			USER_ID,
+			CODE,
+			SERIAL_NO,
+			REMARK,
+			TYPE
+		)
+		values
+		(
+			#{source},
+			#{price},
+			#{createTime},
+			#{sellerId},
+			#{userId},
+			#{code},
+			#{serialno},
+			#{remark},
+			#{type}
+		)
+	</insert>
+	<!-- 更新承兑商钱包 -->
+	<update id="updateUserWallter">
+		update sys_user_wallter
+		<set>
+			<if test="availableBalance != null">
+				AVAILABLE_BALANCE = #{availableBalance},
+			</if>
+			<if test="totalBalance != null">
+				TOTAL_BALANCE = #{totalBalance},
+			</if>
+			<if test="frozenBalance != null">
+				FROZEN_BALANCE = #{frozenBalance},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="version != null">
+				VERSION = #{version}+1,
+			</if>
+		</set>
+		where 
+			USER_ID = #{userId} 
+			and VERSION = #{version} 
+			<if test="type != null and type !=''">
+				and TYPE = #{type}
+			</if>
+	</update>
+	<!-- 划转记录 -->
+	<insert id="addSellerTransferRecord">
+		insert into seller_transfer_record
+		(
+			SELLER_ID,
+			USER_ID,
+			NUMBER,
+			TYPE,
+			CREATE_TIME,
+			FROM_ACCOUNT,
+			TO_ACCOUNT
+		)
+		values
+		(
+			#{sellerId},
+			#{userId},
+			#{number},
+			#{type},
+			#{createTime},
+			#{fromAccount},
+			#{toAccount}
+		)
+	</insert>
+	<!-- 更新挖矿钱包 -->
+	<update id="updateSellerProfitWallter">
+		update seller_profit_wallter
+		<set>
+			<if test="availableBalance != null">
+				AVAILABLE_BALANCE = #{availableBalance},
+			</if>
+			<if test="totalBalance != null">
+				TOTAL_BALANCE = #{totalBalance},
+			</if>
+			<if test="frozenBalance != null">
+				FROZEN_BALANCE = #{frozenBalance},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="version != null">
+				VERSION = #{version}+1,
+			</if>
+		</set>
+		where PROFIT_WALLTER_ID = #{profitWallterId} and VERSION = #{version}
+	</update>
+	<!-- 添加挖矿账号流水记录 -->
+	<insert id="addSellerProfitFlowRecord">
+		insert into seller_profit_account_flow_record
+		(
+			SOURCE,
+			PRICE,
+			CREATE_TIME,
+			SELLER_ID,
+			USER_ID,
+			CODE,
+			SERIAL_NO,
+			TYPE
+		)
+		values
+		(
+			#{source},
+			#{price},
+			#{createTime},
+			#{sellerId},
+			#{userId},
+			#{code},
+			#{serialno},
+			#{type}
+		)
+	</insert>
+	<!-- 获取划转记录列表 -->
+	<select id="getTransferCoinListList" resultType="cn.stylefeng.guns.modular.system.entity.SellerTransferRecord">
+		select 
+			RECORD_ID as recordId,
+			SELLER_ID as sellerId,
+			NUMBER as number,
+			USER_ID as userId,
+			TYPE as type,
+			CREATE_TIME as createTime
+		 from seller_transfer_record
+		<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      	<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and offset !=''  and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	
+	<!-- 获取划转记录列表 总条数 -->
+	<select id="getTransferCoinListListCount" resultType="int">
+		 select
+        count(*)
+        from seller_transfer_record 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      		<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+      	</where>
+	</select>
+	<!-- 获取会员的流水记录列表 -->
+	<select id="getSellerAccountFlowRecordList" resultType="cn.stylefeng.guns.modular.system.entity.SellerAccountFlowRecord">
+		select
+			FLOW_RECORD_ID as  flowRecordId,
+			SOURCE as source,
+			PRICE as price,
+			CREATE_TIME as createTime,
+			SELLER_ID as sellerId,
+			CODE as code,
+			TYPE AS type,
+		    WALLET_TYPE walletType
+		 from 
+		 	seller_account_flow_record
+		 	<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      	<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+	      	<if test="type != null and type != ''">
+				and TYPE = #{type}
+			</if>
+			<if test="walletType != null and walletType != ''">
+				and WALLET_TYPE = #{walletType}
+			</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 获取会员的流水记录总条数 -->
+	<select id="getSellerAccountFlowRecordListCount" resultType="int">
+		 select
+        count(*)
+        from seller_account_flow_record 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      		<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+			<if test="type != null and type != ''">
+				and TYPE = #{type}
+			</if>
+			<if test="walletType != null and walletType != ''">
+				and WALLET_TYPE = #{walletType}
+			</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+	</select>
+	
+	<!-- 获取承兑商的流水记录列表 -->
+	<select id="getUserAccountFlowRecordList" resultType="cn.stylefeng.guns.modular.system.entity.UserAccountFlowRecord">
+		select
+			FLOW_RECORD_ID as  flowRecordId,
+			SOURCE as source,
+			PRICE as price,
+			CREATE_TIME as createTime,
+			SELLER_ID as sellerId,
+			CODE as code
+		 from 
+		 	user_account_flow_record
+		 	<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      	<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and offset !=''  and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 获取承兑商的流水记录总条数 -->
+	<select id="getUserAccountFlowRecordListCount" resultType="int">
+		 select
+        count(*)
+        from user_account_flow_record 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      		<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+	</select>
+		<!-- 获取挖矿账号的流水记录列表 -->
+	<select id="getSellerProfitAccountFlowRecordList" resultType="cn.stylefeng.guns.modular.system.entity.SellerProfitAccountFlowRecord">
+		select
+			FLOW_RECORD_ID as  flowRecordId,
+			SOURCE as source,
+			PRICE as price,
+			CREATE_TIME as createTime,
+			SELLER_ID as sellerId,
+			USER_ID as userId,
+			CODE as code
+		 from 
+		 	seller_profit_account_flow_record
+		 	<where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      	<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and offset !=''  and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 获取挖矿账号的流水记录总条数 -->
+	<select id="getSellerProfitAccountFlowRecordListCount" resultType="int">
+		 select
+        count(*)
+        from seller_profit_account_flow_record 
+        <where>
+	      	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      	</if>
+	      		<if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	      	<if test="code != null">
+	      		and CODE =#{code}
+	      	</if>
+			<if test="starTime != null and starTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+			<if test="endTime != null and endTime !=''">
+				<![CDATA[ and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+			</if>
+      	</where>
+	</select>
+
+	<select id="getFlowRecordStatistics" resultType="map">
+		SELECT
+			SUM(p.gradNumber) gradNumber,
+			SUM(p.gradSuccessNumber) gradSuccessNumber,
+			SUM(p.buyCoinNumber) buyCoinNumber,
+			SUM(p.sellCoinNumber) sellCoinNumber,
+			SUM(p.sellCoinFee) sellCoinFee,
+			SUM(p.sellCoinSuccess) sellCoinSuccess,
+			SUM(p.tranferNumber) tranferNumber,
+			SUM(p.tranferOutNumber) tranferOutNumber,
+			SUM(p.exchangeInNumber) exchangeInNumber,
+			SUM(p.exchangeOutNumber) exchangeOutNumber,
+			SUM(p.rechangeNumber) rechangeNumber,
+			SUM(p.withdrawNumber) withdrawNumber,
+			SUM(p.withdrawFeeNumber) withdrawFeeNumber,
+			SUM(p.profitNumber) profitNumber
+		FROM
+		(
+			(
+				SELECT
+					abs(IFNULL(SUM(safr.PRICE), 0)) gradNumber,
+					abs(IFNULL(SUM(safr.PRICE), 0)) gradSuccessNumber,
+					@rownum buyCoinNumber,
+					@rownum sellCoinNumber,
+					@rownum sellCoinFee,
+					@rownum sellCoinSuccess,
+					@rownum tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					seller_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+				AND safr.TYPE = 'GRAD_HC_COIN'
+		and safr.SELLER_ID = #{sellerId}
+				<if test="starTime != null and starTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				<if test="endTime != null and endTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+			)
+			UNION ALL
+				(
+					SELECT
+		abs(IFNULL(SUM(safr.PRICE), 0)) gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'GRAD_HC_COIN_CANNEL'
+		and safr.SELLER_ID = #{sellerId}
+					<if test="starTime != null and starTime !=''">
+						<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+					</if>
+					<if test="endTime != null and endTime !=''">
+						<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+					</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+						and safr.SELLER_ID = #{sellerId}
+					AND safr.TYPE = 'BUY_HC_COIN'
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'SELL_HC_COIN'
+					and safr.SELLER_ID = #{sellerId}
+					<if test="starTime != null and starTime !=''">
+						<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+					</if>
+					<if test="endTime != null and endTime !=''">
+						<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+					</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'SELL_HC_COIN_FEE'
+		and safr.SELLER_ID = #{sellerId}
+				<if test="starTime != null and starTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				<if test="endTime != null and endTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'SELL_HC_COIN_SUCCESS'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+		abs(IFNULL(SUM(safr.PRICE), 0)) tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'TRANFER_IN_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'TRANFER_OUT_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'EXCHANGER_IN_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+		and safr.SELLER_ID = #{sellerId}
+					AND safr.TYPE = 'EXCHANGER_OUT_COIN'
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) rechangeNumber,
+						@rownum withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'RECHARGE_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) withdrawNumber,
+						@rownum withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'WITHDRAW_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+			UNION ALL
+				(
+					SELECT
+						@rownum gradNumber,
+						@rownum gradSuccessNumber,
+						@rownum buyCoinNumber,
+						@rownum sellCoinNumber,
+						@rownum sellCoinFee,
+						@rownum sellCoinSuccess,
+						@rownum tranferNumber,
+						@rownum tranferOutNumber,
+						@rownum exchangeInNumber,
+						@rownum exchangeOutNumber,
+						@rownum rechangeNumber,
+						@rownum withdrawNumber,
+						abs(IFNULL(SUM(safr.PRICE), 0)) withdrawFeeNumber,
+						@rownum profitNumber
+					FROM
+						seller_account_flow_record safr,
+						(
+							SELECT
+								@rownum := 0 ,@number := 0
+						) AS t
+					WHERE
+						safr.`CODE` = #{code}
+					AND safr.TYPE = 'WITHDRAW_COIN_FEE'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+				)
+		) p
+	</select>
+
+	<select id="getUserAccountFlowRecordStatistics" resultType="map">
+		SELECT
+	SUM(p.gradNumber) gradNumber,
+	SUM(p.gradSuccessNumber) gradSuccessNumber,
+	SUM(p.buyCoinNumber) buyCoinNumber,
+	SUM(p.sellCoinNumber) sellCoinNumber,
+	SUM(p.sellCoinFee) sellCoinFee,
+	SUM(p.sellCoinSuccess) sellCoinSuccess,
+	SUM(p.tranferNumber) tranferNumber,
+	SUM(p.tranferOutNumber) tranferOutNumber,
+	SUM(p.exchangeInNumber) exchangeInNumber,
+	SUM(p.exchangeOutNumber) exchangeOutNumber,
+	SUM(p.rechangeNumber) rechangeNumber,
+	SUM(p.withdrawNumber) withdrawNumber,
+	SUM(p.withdrawFeeNumber) withdrawFeeNumber,
+	SUM(p.profitNumber) profitNumber
+FROM
+	(
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) buyCoinNumber,
+					@rownum sellCoinNumber,
+					@rownum sellCoinFee,
+					@rownum sellCoinSuccess,
+					@rownum tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` =  #{code}
+				AND safr.TYPE = 'BUY_HC_COIN'
+		and safr.SELLER_ID = #{sellerId}
+				<if test="starTime != null and starTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				<if test="endTime != null and endTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+			)
+		UNION ALL
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+					@rownum buyCoinNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinNumber,
+					@rownum sellCoinFee,
+					@rownum sellCoinSuccess,
+					@rownum tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+				AND safr.TYPE = 'SELL_HC_COIN'
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+			)
+		UNION ALL
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+					@rownum buyCoinNumber,
+					@rownum sellCoinNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinFee,
+					@rownum sellCoinSuccess,
+					@rownum tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+				AND safr.TYPE = 'SELL_HC_COIN_FEE'
+				and safr.SELLER_ID = #{sellerId}
+		and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+			)
+		UNION ALL
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+					@rownum buyCoinNumber,
+					@rownum sellCoinNumber,
+					@rownum sellCoinFee,
+		abs(IFNULL(SUM(safr.PRICE), 0)) sellCoinSuccess,
+					@rownum tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+				AND safr.TYPE = 'SELL_HC_COIN_SUCCESS'
+				and safr.SELLER_ID = #{sellerId}
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+			)
+		UNION ALL
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+					@rownum buyCoinNumber,
+					@rownum sellCoinNumber,
+					@rownum sellCoinFee,
+					@rownum sellCoinSuccess,
+		abs(IFNULL(SUM(safr.PRICE), 0)) tranferNumber,
+					@rownum tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+				and safr.SELLER_ID = #{sellerId}
+				AND safr.TYPE = 'TRANFER_IN_COIN'
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+			)
+		UNION ALL
+			(
+				SELECT
+					@rownum gradNumber,
+					@rownum gradSuccessNumber,
+					@rownum buyCoinNumber,
+					@rownum sellCoinNumber,
+					@rownum sellCoinFee,
+					@rownum sellCoinSuccess,
+					@rownum tranferNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) tranferOutNumber,
+					@rownum exchangeInNumber,
+					@rownum exchangeOutNumber,
+					@rownum rechangeNumber,
+					@rownum withdrawNumber,
+					@rownum withdrawFeeNumber,
+					@rownum profitNumber
+				FROM
+					user_account_flow_record safr,
+					(
+						SELECT
+							@rownum := 0 ,@number := 0
+					) AS t
+				WHERE
+					safr.`CODE` = #{code}
+					and safr.SELLER_ID = #{sellerId}
+				AND safr.TYPE = 'TRANFER_OUT_COIN'
+		<if test="starTime != null and starTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+		<if test="endTime != null and endTime !=''">
+			<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+		</if>
+			)
+	) p
+	</select>
+
+	<select id="getSellerProfitAccountFlowRecordStatistics" resultType="map">
+		SELECT
+			SUM(p.gradNumber) gradNumber,
+			SUM(p.gradSuccessNumber) gradSuccessNumber,
+			SUM(p.buyCoinNumber) buyCoinNumber,
+			SUM(p.sellCoinNumber) sellCoinNumber,
+			SUM(p.sellCoinFee) sellCoinFee,
+			SUM(p.sellCoinSuccess) sellCoinSuccess,
+			SUM(p.tranferNumber) tranferNumber,
+			SUM(p.tranferOutNumber) tranferOutNumber,
+			SUM(p.exchangeInNumber) exchangeInNumber,
+			SUM(p.exchangeOutNumber) exchangeOutNumber,
+			SUM(p.rechangeNumber) rechangeNumber,
+			SUM(p.withdrawNumber) withdrawNumber,
+			SUM(p.withdrawFeeNumber) withdrawFeeNumber,
+			SUM(p.profitNumber) profitNumber
+		FROM
+		(
+			(
+				SELECT
+				@rownum gradNumber,
+				@rownum gradSuccessNumber,
+				@rownum buyCoinNumber,
+				@rownum sellCoinNumber,
+				@rownum sellCoinFee,
+				@rownum sellCoinSuccess,
+				@rownum tranferNumber,
+				@rownum tranferOutNumber,
+				@rownum exchangeInNumber,
+				@rownum exchangeOutNumber,
+				@rownum rechangeNumber,
+				@rownum withdrawNumber,
+				@rownum withdrawFeeNumber,
+				abs(IFNULL(SUM(safr.PRICE), 0)) profitNumber
+				FROM
+					seller_profit_account_flow_record safr,
+				(
+				SELECT
+				@rownum := 0 ,@number := 0
+				) AS t
+				WHERE
+				safr.`CODE` = #{code}
+				and safr.SELLER_ID = #{sellerId}
+				AND safr.TYPE = 'PROFIT_COIN'
+				<if test="starTime != null and starTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				<if test="endTime != null and endTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+			)
+				UNION ALL
+				(
+				SELECT
+				@rownum gradNumber,
+				@rownum gradSuccessNumber,
+				@rownum buyCoinNumber,
+				@rownum sellCoinNumber,
+				@rownum sellCoinFee,
+				@rownum sellCoinSuccess,
+				@rownum tranferNumber,
+		abs(IFNULL(SUM(safr.PRICE), 0)) tranferOutNumber,
+				@rownum exchangeInNumber,
+				@rownum exchangeOutNumber,
+				@rownum rechangeNumber,
+				@rownum withdrawNumber,
+				@rownum withdrawFeeNumber,
+				@rownum profitNumber
+				FROM
+				seller_profit_account_flow_record safr,
+				(
+				SELECT
+				@rownum := 0 ,@number := 0
+				) AS t
+				WHERE
+				safr.`CODE` = #{code}
+				AND safr.TYPE = 'TRANFER_OUT_COIN'
+				and safr.SELLER_ID = #{sellerId}
+				<if test="starTime != null and starTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') >= DATE_FORMAT(#{starTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+				<if test="endTime != null and endTime !=''">
+					<![CDATA[ and  DATE_FORMAT(safr.CREATE_TIME, '%Y-%m-%d %H:%i') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')  ]]>
+				</if>
+			)
+		) p
+	</select>
+
+
+	<!-- 提交承兑商申请 -->
+	<insert id="addSellerAccpterAppeal">
+		insert into seller_accpter_appeal
+		(
+			SELLER_ID,
+			NAME,
+			IDCARD_NO,
+			PHONE,
+			STATUS,
+			CREATE_TIME
+		)
+		values
+		(
+			#{sellerId},
+			#{name},
+			#{idCardNo},
+			#{phone},
+			#{status},
+			#{createTime}
+		)
+	</insert>
+	<!-- 获取oct列表数据-->
+	<select id="getSellOtcpOrderList" resultType="cn.stylefeng.guns.modular.app.dto.SellOtcpOrderDto">
+  		 SELECT
+			soo.ORDER_ID AS orderId,
+			soo.SERIALNO AS serialno,
+			soo.USER_ID AS userId,
+			soo.NUMBER AS number,
+			soo.SUP_NUMBER AS supNumber,
+			soo.MIN_NUMBER AS minNumber,
+			soo.MAX_NUMBER AS maxNumber,
+			soo.ROLE_ID AS roleId,
+			soo.SELLER_ID AS sellerId,
+			soo.PAY_METHOD_IDS AS payMethodIds,
+			soo.FEE_PRICE AS feePrice,
+			soo.FEE_RATIO AS feeRatio,
+			soo.STATUS AS STATUS,
+			soo.PRICE AS price,
+			soo.TOTAL_PRICE AS totalPrice,
+			soo.TYPE AS type,
+			soo.CREATE_TIME AS createTime,
+			soo.UPDATE_TIME AS updateTime,
+			COUNT( oto.ORDER_ID ) traderNum,
+			SUM( CASE WHEN oto.`STATUS` = 4 THEN 1 ELSE 0 END )/COUNT( oto.ORDER_ID ) AS successRatio
+		FROM
+			sell_otcp_order soo
+			LEFT JOIN otcp_order oto ON soo.ORDER_ID = oto.OTC_ORDER_ID
+			<![CDATA[ AND DATE_SUB( CURDATE(), INTERVAL 30 DAY ) <= date( oto.CREATE_TIME )	]]>
+			WHERE
+				soo.STATUS = 1
+			<if test="isMySelf ==2">
+					<if test="type != null and type !='' ">
+						<if test="type ==1">
+							and soo.TYPE =2
+						</if>
+						<if test="type ==2">
+							and soo.TYPE NOT IN(2)
+						</if>
+					</if>
+					<if test="symbols != null and symbols !=''">
+						and soo.SYMBOLS = #{symbols}
+					</if>
+					<if test="payMethod != null and payMethod !=''">
+						and soo.PAY_METHOD_TYPE like CONCAT('%',#{payMethod},'%')
+					</if>
+					<if test="	price != null and price !=''">
+						and soo.PRICE  = #{price}
+					</if>
+				 </if>
+				 <if test="isMySelf ==1">
+					<if test="sellerId != null and sellerId !=''">
+					and soo.SELLER_ID = #{sellerId}
+					</if>
+					<if test="type != null and type !='' ">
+						and soo.TYPE = #{type}
+					</if>
+				 </if>
+			ORDER BY
+				soo.PRICE ASC,successRatio desc
+			<if test="offset != null and offset !=''  and limit != null and limit !=''">
+				limit #{offset}, #{limit}
+			</if>
+
+	</select>
+	<!-- 获取otc列表总条数 -->
+	<select id="getSellOtcpOrderListCount" resultType="int">
+		 select
+        count(*)
+        from sell_otcp_order 
+        	 where STATUS = 1
+	      		 <if test="isMySelf ==2">
+	      		<if test="type != null and type !='' ">
+		      		<if test="type ==1">
+		      			and TYPE =2
+		      		</if>
+		      		<if test="type ==2">
+		      			and TYPE NOT IN(2)
+		      		</if>
+	      		</if>
+		 	 </if>
+		 	 <if test="isMySelf ==1">
+		 	 	<if test="sellerId != null and sellerId !=''">
+	      		and SELLER_ID = #{sellerId}
+	      		</if>
+	      		<if test="type != null and type !='' ">
+		      		and TYPE = #{type}
+	      		</if>
+		 	 </if>
+		 	 <if test="userId != null and userId !=''">
+	      		and USER_ID = #{userId}
+	      	</if>
+	</select>
+	
+	<!-- 会员出售otc手续费 -->
+	<select id="findSellerOtcFeeSettingOne" resultType="cn.stylefeng.guns.modular.system.entity.SellerOtcFeeSetting">
+		select  
+		 SETTING_ID as settingId,
+		 RATIO as ratio,
+		 MIN_NUMER AS minNumber,
+		 SYMBOLS AS symbols,
+		 CREATE_TIME as createTime,
+		 UPDATE_TIME as updateTime
+		from seller_otc_fee_setting
+		where  SYMBOLS = #{symbols}
+		 limit 1
+	</select>
+	<!-- 查询octp价格信息 -->
+	<select id="findOtcpPriceSettingOne" resultType="cn.stylefeng.guns.modular.system.entity.OtcpPirceSetting">
+		select 
+			SETTING_ID as settingId,
+			PRICE as price,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+			from otcp_price_setting
+			where  SYMBOLS = #{symbols}
+			limit 1
+	</select>
+	<!-- 获取我的otcp订单列表数据 -->
+	<select id="getOtcpOrderList" resultType="cn.stylefeng.guns.modular.system.entity.OtcpOrder">
+		SELECT
+			ORDER_ID AS orderId,
+			SERIALNO AS serialno,
+			BUYER_ID AS buyerId,
+			SELLER_ID AS sellerId,
+			PRICE AS price,
+			NUMBER AS number,
+			TOTAL_PRICE AS totalPrice,
+			STATUS AS STATUS,
+			CREATE_TIME AS createTime,
+			UPDATE_TIME AS updateTime,
+			CANNEL_TIME AS cannelTime,
+			PAY_METHOD_IDS AS payMethodIds,
+			CERTIFICATE AS certificate,
+			IS_APPEAL AS isAppeal,
+			APPEAL_TIME AS appealTime,
+			CLOSE_TIME AS closeTime,
+			TYPE AS type,
+			BUY_SELL_TYPE AS buySellType,
+			REMARK AS remark,
+			OTC_ORDER_ID otcOrderId
+		FROM
+			otcp_order
+		<where>
+			<if test="status != null and status !=7">
+				and STATUS = #{status}
+			</if>
+			<if test="status != null and status ==7">
+				and STATUS in(5,7) 
+			</if>
+			<if test="sellerId != null and sellerId !='' and (tradeType == null or tradeType =='')">
+				and (SELLER_ID = #{sellerId}  or BUYER_ID = #{sellerId})
+			</if>
+			<if test=" sellerId != null and sellerId !='' and tradeType != null and tradeType == 1">
+				and BUYER_ID = #{sellerId}
+			</if>
+			<if test=" sellerId != null and sellerId !='' and tradeType != null and tradeType == 2">
+				and SELLER_ID = #{sellerId}
+			</if>
+	      	<if test="type != null and type != ''">
+	      		and TYPE = #{type}
+	      	</if>
+			<if test="time != null and time != ''">
+				and (CREATE_TIME between CONCAT(#{time},' 00:00:00') and CONCAT(#{time},' 23:59:59'))
+			</if>
+<!--	      	<if test="buyerId != null and buyerId !=''">
+	      		and BUYER_ID = #{buyerId}
+	      	</if>-->
+      	</where>
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by  CREATE_TIME  desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<!-- 获取我的otcp订单总条数 -->
+	<select id="getOtcpOrderListCount" resultType="int">
+		SELECT
+			count(*)
+		<where>
+			<if test="status != null and status !=7">
+				and STATUS = #{status}
+			</if>
+			<if test="status != null and status ==7">
+				and STATUS in(5,7)
+			</if>
+			<if test="sellerId != null and sellerId !='' and (tradeType == null or tradeType =='')">
+				and (SELLER_ID = #{sellerId}  or BUYER_ID = #{sellerId})
+			</if>
+			<if test=" sellerId != null and sellerId !='' and tradeType != null and tradeType == 1">
+				and BUYER_ID = #{sellerId}
+			</if>
+			<if test=" sellerId != null and sellerId !='' and tradeType != null and tradeType == 2">
+				and SELLER_ID = #{sellerId}
+			</if>
+			<if test="type != null and type != ''">
+				and TYPE = #{type}
+			</if>
+			<if test="time != null and time != ''">
+				and (CREATE_TIME between CONCAT(#{time},' 00:00:00') and CONCAT(#{time},' 23:59:59'))
+			</if>
+			<!--	      	<if test="buyerId != null and buyerId !=''">
+                              and BUYER_ID = #{buyerId}
+                          </if>-->
+		</where>
+	</select>
+
+
+
+	<!-- 获取平台交易错误次数数据 -->
+	<select id="findOtcpCannelNumberSetting" resultType="cn.stylefeng.guns.modular.system.entity.OtcpCannelNumberSetting">
+		select 
+			SETTING_ID as settingId,
+			NUMBER as number,
+			TIME AS time,
+			MIN_TIME AS minTime,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		from 
+			otcp_cannel_number_setting
+			limit 1
+	</select>
+	<!-- 承兑商返利设置 -->
+	<select id="findAccepterRebateSetting" resultType="cn.stylefeng.guns.modular.system.entity.AccepterRebateSetting">
+		select 
+			REBATE_ID as rebateId,
+			VALUE as value
+			from accepter_rebate_setting
+			<where>
+				<if test="channelType != null and channelType !=''">
+					and CHANNEL_TYPE = #{channelType}
+				</if>
+				<if test="symbols != null and symbols !=''">
+					and SYMBOLS = #{symbols}
+				</if>
+			</where>
+			limit 1
+	</select>
+	<!-- 上级承兑商的返利设置 -->
+	<select id="findSuperiorAccepterRebateSetting" resultType="cn.stylefeng.guns.modular.system.entity.SuperiorAccepterRebateSetting">
+		select 
+			SETTING_ID as settingId,
+			VALUE as value
+			from
+				superior_accepter_rebate_setting
+			<where>
+				<if test="channelType != null and channelType !=''">
+					and CHANNEL_TYPE = #{channelType}
+				</if>
+				<if test="symbols != null and symbols !=''">
+					and SYMBOLS = #{symbols}
+				</if>
+			</where>
+			limit 1
+	</select>
+	
+	<select id="getHelpList" resultType="cn.stylefeng.guns.modular.system.entity.Help">
+		select 
+				ID id,
+				TITLE title,
+				CONTENT content,
+				CREATE_TIME as createTime
+			from help
+        <choose>
+            <when test="sort  != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by CREATE_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null and limit !=''">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+	<select id="getHelpListCount" resultType="int">
+		 select
+        count(*)
+        from help 
+	</select>
+	
+	<select id="getHelpDetail"  resultType="cn.stylefeng.guns.modular.system.entity.Help">
+		select 
+				ID id,
+				TITLE title,
+				CONTENT content,
+				CREATE_TIME as createTime
+			from help
+			where ID = #{id}
+	</select>
+	
+	<select id="findSellerPayMethodByIsCheck"  resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select 
+			PAY_METHOD_ID as payMethodId,
+			SELLER_ID as sellerId,
+			TYPE AS type,
+			QR_CODE as qrCode,
+			ACCOUNT as account,
+			CARD_BANK as cardBank,
+			CARD_BANK_NAME as cardBankName,
+			NAME as name,
+			USE_NUMBER as useNumber,
+			IS_CHECK as isCheck,
+			BUY_NUMBER as buyNumber,
+			SUCCESS_NUMBER as successNumber,
+			SUCCESS_RATIO as successRatio,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime,
+			QR_VALUE AS qrValue,
+			FAIL_NUMBER as failNumber,
+			FAIL_NOTICE as failNotice
+		from seller_pay_method
+		where IS_CHECK = 1
+		<if test="sellerId != null and sellerId != ''">
+			and SELLER_ID = #{sellerId}
+		</if>
+		<if test="type != null and type !=''">
+			and TYPE = #{type}
+		</if>
+	</select>
+
+
+	<select id="findSellerPayMethodByException" resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select
+		PAY_METHOD_ID as payMethodId,
+		SELLER_ID as sellerId,
+		TYPE AS type,
+		QR_CODE as qrCode,
+		ACCOUNT as account,
+		CARD_BANK as cardBank,
+		CARD_BANK_NAME as cardBankName,
+		NAME as name,
+		USE_NUMBER as useNumber,
+		IS_CHECK as isCheck,
+		BUY_NUMBER as buyNumber,
+		SUCCESS_NUMBER as successNumber,
+		SUCCESS_RATIO as successRatio,
+		REMARK as remark,
+		CREATE_TIME as createTime,
+		UPDATE_TIME as updateTime,
+		QR_VALUE AS qrValue,
+		FAIL_NUMBER as failNumber,
+		FAIL_NOTICE as failNotice
+		from seller_pay_method
+		<where>
+		<if test="sellerId != null and sellerId != ''">
+			and SELLER_ID = #{sellerId}
+		</if>
+		</where>
+	</select>
+
+	<select id="findSellerPayMethodList"  resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select
+		PAY_METHOD_ID as payMethodId,
+		SELLER_ID as sellerId,
+		TYPE AS type,
+		QR_CODE as qrCode,
+		ACCOUNT as account,
+		CARD_BANK as cardBank,
+		CARD_BANK_NAME as cardBankName,
+		NAME as name,
+		USE_NUMBER as useNumber,
+		IS_CHECK as isCheck,
+		BUY_NUMBER as buyNumber,
+		SUCCESS_NUMBER as successNumber,
+		SUCCESS_RATIO as successRatio,
+		REMARK as remark,
+		CREATE_TIME as createTime,
+		UPDATE_TIME as updateTime,
+		QR_VALUE AS qrValue,
+		FAIL_NUMBER as failNumber,
+		FAIL_NOTICE as failNotice,
+		IS_SOLD_OUT isSoldOut,
+		SOLD_OUT_TIME soldOutTime
+		from seller_pay_method
+		<where>
+			<if test="sellerId != null and sellerId != ''">
+				and SELLER_ID = #{sellerId}
+			</if>
+			<if test="isSoldOut != null and isSoldOut !=''">
+				and IS_SOLD_OUT = #{isSoldOut}
+			</if>
+			<if test="type != null and type !=''">
+				and TYPE = #{type}
+			</if>
+			<if test="account != null and account != ''">
+				and ACCOUNT = #{account}
+			</if>
+			<if test="qrValue != null and qrValue != ''">
+				and QR_VALUE = #{qrValue}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findsellerPayMethodBySellerId" resultType="cn.stylefeng.guns.modular.system.entity.SellerPayMethod">
+		select 
+			PAY_METHOD_ID as payMethodId,
+			SELLER_ID as sellerId,
+			TYPE AS type,
+			QR_CODE as qrCode,
+			ACCOUNT as account,
+			CARD_BANK as cardBank,
+			CARD_BANK_NAME as cardBankName,
+			NAME as name,
+			USE_NUMBER as useNumber,
+			IS_CHECK as isCheck,
+			BUY_NUMBER as buyNumber,
+			SUCCESS_NUMBER as successNumber,
+			SUCCESS_RATIO as successRatio,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime,
+			QR_VALUE AS qrValue,
+			FAIL_NUMBER as failNumber,
+			FAIL_NOTICE as failNotice,
+			IS_SOLD_OUT  as isSoldOut,
+			SOLD_OUT_TIME  as soldOutTime
+		from seller_pay_method
+		<where>
+			<if test="sellerId != null and sellerId != ''">
+				and SELLER_ID = #{sellerId}
+			</if>
+			<if test="type != null and type !=''">
+				and TYPE = #{type}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findUserPayMethod" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethod">
+		select 
+			PAY_METHOD_ID as payMethodId,
+			USER_ID as userId,
+			TYPE AS type,
+			QR_CODE as qrCode,
+			ACCOUNT as account,
+			CARD_BANK as cardBank,
+			CARD_BANK_NAME as cardBankName,
+			NAME as name,
+			USE_NUMBER as useNumber,
+			REMARK as remark,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		from sys_user_pay_method 
+		where PAY_METHOD_ID =#{id}
+	</select>
+	
+	<select id="findUserPayMethodFeeSettingByUserId" resultType="cn.stylefeng.guns.modular.system.entity.UserPayMethodFeeSetting">
+		select 
+			SETTING_ID as settingId,
+			USER_ID as userId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			CLOUD_PAY_RATIO AS cloudPayRatio,
+			 CREATE_TIME as createTime,
+			 UPDATE_TIME as updateTime
+		from 
+		user_pay_method_fee_setting 
+		where USER_ID = #{userId}
+	</select>
+	
+	<select id="findUserBonusSetting" resultType="cn.stylefeng.guns.modular.system.entity.UserBonusSetting">
+		select
+			BONUS_ID as bonusId,
+			USER_ID as userId,
+			AGENT_ID as agentId,
+			ALIPAY_RATIO as alipayRatio,
+			WX_RATIO as wxRatio,
+			CARD_RATIO as cardRatio,
+			CREATE_TIME as createTime,
+		CLOUD_PAY_RATIO AS cloudPayRatio,
+			UPDATE_TIME as updateTime
+		from 
+			user_bonus_setting
+			<where>
+				<if test="userId != null and userId != ''">
+					and USER_ID = #{userId}
+				</if>
+				<if test="agentId != null and agentId !=''">
+					and AGENT_ID = #{agentId}
+				</if>
+			</where>
+			limit 1
+	</select>
+	
+	<select id="findUserRecommendRelation" resultType="cn.stylefeng.guns.modular.system.entity.UserRecommendRelation">
+		select 
+			RELATION_ID as relationId,
+			USER_ID as userId,
+			RECOMMEND_ID as recommendId,
+			CREATE_TIME as createTime
+		from 
+			sys_user_recommend_relation
+		<where>
+			<if test="userId != null and userId != ''">
+				and USER_ID = #{userId}
+			</if>
+			<if test="recommendId != null and recommendId != ''">
+				and RECOMMEND_ID = #{recommendId}
+			</if>
+		</where>
+		limit 1
+	</select>
+	
+	<select id="getOneSellerAwardSetting" resultType="cn.stylefeng.guns.modular.system.entity.SellerAwardSetting">
+		select 
+			SETTING_ID as settingId,
+			VALUE as value,
+			CREATE_TIME as createTime,
+			UPDATE_TIME as updateTime
+		 from seller_award_setting limit 1
+	</select>
+	
+	<select id="findSellerBuyCoinNotice" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyCoinNotice">
+		select 
+			NOTICE_ID as noticeId,
+			SELLER_ID as sellerId,
+			IS_NOTICE AS isNotice
+		 from seller_buy_coin_notice
+		 where 
+		 SELLER_ID =#{sellerId}
+	</select>
+	
+	<update id="updateSellerBuyCoinNotice">
+		update seller_buy_coin_notice set IS_NOTICE = #{isNotice} where SELLER_ID = #{sellerId}
+	</update>
+	
+	
+	<insert id="addSellerBuyCoinNotice">
+		insert into seller_buy_coin_notice 
+		(
+			SELLER_ID,
+			IS_NOTICE
+		)
+		values
+		(
+			#{sellerId},
+			#{isNotice}
+		)
+	</insert>
+	
+	<select id="findOtcpOrderBySellerIdAndNoFinish" resultType="int">
+		select
+			count(*)		
+		 from 
+		 	otcp_order
+		where BUYER_ID = #{sellerId} and STATUS in(1,2,3,6)
+	</select>
+	
+	<select id="findMerchatPayOne" resultType="cn.stylefeng.guns.modular.system.entity.MerchantPay">
+		select ID id,VALUE value from merchant_pay limit 1
+	</select>
+	
+	<select id="findTeamBonusSettingList" resultType="cn.stylefeng.guns.modular.system.entity.TeamBonusSetting">
+		select 
+			SETTING_ID settingId,
+			MIN_PRICE minPrice,
+			MAX_PRICE maxPrice,
+			BONUS_RATIO as bonusRatio,
+			LEVEL level
+		from team_bonus_setting 
+		order by LEVEL asc
+	</select>
+	
+	
+	<select id="findMyselfTeamByToday" resultType="map">
+				SELECT
+			IFNULL(SUM(sbco.NUMBER), 0) todayPrice,
+			(
+				SELECT
+					IFNULL(SUM(co.NUMBER), 0) 
+				FROM
+					seller_buyer_coin_order co
+				WHERE
+					co.`STATUS` = 4
+				AND DATE(co.CLOSE_TIME) = CURDATE()
+				AND co.SELLER_ID IN (
+					SELECT
+						s.SELLER_ID
+					FROM
+						seller s
+					WHERE
+						s.REFERCE_IDS LIKE CONCAT('%,',  #{sellerId}, ',%')  OR s.SELLER_ID = #{sellerId}
+				)
+			) teamPrice,
+		(
+				SELECT
+					COUNT(DISTINCT sr.SELLER_ID)
+				FROM
+					seller sr,
+					seller_buyer_coin_order sbco
+				WHERE
+					sr.SELLER_ID IN (
+						SELECT
+							so.SELLER_ID
+						FROM
+							seller so
+						WHERE
+							so.REFERCE_IDS LIKE CONCAT('%,', #{sellerId}, ',%')
+					)
+				AND sr.SELLER_ID = sbco.SELLER_ID
+				AND sbco.`STATUS` = 4
+				AND DATE(sbco.CLOSE_TIME) = CURDATE()
+			) teamNumber,
+			(
+			SELECT
+						COUNT(*)
+					FROM
+						seller s
+					WHERE
+						s.REFERCE_IDS LIKE CONCAT('%,',  #{sellerId}, ',%')
+		) totalTeamNumber
+		FROM
+			seller_buyer_coin_order sbco
+		WHERE
+			sbco.`STATUS` = 4
+		AND sbco.SELLER_ID = #{sellerId}
+		AND DATE(sbco.CLOSE_TIME) = CURDATE()
+	</select>
+	
+	<select id="findMyselfSubordinateByToday" resultType="map">
+		SELECT
+			s.ACCOUNT CODE ,
+			IFNULL(SUM(sbco.NUMBER), 0) todayPrice,
+			(
+				SELECT
+					IFNULL(SUM(co.NUMBER), 0)
+				FROM
+					seller_buyer_coin_order co
+				WHERE
+					co.`STATUS` = 4
+				AND DATE(co.CLOSE_TIME) = CURDATE()
+				AND co.SELLER_ID IN (
+					SELECT
+						so.SELLER_ID
+					FROM
+						seller so
+					WHERE
+						so.REFERCE_IDS LIKE CONCAT('%,', s.SELLER_ID, ',%')
+					OR so.SELLER_ID = s.SELLER_ID
+				)
+			) teamPrice,
+			(
+				SELECT
+					COUNT(DISTINCT sr.SELLER_ID)
+				FROM
+					seller sr,
+					seller_buyer_coin_order sbco
+				WHERE
+					sr.SELLER_ID IN (
+						SELECT
+							so.SELLER_ID
+						FROM
+							seller so
+						WHERE
+							so.REFERCE_IDS LIKE CONCAT('%,', s.SELLER_ID, ',%')
+					)
+				AND sr.SELLER_ID = sbco.SELLER_ID
+				AND sbco.`STATUS` = 4
+				AND DATE(sbco.CLOSE_TIME) = CURDATE()
+			) teamNumber,
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					seller so
+				WHERE
+					so.REFERCE_IDS LIKE CONCAT('%,', s.SELLER_ID, ',%')
+			) totalTeamNumber
+		FROM
+			seller s
+		LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID AND DATE(sbco.CLOSE_TIME) = CURDATE()
+		AND sbco.`STATUS` = 4
+		WHERE
+			s.SELLER_ID IN (
+				SELECT
+					s.SELLER_ID
+				FROM
+					seller s
+				WHERE
+					s.REFERCE_ID = #{sellerId}
+			)
+		GROUP BY
+			s.SELLER_ID
+	        <if test="offset != null and limit != null">
+	            limit #{offset}, #{limit}
+	        </if>
+		</select>
+		
+		<select id="findMyselfSubordinateByTodayCount" resultType="Integer">
+			SELECT
+				IFNULL(COUNT(*), 0) 
+				FROM
+				seller s
+			LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID AND DATE(sbco.CLOSE_TIME) = CURDATE()
+			AND sbco.`STATUS` = 4
+			WHERE
+				s.SELLER_ID IN (
+					SELECT
+						s.SELLER_ID
+					FROM
+						seller s
+					WHERE
+						s.REFERCE_ID = #{sellerId}
+				)
+		</select>
+		
+		<select id="subordinateBonusList" resultType="map">
+			SELECT
+				s.ACCOUNT CODE,
+				IFNULL(SUM(sbco.NUMBER), 0) todayPrice,
+			IFNULL(SUM(sbco.BONUS_NUMER), 0) todayBonusNumber,
+				(
+					SELECT
+						IFNULL(SUM(co.NUMBER), 0)
+					FROM
+						seller_buyer_coin_order co
+					WHERE
+						co.`STATUS` = 4
+			<!-- AND DATE(co.CLOSE_TIME) = CURDATE() -->
+					AND co.SELLER_ID IN (
+						SELECT
+							so.SELLER_ID
+						FROM
+							seller so
+						WHERE
+							so.REFERCE_IDS LIKE CONCAT('%,', s.SELLER_ID, ',%')
+						OR so.SELLER_ID = s.SELLER_ID
+					)
+				) teamPrice,
+				(
+						SELECT
+						IFNULL(SUM(co.BONUS_NUMER), 0)
+					FROM
+						seller_buyer_coin_order co
+					WHERE
+						co.`STATUS` = 4
+			<!-- AND DATE(co.CLOSE_TIME) = CURDATE() -->
+					AND co.SELLER_ID IN (
+						SELECT
+							so.SELLER_ID
+						FROM
+							seller so
+						WHERE
+							so.REFERCE_IDS LIKE CONCAT('%,', s.SELLER_ID, ',%')
+						OR so.SELLER_ID = s.SELLER_ID
+					)
+			) teamTotalBonusNumber
+			FROM
+				seller s
+			LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID 
+			<!-- AND DATE(sbco.CLOSE_TIME) = CURDATE() -->
+			AND sbco.`STATUS` = 4
+			WHERE
+				s.SELLER_ID IN (
+					SELECT
+						s.SELLER_ID
+					FROM
+						seller s
+					WHERE
+						s.REFERCE_ID = #{sellerId}
+				)
+			GROUP BY
+				s.SELLER_ID
+	        <if test="offset != null and limit != null">
+	            limit #{offset}, #{limit}
+	        </if>
+		</select>
+		
+		<select id="subordinateBonusListCount" resultType="Integer">
+			SELECT
+			IFNULL(COUNT(*), 0) 
+			FROM
+				seller s
+				LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID
+				<!--  AND DATE(sbco.CLOSE_TIME) = CURDATE() -->
+				AND sbco.`STATUS` = 4
+				WHERE
+					s.SELLER_ID IN (
+						SELECT
+							s.SELLER_ID
+						FROM
+							seller s
+						WHERE
+							s.REFERCE_ID = #{sellerId}
+					)
+		</select>
+		
+		<select id="teamBonusInfo" resultType="map">
+				SELECT
+					IFNULL(SUM(sbco.BONUS_NUMER), 0) bonusNumber,
+					(
+						SELECT
+							IFNULL(SUM(co.NUMBER), 0) 
+						FROM
+							seller_buyer_coin_order co
+						WHERE
+							co.`STATUS` = 4
+							<!-- AND DATE(co.CLOSE_TIME) = CURDATE() -->
+						AND co.SELLER_ID IN (
+							SELECT
+								s.SELLER_ID
+							FROM
+								seller s
+							WHERE
+								s.REFERCE_IDS LIKE CONCAT('%,',  #{sellerId}, ',%') OR s.SELLER_ID=#{sellerId}
+						)
+					) teamPrice,
+				(
+						SELECT
+							IFNULL(SUM(co.BONUS_NUMER), 0) 
+						FROM
+							seller_buyer_coin_order co
+						WHERE
+							co.`STATUS` = 4
+							<!-- AND DATE(co.CLOSE_TIME) = CURDATE() -->
+						AND co.SELLER_ID IN (
+							SELECT
+								s.SELLER_ID
+							FROM
+								seller s
+							WHERE
+								s.REFERCE_IDS LIKE CONCAT('%,',  #{sellerId}, ',%') OR s.SELLER_ID=#{sellerId}
+						)
+					)  totalTeamBonusNumber,
+					(
+						SELECT
+							IFNULL(SUM(co.BONUS_NUMER), 0) 
+						FROM
+							seller_buyer_coin_order co
+						WHERE
+							co.`STATUS` = 4
+							<!-- AND DATE(co.CLOSE_TIME) = CURDATE() -->
+						AND co.SELLER_ID IN (
+							SELECT
+								s.SELLER_ID
+							FROM
+								seller s
+							WHERE
+								s.REFERCE_IDS LIKE CONCAT('%,',  #{sellerId}, ',%')
+						)
+					) teamBonusNumber
+				FROM
+					seller_buyer_coin_order sbco
+				WHERE
+					sbco.`STATUS` = 4
+				<!-- 	AND DATE(sbco.CLOSE_TIME) = CURDATE() -->
+				AND sbco.SELLER_ID =#{sellerId}
+		</select>
+		
+		<insert id="addSellerBuyCoinPayMethodQueue">
+			insert into seller_buy_coin_pay_method_queue
+			(
+				PAYMETHOD_ID,
+				SELLER_ID,
+				TYPE,
+				PRICE,
+				SELLER_ORDER_ID
+			)
+			values
+			(
+				#{payMethodId},
+				#{sellerId},
+				#{type},
+				#{price},
+				#{sellerOrderId}
+			)
+		</insert>
+		
+		<select id="findSellerBuyCoinMethodQueue" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyCoinPayMethodQueue">
+			select ID id,PAYMETHOD_ID as payMethodId,SELLER_ID as sellerId ,TYPE AS type, PRICE AS price,SELLER_ORDER_ID as sellerOrderId
+			from seller_buy_coin_pay_method_queue
+			<where>
+				<if test="sellerOrderId != null and sellerOrderId != ''">
+					and SELLER_ORDER_ID = #{sellerOrderId}
+				</if>
+				<if test="sellerId != null and sellerId != ''">
+					and SELLER_ID = #{sellerId}
+				</if>
+				
+				<if test="payMethodId != null and payMethodId != ''">
+					and PAYMETHOD_ID = #{payMethodId}
+				</if>
+				<if test="type != null and type != ''">
+					and TYPE = #{type}
+				</if>
+				<if test="price != null and price != ''">
+					and PRICE = #{price}
+				</if>
+			</where>
+		</select>
+		
+		<select id="findUserWallet" resultType="cn.stylefeng.guns.modular.system.entity.UserWallter">
+			select AVAILABLE_BALANCE as availableBalance  from sys_user_wallter where USER_ID = #{userId} and TYPE = 2
+		</select>
+	
+		<insert id="addAccountUpdateRecord">
+			insert into account_update_record
+			(
+				SERIAL_NO,
+				PHONE,
+				SOURCE,
+				CODE,
+				TYPE,
+				PAYMETHOD_TYPE,
+				REMARK,
+				ROLE_ID,
+				BEFORE_PRICE,
+				AFTER_PRICE,
+				CREATE_TIME,
+				PRICE,
+				ACCOUNT_ID,
+				WALLET_CODE
+			)
+			values
+			(
+				#{serialno},
+				#{phone},
+				#{source},
+				#{code},
+				#{type},
+				#{payMethodType},
+				#{remark},
+				#{roleId},
+				#{beforePrice},
+				#{afterPrice},
+				#{createTime},
+				#{price},
+				#{accountId},
+				#{walletCode}
+			)
+		</insert>
+		
+		<select id="findCustomerList" resultType="cn.stylefeng.guns.modular.system.entity.Customer">
+			select 
+				QQ_NO
+			FROM customer
+		</select>
+
+
+		<select id="getSellerTimeOne" resultType="cn.stylefeng.guns.modular.system.entity.SellerTimeSetting">
+			select
+			*
+			from
+				seller_time_setting
+			limit 1
+		</select>
+
+		<select id="getSellerBuyerCoinOrderLast" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+			select
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+			from seller_buyer_coin_order
+			where SELLER_ID = #{sellerId}
+    		ORDER BY CREATE_TIME DESC
+    		limit 1
+		</select>
+
+		<select id="getSellOtcpOrderLast" resultType="cn.stylefeng.guns.modular.system.entity.SellOtcpOrder">
+			select
+				ORDER_ID as orderId,
+				SERIALNO as serialNo,
+				USER_ID as userId,
+				NUMBER as number,
+				SUP_NUMBER supNumber,
+				MIN_NUMBER minNumber,
+				MAX_NUMBER maxNumber,
+				ROLE_ID roleId,
+				SELLER_ID sellerId,
+				PAY_METHOD_IDS payMethodIds,
+				FEE_PRICE feePrice,
+				FEE_RATIO as feeRatio,
+				STATUS status,
+				PRICE price,
+				CREATE_TIME createTime,
+				TOTAL_PRICE totalPrice,
+				TYPE AS type,
+				AUTO_MERCHANT as autoMerchant,
+				VERSION AS version
+			 from sell_otcp_order
+			 where
+			 	<if test="type != null and type ==1">
+					SELLER_ID = #{id} and TYPE = #{type}
+				</if>
+				<if test="type != null and type ==2">
+					USER_ID = #{id} and TYPE = #{type}
+				</if>
+				order by CREATE_TIME desc
+				limit 1
+		</select>
+
+		<select id="selectSellerCashBySellerId" resultType="cn.stylefeng.guns.modular.system.entity.SellerCash">
+			select
+					ID id,
+					CASH cash,
+					SELLER_ID sellerId,
+					CREATE_TIME createTime,
+					UPDATE_TIME updateTime
+				from
+				seller_cash
+				where SELLER_ID = #{sellerId}
+		</select>
+
+	<update id="updateSellerCash">
+		update seller_cash
+		set
+			CASH = #{cash},
+			UPDATE_TIME = #{updateTime}
+		where
+			ID = #{id} and SELLER_ID = #{sellerId}
+	</update>
+
+	<insert id="addSellerCash">
+		insert into seller_cash(CASH,CREATE_TIME,SELLER_ID) VALUES (#{cash},#{createTime},#{sellerId})
+	</insert>
+
+	<select id="getSellerBuySoldOutSetting" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuySoldOutSetting">
+		select ID id,NUMBER number,TIME time ,CREATE_TIME createTime,UPDATE_TIME updateTime
+		from seller_buy_sold_out_setting
+		limit 1
+	</select>
+
+	<select id="getSellerNoticeList" resultType="cn.stylefeng.guns.modular.system.entity.SellerNotice">
+		select
+			ID id,
+			CONTENT content,
+			SELLER_ID sellerId,
+			CREATE_TIME as createTime,
+			IS_SEE isSee
+		from seller_notice
+		<where>
+			<if test="sellerId != null and sellerId !=''">
+				and SELLER_ID = #{sellerId}
+			</if>
+		</where>
+		<choose>
+			<when test="sort  != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by CREATE_TIME desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and offset !=''  and limit != null and limit !=''">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="getSellerNoticeListCount" resultType="int">
+		select count(*) from seller_notice
+		<where>
+			<if test="sellerId != null and sellerId !=''">
+				and SELLER_ID = #{sellerId}
+			</if>
+		</where>
+	</select>
+
+	<select id="getSellerNoticeById" resultType="cn.stylefeng.guns.modular.system.entity.SellerNotice">
+		select
+			ID id,
+			CONTENT content,
+			SELLER_ID sellerId,
+			CREATE_TIME as createTime,
+			IS_SEE isSee
+			from  seller_notice
+			where
+			 ID = #{id}
+	</select>
+
+
+	<select id="findSellerNoticeCount" resultType="int">
+		select count(*) from  seller_notice
+			where SELLER_ID = #{sellerId} and IS_SEE =0
+	</select>
+
+	<update id="updateSellerNotice">
+		update seller_notice set IS_SEE = #{isSee},UPDATE_TIME = #{updateTime} where ID = #{id}
+	</update>
+
+	<select id="getExchangeFeeSetting" resultType="cn.stylefeng.guns.modular.system.entity.ExchangeSetting">
+		select
+			ID id,
+			EXCHANGE_VALUE exchangeValue,
+			TYPE type,
+			ROLE_ID as roleId
+		from
+			exchange_setting
+		where
+			type = #{type} and ROLE_ID = 1
+	</select>
+
+	<select id="getSellerExchangeOrderRecordList" resultType="cn.stylefeng.guns.modular.system.entity.ExchangeOrderRecord">
+		select
+		ID id,
+		SOURCE source,
+		NUMBER number,
+		COIN coin,
+		CODE code,
+		FEE_PRICE feePrice,
+		TOTAL_NUMBER totalNumber,
+		ROLE role,
+		ACCOUNT_ID as accountId,
+		CREATE_TIME as createTime
+		from
+		exchange_order_record
+		where ROLE = 1
+		<if test="sellerId != null and sellerId != ''">
+			and ACCOUNT_ID = #{sellerId}
+		</if>
+		<choose>
+			<when test="sort  != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by CREATE_TIME desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null ">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="getSellerExchangeOrderRecordListCount" resultType="int">
+		select
+		count(*)
+		from exchange_order_record
+		where ROLE = 1
+		<if test="sellerId != null and sellerId !=''">
+			and ACCOUNT_ID = #{sellerId}
+		</if>
+	</select>
+
+	<insert id="addExchangeOrderRecord">
+		insert into exchange_order_record
+		(
+			ID,
+			SOURCE,
+			NUMBER,
+			COIN,
+			CODE,
+			FEE_PRICE,
+			TOTAL_NUMBER,
+			CREATE_TIME,
+			ROLE,
+			ACCOUNT_ID
+		)
+		values
+		(
+			#{id},
+			#{source},
+			#{number},
+			#{coin},
+			#{code},
+			#{feePrice},
+			#{totalNumber},
+			#{createTime},
+			#{role},
+			#{accountId}
+		)
+	</insert>
+
+	<select id="findSellerByEmail" resultType="cn.stylefeng.guns.modular.system.entity.Seller">
+		select
+		SELLER_ID as sellerId,
+			PHONE phone,
+			PASSWORD password,
+			IS_AUTH isAuth,
+			ICON icon,
+			REAL_NAME realName,
+			ID_CARD_NO as idCardNo,
+			ID_CARD_FRONT idCardFront,
+			ID_CARD_REVERSE idCardReverse,
+			ID_CARD_IMAGE idCardImage,
+			TRADER_PASSWORD traderPassword,
+			NICK_NAME nickName,
+			STATUS status,
+			ENABLED as enabled,
+			CODE code,
+			REFERCE_IDS as referceIds,
+			REFERCE_ID as referceId,
+			IS_ACCEPTER isAccepter,
+			USER_ID userId,
+			EMAIL email,
+			GRAD_ENABLED gradEnabled,
+			SELLER_ENABLED sellerEnabled,
+			TRANFE_ENABLED tranfeEnabled,
+			BUY_ENABLED buyEnabled,
+			BING_GOOGLE bingGoogle,
+			GOOGLE_SECRET googleSecret,
+			LOGIN_METHOD loginMethod,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime
+		 from seller where EMAIL = #{email} and STATUS = 0 limit 1
+	</select>
+
+	<delete id="deleteSellerCashById">
+		delete from  seller_cash where ID = #{id}
+	</delete>
+
+	<insert id="addSellerNotice">
+		insert into seller_notice (
+			SELLER_ID,
+			CONTENT,
+			IS_SEE,
+			CREATE_TIME
+			)
+		values(
+			#{sellerId},
+			#{content},
+			#{isSee},
+			#{createTime}
+		)
+	</insert>
+
+	<select id="findSellerBuyCoinByCoindition" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+		from
+			seller_buyer_coin_order
+			<where>
+				<if test="payMethodId != null and payMethodId!=''">
+					and PAY_METHOD_ID = #{payMethodId}
+				</if>
+				<if test="sellerId != null and sellerId!=''">
+					and SELLER_ID = #{sellerId}
+				</if>
+				<if test="status != null and status!=''">
+					and STATUS = #{status}
+				</if>
+				<if test="price != null and price!=''">
+					and NUMBER = #{price}
+				</if>
+			</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,47 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/platformWithDrawStatistics/platformWithDrawStatistics.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">平台总提现(USDT)</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                	<div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="请选择日期" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            	 <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                             <div class="layui-inline">
+	                               	<label >会员总提现：<span style="color: red;">${totalSellerNumberWithDraw}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >商户总提现：<span style="color: red;">${totalMemrchantNumberWithDraw}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >代理商总提现：<span style="color: red;">${totalAgentNumberWithDraw}</span></label>
+	                            </div>
+	                             <div class="layui-inline">
+	                               	<label >当日会员总提现：<span style="color: red;">${totalSellerNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >当日商户总提现：<span style="color: red;">${totalMemrchantNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >当日代理商总提现：<span style="color: red;">${totalAgentNumber}</span></label>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="platformWithDrawStatisticsTable" lay-filter="platformWithDrawStatisticsTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

@@ -1,0 +1,49 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/seller/sellerWithdrawCoinAppeal.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">提币审核列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                	  <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="phone" class="layui-input" type="text" placeholder="账号"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="创建时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="address" class="layui-input" type="text" placeholder="提币地址"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="status" name="status" lay-verify="">
+									  <option value="">请选择状态</option>
+									  <option value="1">审核中</option>
+									  <option value="2">审核通过</option>
+									  <option value="3">审核不通过</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                                <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="sellerWithdrawCoinAppealTable" lay-filter="sellerWithdrawCoinAppealTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+	{{#  if(d.status ==1){ }}
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yesStatus">审核通过</a>
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="noStatus">审核不通过</a>
+	{{#  } }}
+</script>
+@}

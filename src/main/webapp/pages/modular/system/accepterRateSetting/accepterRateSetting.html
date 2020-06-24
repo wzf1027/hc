@@ -1,0 +1,23 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/accepterRateSetting/accepterRateSetting.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">承兑商挖矿返利设置</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-table" id="accepterRateSettingTable" lay-filter="accepterRateSettingTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+  @if(shiro.hasPermission("/accepterRateSettingMgr/update")){
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    @}
+</script>
+@}

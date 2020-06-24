@@ -1,0 +1,23 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/userWithdrawFeeSetting/agentWithdrawFeeSetting.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">提币手续费设置</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-table" id="userWithdrawFeeSettingTable" lay-filter="userWithdrawFeeSettingTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+  @if(shiro.hasPermission("/userWithdrawFeeSettingMgr/update")){
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="update">修改</a>
+    @}
+</script>
+@}

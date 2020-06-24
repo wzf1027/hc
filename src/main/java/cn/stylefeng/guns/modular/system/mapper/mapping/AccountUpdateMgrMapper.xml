@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.AccountUpdateMgrMapper">
+	
+	<select id="findAccountUpdateByCondition" resultType="map">
+		SELECT
+			SERIAL_NO serialno,
+			PHONE phone,
+			SOURCE source,
+			`CODE` ,
+			TYPE type,
+			case 
+				when PAYMETHOD_TYPE = 1
+				then '支付宝'
+				when PAYMETHOD_TYPE = 2
+				then '微信'
+				when PAYMETHOD_TYPE = 3
+				then '银行卡'
+				when PAYMETHOD_TYPE = 4
+				then '云闪付'
+				when PAYMETHOD_TYPE = 5
+				then '支付宝手机号码转账'
+				when PAYMETHOD_TYPE = 6
+				then '微信手机号码转账'
+				when PAYMETHOD_TYPE = 7
+				then '支付宝转银行卡'
+				when PAYMETHOD_TYPE = 8
+				then '微信转银行卡'
+				when PAYMETHOD_TYPE = 9
+				then '微信赞赏码'
+				else ''
+			end payMethodType,
+			BEFORE_PRICE beforPrice,
+			PRICE price,
+			AFTER_PRICE afterPrice,
+			CREATE_TIME createTime,
+			REMARK remark
+		FROM
+		account_update_record 
+		<where>
+			<if test="sellerAccountUpdate.serialno != null and sellerAccountUpdate.serialno !=''">
+				and SERIAL_NO = #{sellerAccountUpdate.serialno}
+			</if>
+
+			<if test="sellerAccountUpdate.phone != null and sellerAccountUpdate.phone !=''">
+				and PHONE = #{sellerAccountUpdate.phone}
+			</if>
+			<if test="sellerAccountUpdate.source != null and sellerAccountUpdate.source !=''">
+				and SOURCE = #{sellerAccountUpdate.source}
+			</if>
+			<if test="sellerAccountUpdate.code != null and sellerAccountUpdate.code !=''">
+				and CODE = #{sellerAccountUpdate.code}
+			</if>
+			<if test="sellerAccountUpdate.type != null and sellerAccountUpdate.type !=''">
+				and TYPE = #{sellerAccountUpdate.type}
+			</if>
+			<if test="sellerAccountUpdate.payMethodType != null and sellerAccountUpdate.payMethodType !=''">
+				and PAYMETHOD_TYPE = #{sellerAccountUpdate.payMethodType}
+			</if>
+			<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if>
+      		 <if test="role == null or role ==''">
+      		 	and ROLE_ID in(1,3)
+      		 </if>
+      		 <if test="role != null and role !=''">
+      		 	and ROLE_ID =#{role}
+      		 </if>
+			<if test="userId != null and userId !=''">
+				and ACCOUNT_ID = #{userId}
+			</if>
+		</where>
+		order by CREATE_TIME desc
+	</select>
+		
+</mapper>

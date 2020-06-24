@@ -1,0 +1,23 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/sellerOrderTimeSetting/sellerOrderTimeSetting.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">会员确认收款失效时间设置</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-table" id="sellerOrderTimeSettingTable" lay-filter="sellerOrderTimeSettingTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+  @if(shiro.hasPermission("/sellerOrderTimeMgr/update")){
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    @}
+</script>
+@}

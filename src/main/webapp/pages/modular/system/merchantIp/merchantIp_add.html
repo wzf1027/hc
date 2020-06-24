@@ -1,0 +1,21 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/merchantIp/merchantIp_add.js"]}){
+<form id="carouselForm" lay-filter="carouselForm" class="layui-form model-form">
+    <input name="type" type="hidden" value="${type}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商户ID<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="account" placeholder="请输入商户ID" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">IP地址<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="ipAddress" placeholder="请输入IP地址" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

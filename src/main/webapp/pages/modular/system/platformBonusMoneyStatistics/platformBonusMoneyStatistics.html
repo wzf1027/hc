@@ -1,0 +1,53 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/platformBonusMoneyStatistics/platformBonusMoneyStatistics.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">HC挖矿总量</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                	<div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="请选择日期" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            	 <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >会员总挖矿：<span style="color: red;">${totalSellerNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >推荐总挖矿：<span style="color: red;">${totalRecommendNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >承兑商总挖矿：<span style="color: red;">${totalAccepterNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >代理总挖矿：<span style="color: red;">${totalAgentBonusNumber}</span></label>
+	                            </div>
+	                             <div class="layui-inline">
+	                               	<label >当日会员总挖矿：<span style="color: red;">${totalSellerBonusNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >当日推荐总挖矿：<span style="color: red;">${totalRecommendBonusNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >当日承兑商总挖矿：<span style="color: red;">${totalAccepterBonusNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >当日代理总挖矿：<span style="color: red;">${totalAgentNumber}</span></label>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="platformBonusMoneyStatisticsTable" lay-filter="platformBonusMoneyStatisticsTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

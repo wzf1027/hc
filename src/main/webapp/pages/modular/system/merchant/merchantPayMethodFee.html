@@ -1,0 +1,76 @@
+@layout("/common/_container.html",{bg:"bg-white"}){
+<form id="userPayMethodFeeForm" lay-filter="userPayMethodFeeForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付宝费用(%)</label>
+        <div class="layui-input-block">
+            <input name="alipayRatio" value="${alipayRatio}" readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付宝最小接单数额</label>
+        <div class="layui-input-block">
+            <input name="minAlipayValue" value="${minAlipayValue}" readonly="readonly"  type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付宝最大接单数额</label>
+        <div class="layui-input-block">
+            <input name="maxAlipayValue" value="${maxAlipayValue}" readonly="readonly"  type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信费用(%)</label>
+        <div class="layui-input-block">
+            <input name="wxRatio" value="${wxRatio}"  readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信最小接单数额</label>
+        <div class="layui-input-block">
+            <input name="minWxValue" value="${minWxValue}" readonly="readonly" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信最大接单数额</label>
+        <div class="layui-input-block">
+            <input name="maxWxValue" value="${maxWxValue}" readonly="readonly"  type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行卡费用（%)</label>
+        <div class="layui-input-block">
+            <input name="cardRatio" value="${cardRatio}" readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行卡最小接单数额</label>
+        <div class="layui-input-block">
+            <input name="minCardValue" value="${minCardValue}" readonly="readonly" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行卡最大接单数额</label>
+        <div class="layui-input-block">
+            <input name="maxCardValue" value="${maxCardValue}" readonly="readonly"  type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">云闪付费用（%)</label>
+        <div class="layui-input-block">
+            <input name="cloudPayRatio" value="${cloudPayRatio}" readonly="readonly" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">云闪付最小接单数额</label>
+        <div class="layui-input-block">
+            <input name="minCloudPayValue" value="${minCloudPayValue}" readonly="readonly" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">云闪付最大接单数额<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="maxCloudPayValue" value="${maxCloudPayValue}" readonly="readonly"  type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+</form>
+@}

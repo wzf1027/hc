@@ -1,0 +1,51 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/seller/seller_wallter_number.js"]}){
+<form id="sellerWallterForm" lay-filter="sellerWallterForm" class="layui-form model-form">
+    <input name="sellerWallterId" type="hidden" value="${sellerWallterId}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类别<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="code" readonly="readonly" value="${code}" type="text" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">资产密码<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="password" placeholder="请输入资产密码" type="password" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">可用余额</label>
+        <div class="layui-input-block">
+            <input  value="${availableBalance}" type="text" class="layui-input" readonly="readonly"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">冻结余额</label>
+        <div class="layui-input-block">
+            <input  value="${frozenBalance}" type="text" class="layui-input" readonly="readonly"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">修改可用余额(正数加当前的余额，负数减)<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="availableBalance" placeholder="请输入可用余额" value="0" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">修改冻结余额(正数加当前的余额，负数减)<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="frozenBalance" placeholder="请输入冻结余额" value="0" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">修改备注<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="remark" placeholder="请输入备注" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

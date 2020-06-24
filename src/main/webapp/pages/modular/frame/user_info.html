@@ -1,0 +1,61 @@
+@layout("/common/_container.html",{title:"个人中心",css:["/assets/modular/frame/user_info.css"],js:["/assets/modular/frame/user_info.js"]}){
+<div class="layui-body-header">
+    <span class="layui-body-header-title">个人中心</span>
+    <span class="layui-breadcrumb pull-right">
+        <a href="${ctxPath}/system/welcome">首页</a>
+        <a><cite>个人中心</cite></a>
+    </span>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <!-- 右 -->
+        <div class="layui-col-sm12 layui-col-md9">
+            <div class="layui-card">
+                <div class="layui-card-body layui-text">
+
+                    <div class="layui-tab layui-tab-brief" lay-filter="userInfoTab">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">基本信息</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-form layui-tab-item layui-show" lay-filter="userInfoForm">
+                                <input type="hidden" name="userId"/>
+                                <div class="layui-form user-info-form" style="max-width: 400px;padding-top: 25px;">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">账号:</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="account" class="layui-input" lay-verify="required" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">姓名:<span style="color: red;">*</span></label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="name" class="layui-input" lay-verify="required" required/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">手机号码:<span style="color: red;">*</span></label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="phone" class="layui-input" lay-verify="phone" required/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn" lay-filter="userInfoSubmit" lay-submit>
+                                                更新基本信息
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+    </div>
+</div>
+@}

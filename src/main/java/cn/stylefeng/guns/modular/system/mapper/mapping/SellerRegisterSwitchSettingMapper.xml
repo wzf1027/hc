@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellerRegisterSwitchSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.SellerRegisterSwitchSetting">
+        <id column="SWITCH_SETTING_ID" property="switchSettingId"/>
+        <result column="IS_SWITCH" property="isSwitch"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        SWITCH_SETTING_ID AS switchSettingId, IS_SWITCH AS isSwitch  
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from seller_register_switch_setting
+        <if test="condition != null and condition != ''">
+            where TITLE like CONCAT('%',#{condition},'%') or CONTENT like CONCAT('%',#{condition},'%')
+        </if>
+    </select>
+
+</mapper>

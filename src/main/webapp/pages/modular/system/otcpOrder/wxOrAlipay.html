@@ -1,0 +1,22 @@
+@layout("/common/_container.html",{bg:"bg-white"}){
+<form id="payMethodForm" lay-filter="payMethodForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input name="accountName" value="${accountName}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号</label>
+        <div class="layui-input-block">
+            <input name="account" value="${account}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">二维码</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${qrCode}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+</form>
+@}

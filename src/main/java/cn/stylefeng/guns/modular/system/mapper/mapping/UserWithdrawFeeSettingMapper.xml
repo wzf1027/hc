@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.UserWithdrawFeeSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.UserWithdrawFeeSetting">
+        <id column="SETTING_ID" property="settingId"/>
+        <result column="MIN_NUMBER" property="minNumber"/>
+        <result column="MAX_NUMBER" property="maxNumber"/>
+        <result column="MIN_FEE_NUMBER" property="minFeeNumber"/>
+        <result column="FEE_RATIO" property="feeRatio"/>
+        <result column="START_RATIO_NUMBER" property="startRatioNumber"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        SETTING_ID AS settingId, MIN_NUMBER AS minNumber,MAX_NUMBER as maxNumber,FEE_RATIO as feeRatio,START_RATIO_NUMBER as startRatioNumber,CREATE_TIME as createTime
+        ,UPDATE_TIME updateTime,MIN_FEE_NUMBER minFeeNumber
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from user_withdraw_fee_setting
+        <if test="condition != null and condition != ''">
+            where ROLE_ID = #{condition}
+        </if>
+        order by CREATE_TIME
+    </select>
+
+</mapper>

@@ -1,0 +1,35 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/proclamation/proclamation_edit.js"]}){
+<form id="proclamationForm" lay-filter="proclamationForm" class="layui-form model-form">
+    <input name="proclamationId" value="${proclamationId}" type="hidden"/>
+        <div class="layui-form-item">
+        <label class="layui-form-label">名称<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="title" placeholder="请输入名称" value="${title}" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">是否首页显示<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+         	<select id ="isTop" name="isTop" lay-verify="">
+			  <option value="0">否</option>
+			  <option value="1">是</option>
+			</select>   
+         </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">内容<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+        	 <textarea name="content" id="content" class="layui-textarea" lay-verify="content"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+<script src="${ctxPath}/assets/common/plugins/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+$("#content").val('${content}');
+document.getElementById('isTop').value='${isTop}';
+</script>
+@}

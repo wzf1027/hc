@@ -1,0 +1,80 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/platformFeeBonusStatistics/platformFeeBonusStatistics.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">平台手续费总分成</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                	<div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="请选择日期" />
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            	 <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                              <div class="layui-inline">
+	                               	<label >平台接单总流水：<span style="color: red;">${totalNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >会员接单总挖矿：<span style="color: red;">${totalSellerBonusNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >商户总费率(商户总手续费)：<span style="color: red;">${totalMerchantFeeRatio}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >代理商总挖矿：<span style="color: red;">${totalAgentBounsNumber}</span></label>
+	                            </div>
+	                             <div class="layui-inline">
+	                               	<label >团队推荐总挖矿：<span style="color: red;">${totalTeamBonusNumber}</span></label>
+	                            </div>
+								<div class="layui-inline">
+									<label >推荐返利总挖矿：<span style="color: red;">${totalSupReturnNumber}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >会员兑换总手续费：<span style="color: red;">${totalSellerExchangeFee}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >商户兑换总手续费：<span style="color: red;">${totalMerchantExchangeFee}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >代理兑换总手续费：<span style="color: red;">${totalAgentExchangeFee}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >会员提币手续费：<span style="color: red;">${totalSellerWithdrawFee}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >商户提币手续费：<span style="color: red;">${totalMerchantWithdrawFee}</span></label>
+								</div>
+								<div class="layui-inline">
+									<label >代理提币手续费：<span style="color: red;">${totalAgentWithdrawFee}</span></label>
+								</div>
+	                            <div class="layui-inline">
+	                               	<label >承兑商总挖矿(包含承兑推荐承兑返利及承兑购买返利)：<span style="color: red;">${totalAccepterBonusNumber}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >会员出售总手续费：<span style="color: red;">${totalOtcFeePriceSeller}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >代理手动出售总手续费：<span style="color: red;">${totalOtcFeePriceAgent}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >商户手动出售总手续费：<span style="color: red;">${totalOtcFeePriceMerchant}</span></label>
+	                            </div>
+	                            <div class="layui-inline">
+	                               	<label >平台总盈利：<span style="color: red;">${totalProfit}</span></label>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="platformFeeBonusStatisticsTable" lay-filter="platformFeeBonusStatisticsTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

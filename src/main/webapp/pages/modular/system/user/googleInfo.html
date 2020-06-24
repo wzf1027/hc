@@ -1,0 +1,32 @@
+@layout("/common/_container.html",{js:["/assets/modular/system/user/bingGoogle.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">谷歌验证密钥绑定</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                   	<div class="layui-form layui-tab-item layui-show" lay-filter="bingGoogleForm">
+					  	<div class="layui-form-item">
+					        <label class="layui-form-label">密钥<span style="color: red;">*</span></label>
+					        <div class="layui-input-block">
+								<input type="text" id="code" name="code"  class="layui-input"  value="${code}"  placeholder="该账号未绑定谷歌，请点击绑定更新" />
+					        </div>
+					    </div>
+		               <div class="layui-form-item">
+                             <div class="layui-input-block">
+                                 <button class="layui-btn" lay-filter="bingGoogleSubmit" lay-submit>
+                                    	 ${title}
+                                 </button>
+                             </div>
+                        </div>
+                   </div>
+            	</div>
+        	</div>
+    	</div>
+	</div>
+</div>
+@}

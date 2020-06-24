@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.UserWithdrawCoinAppealMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.UserWithdrawCoinAppealOrder">
+        <id column="APPEAL_ID" property="appealId"/>
+        <result column="NUMBER" property="number"/>
+        <result column="SERIALNO" property="serialno"/>
+        <result column="ADDRESS" property="address"/>
+        <result column="FEE_PRICE" property="feePrice"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="STATUS" property="status"/>
+        <result column="TOTAL_NUMBER" property="totalNumber"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        APPEAL_ID AS appealId, NUMBER AS number,ADDRESS as address,FEE_PRICE as feePrice,USER_ID as userId,CREATE_TIME as createTime
+        ,UPDATE_TIME updateTime,STATUS as status,TOTAL_NUMBER as totalNumber,SERIALNO serialno,USER_ACCOUNT userAccount
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from user_withdraw_coin_appeal_order
+        <where>
+        	<if test="condition != null">
+        		and ROLE_ID = #{condition}
+        	</if>
+        	<if test="status != null">
+        		and  STATUS= #{status}
+        	</if>
+        	<if test="address != null and address !=''">
+        		and  ADDRESS = #{address}
+        	</if>
+        	<if test="phone != null and phone !=''">
+	        	and USER_ID = (
+	        		SELECT USER_ID from sys_user where ACCOUNT_CODE = #{phone}
+	        	)
+	        </if>
+	         <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if> 
+	        <if test="userId != null and userId != ''">
+	        	and USER_ID = #{userId}
+	        </if>
+        </where>
+         order by CREATE_TIME desc
+    </select>
+
+</mapper>

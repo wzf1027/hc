@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.UserPayMethodMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.UserPayMethod">
+        <id column="PAY_METHOD_ID" property="payMethodId" />
+        <result column="USER_ID" property="userId" />
+        <result column="TYPE" property="type" />
+        <result column="QR_CODE" property="qrCode" />
+        <result column="ACCOUNT" property="account" />
+        <result column="CARD_BANK" property="cardBank" />
+         <result column="CARD_BANK_NAME" property="cardBankName" />
+        <result column="NAME" property="cardName" />
+        <result column="USE_NUMBER" property="useNumber" />
+        <result column="REMARK" property="remark" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="UPDATE_TIME" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        PAY_METHOD_ID AS payMethodId,
+         USER_ID AS userId, 
+         TYPE AS type,
+          QR_CODE AS qrCode,
+           ACCOUNT AS account,
+           CARD_BANK as cardBank,
+           CARD_BANK_NAME as cardBankName,
+            NAME AS cardName,
+             USE_NUMBER AS useNumber,
+             REMARK remark,
+             CREATE_TIME createTime,
+             UPDATE_TIME updateTime
+    </sql>
+
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from sys_user_pay_method
+        <where>
+          <if test="userId != null and userId !=''">
+        		and USER_ID = #{userId}
+        	</if>
+        </where>
+        order by CREATE_TIME DESC
+    </select>
+    
+   
+</mapper>

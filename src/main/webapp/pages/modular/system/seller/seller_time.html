@@ -1,0 +1,15 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/seller/seller_time.js"]}){
+<form id="sellerTimeForm" lay-filter="sellerTimeForm" class="layui-form model-form">
+    <input name="id" type="hidden" value="${id}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">时间<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="value" value="${time}" placeholder="请输入时间" type="number" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

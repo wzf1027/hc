@@ -1,0 +1,60 @@
+@layout("/common/_container.html",{js:["/assets/modular/system/merchant/merchantFlowRecord.js"]}){
+<div class="layui-body-header">
+    <span class="layui-body-header-title">资产信息</span>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <!-- 左 -->
+        <div class="layui-col-sm12 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 25px;">
+                    <div class="layui-text">
+                          <button id="btnExchange" class="layui-btn icon-btn">一键兑换</button>
+                    </div> 
+                    <div class="layui-text" style="padding-top: 30px;">
+                        <div class="info-list-item">
+                            <p>手机号码：${phone!}</p>
+                        </div>
+                    </div>
+                    <div class="layui-text" style="padding-top: 30px;">
+                        <div class="info-list-item">
+                            <p>账号ID：${uId!}</p>
+                        </div>
+                    </div>
+                    @if(shiro.hasRole("merchant")){
+                     <div class="layui-text" style="padding-top: 30px;">
+                        <div class="info-list-item">
+                            <p>商户secret：${secret!}</p>
+                        </div>
+                    </div>
+                    @} 
+                    <div class="layui-text">
+                      <div class="info-list-item">
+                        <p style="padding-top: 20px;">USDT可用余额:${usdtMoney}<p/>
+                         <p style="padding-top: 20px;">USDT冻结余额:${usdtFrozenMoney}</p>
+                        </div>
+                    </div>
+                    <div class="layui-text">
+                     <div class="info-list-item">
+                        	<p style="padding-top: 20px;">HC可用余额:${money}</p>
+                         	<p style="padding-top: 20px;">结算进行中(请及时在结算记录中确认收款):${frozenMoney}</p>
+                        </div>
+                    </div>
+                    <div class="dash"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 右 -->
+        <div class="layui-col-sm12 layui-col-md9">
+            <div class="layui-card">
+   				 <div class="layui-card-body">
+                    <table class="layui-table" id="flowRecordTable" lay-filter="flowRecordTable"></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@}

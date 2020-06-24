@@ -1,0 +1,34 @@
+@layout("/common/_container.html",{bg:"bg-white"}){
+<form id="sellerAuthForm" lay-filter="sellerAuthForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <input name="realName" value="${realName}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份证号码</label>
+        <div class="layui-input-block">
+            <input name="idCardNo" value="${idCardNo}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">正面图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardFront}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">反面图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardReverse}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">手持图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardImage}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+</form>
+@}

@@ -1,0 +1,87 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/otcpOrder/otcpOrder.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">购买订单列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                            <div class="layui-inline">
+	                                <input id="buyerPhone" class="layui-input" type="text" placeholder="买家账号"/>
+	                            </div>
+	                             <div class="layui-inline">
+	                                <input id="remark" class="layui-input" type="text" placeholder="参考号"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="serialno" class="layui-input" type="text" placeholder="订单流水号"/>
+	                            </div>
+	                             <div class="layui-inline">
+	                                 <select id ="status" name="status" lay-verify="">
+									  <option value="">请选择状态</option>
+									  <option value="1">未支付</option>
+									  <option value="2">等待卖家确认到账</option>
+									  <option value="3">等待买家确认收款</option>
+									  <option value="4">已完成</option>
+									  <option value="6">申诉中</option>
+									  <option value="7">已取消</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="isAppeal" name="isAppeal" lay-verify="">
+									  <option value="">申诉状态</option>
+									  <option value="1">申诉中</option>
+									  <option value="2">买家胜</option>
+									  <option value="3">卖家胜</option>
+									  <option value="4">取消申诉</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="payMethodType" name="payMethodType" lay-verify="">
+									  <option value="">买家支付类型</option>
+									  <option value="1">支付宝</option>
+									  <option value="2">微信</option>
+									  <option value="3">银行卡</option>
+									</select> 
+	                            </div>
+	                              @if(shiro.hasAnyRoles("administrator")){
+	                            <div class="layui-inline">
+	                                <input id="sellerPhone" class="layui-input" type="text" placeholder="卖家账号"/>
+	                            </div>
+	                             @}
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="下单时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                                   <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="otcpOrderTable" lay-filter="otcpOrderTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableBar">
+ 	@if(shiro.hasRole("administrator")){
+    {{#  if(d.isAppeal == 1){ }}
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="updateAppeal">申诉审核</a>
+     {{#  } }}
+	@}
+	 @if(shiro.hasPermission("/merchantMgr/updateOrderStatus")){
+	{{#  if(d.status == 1){ }}
+   	 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cannelTrade">取消交易</a>
+	{{#  } }}
+	{{#  if(d.status == 2){ }}
+   	 	<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="getMoney">确认收款</a>
+		<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="appealAdd">申诉</a>
+	{{#  } }}    
+	@}
+</script>
+@}

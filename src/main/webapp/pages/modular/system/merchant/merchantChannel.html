@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>${systemName}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctxPath}/assets/common/layui/css/layui.css"/>
+    <link rel="stylesheet" href="${ctxPath}/assets/common/module/admin.css"/>
+<style>
+#LAY-component-grid-list .demo-list .layui-card{height: 250px;}
+.layuiadmin-card-list p.layuiadmin-big-font {
+    font-size: 14px;
+    color: #666;
+    line-height: 14px;
+    padding: 5px 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+    text-align: left;
+    margin-top: 2px;
+    margin-left: 20px;
+    }
+.title{
+	font-size: 20px;
+	float: left;
+}
+.success{
+	margin-left: 15%;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<div class="layui-card-body" style="text-align: center;">
+	<div class="layui-fluid" id="LAY-component-grid-list">
+  <div class="layui-row layui-col-space10 demo-list" id="demo-list">
+  </div>
+</div>
+</div>
+
+<!-- js部分 -->
+@/* 加入contextPath属性和session超时的配置 */
+<script type="text/javascript">
+    var Feng = {
+        ctxPath: "",
+        addCtx: function (ctx) {
+            if (this.ctxPath === "") {
+                this.ctxPath = ctx;
+            }
+        }
+    };
+    Feng.addCtx("${ctxPath}");
+</script>
+<script type="text/javascript" src="${ctxPath}/assets/common/layui/layui.js"></script>
+<script type="text/javascript" src="${ctxPath}/assets/common/js/common.js"></script>
+<script>
+    layui.use(['layer'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+     	var list =${list};
+     	var html ='';
+     	var alipay = false;
+     	var wx= false;
+     	var bank =false;
+     	var cloudPay = false;
+     	var alipayAccount = false;
+     	var alipayCard= false;
+     	var wxAccount = false;
+     	var wxCard = false;
+     	var wxZan = false;
+     	for(var map in list){
+     		 html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+     	     <div class="layui-card">\
+     	     <div class="layui-card-header">';
+     	     if(list[map].type ==1){
+     	    	 alipay =true;
+     	    	html += '<span class="title">支付宝</span></div>'; 
+     	     }else if(list[map].type ==2){
+     	    	wx =true;
+     	    	html += '<span class="title">微信</span></div>'; 
+     	     }else if(list[map].type ==3){
+     	    	bank =true;
+     	    	html += '<span class="title">银行卡</span></div>';  
+     	     }else if(list[map].type ==4){
+                 cloudPay =true;
+                 html += '<span class="title">云闪付</span></div>';
+             }else if(list[map].type ==5){
+                 alipayAccount =true;
+                 html += '<span class="title">支付宝账号转账</span></div>';
+             }else if(list[map].type ==6){
+                 wxAccount =true;
+                 html += '<span class="title">微信手机号码转账</span></div>';
+             }else if(list[map].type ==7){
+                 alipayCard =true;
+                 html += '<span class="title">支付宝转银行卡</span></div>';
+             }else if(list[map].type ==8){
+                 wxCard =true;
+                 html += '<span class="title">微信转银行卡</span></div>';
+             }else{
+                 wxZan =true;
+                 html += '<span class="title">微信赞赏码</span></div>';
+             }
+
+     	    html+='<div class="layui-card-body layuiadmin-card-list">\
+     	        <p class="layuiadmin-big-font">成功交易金额：'+list[map].totalPrice+'</p>\
+     	        <p class="layuiadmin-big-font">成功交易的手续费：'+list[map].totalFeePrice+'</p>\
+     	        <p class="layuiadmin-big-font">\
+     	        	<label>入金总额：<span class="layuiadmin-span-color">'+list[map].intoNumber+'</span></label>\
+     	   			<label class="success">成功率：<span class="layuiadmin-span-color">'+list[map].successRatio+'</span></label>\
+     	        </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>总交易笔数：<span class="layuiadmin-span-color">'+list[map].orderTotalNumber+'</span></label>\
+     				<label class="success">成功笔数：<span class="layuiadmin-span-color">'+list[map].successTotalNumber+'</span></label>\
+     	         </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>未付笔数：<span class="layuiadmin-span-color">'+list[map].noPayOrderNumber+'</span></label>\
+     				<label class="success">取消笔数：<span class="layuiadmin-span-color">'+list[map].cannelNumber+'</span></label>\
+     	         </p>\
+     	        </div>\
+     	        </div>\
+     	    	</div>';
+     	}
+     	if(!wx){
+     		 html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+         	     <div class="layui-card">\
+         	     <div class="layui-card-header">\
+     			<span class="title">微信</span></div>\
+     			<div class="layui-card-body layuiadmin-card-list">\
+     	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+     	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+     	       <p class="layuiadmin-big-font">\
+	        	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+	   			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+	       		 </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+     				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+     	         </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+     				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+     	         </p>\
+     	        </div>\
+     	        </div>\
+     	    	</div>';
+     	}
+    	if(!alipay){
+    		 html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+        	     <div class="layui-card">\
+        	     <div class="layui-card-header">\
+    			<span class="title">支付宝</span></div>\
+    			<div class="layui-card-body layuiadmin-card-list">\
+    	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+    	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+    	        <p class="layuiadmin-big-font">\
+	        	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+	   			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+	       		 </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+     				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+     	         </p>\
+     	        <p class="layuiadmin-big-font">\
+     				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+     				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+     	         </p>\
+    	        </div>\
+    	        </div>\
+    	    	</div>';
+    	}
+        if(!bank){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">银行卡</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+    	if(!cloudPay){
+   		 html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">云闪付</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+   	}
+        if(!alipayAccount){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">支付手机号码转账</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+        if(!alipayCard){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">支付宝转账银行卡</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+        if(!wxAccount){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">微信手机号码转账</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+        if(!wxCard){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">微信转银行卡</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+        if(!wxZan){
+            html +='<div class="layui-col-sm4 layui-col-md3 layui-col-lg4">\
+       	     <div class="layui-card">\
+       	     <div class="layui-card-header">\
+   			<span class="title">微信赞赏码</span></div>\
+   			<div class="layui-card-body layuiadmin-card-list">\
+   	        <p class="layuiadmin-big-font">成功交易金额：0</p>\
+   	        <p class="layuiadmin-big-font">成功交易的手续费：0</p>\
+   	     <p class="layuiadmin-big-font">\
+     	<label>入金总额：<span class="layuiadmin-span-color">0</span></label>\
+			<label class="success">成功率：<span class="layuiadmin-span-color">0</span></label>\
+    		 </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>总交易笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">成功笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+	        <p class="layuiadmin-big-font">\
+				<label>未付笔数：<span class="layuiadmin-span-color">0</span></label>\
+				<label class="success">取消笔数：<span class="layuiadmin-span-color">0</span></label>\
+	         </p>\
+   	        </div>\
+   	        </div>\
+   	    	</div>';
+        }
+     	 document.getElementById("demo-list").innerHTML +=html;
+    });
+</script>
+</body>
+
+</html>

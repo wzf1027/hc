@@ -1,0 +1,39 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/seller/seller.js"]}){
+<form id="sellerAuthForm" lay-filter="sellerAuthForm" class="layui-form model-form">
+    <input name="sellerId" value="${sellerId}" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <input name="realName" value="${realName}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份证号码</label>
+        <div class="layui-input-block">
+            <input name="idCardNo" value="${idCardNo}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">正面图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardFront}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">反面图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardReverse}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">手持图片</label>
+        <div class="layui-input-block">
+            <img src="${ctxPath}${idCardImage}" style="width: 50%;height: 10%;">
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-normal" type="button" id="agree">审核通过</button>
+        <button class="layui-btn layui-btn-danger" type="button" id="refuse">审核不通过</button>
+    </div>
+</form>
+@}

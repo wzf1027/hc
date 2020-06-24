@@ -1,0 +1,50 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/merchant/merchantBuyCoinOrder.js"]}){
+
+<div class="layui-body-header">
+    <span class="layui-body-header-title">商户交易列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+                     	       
+	                            <div class="layui-inline">
+                                	<input id="serialno" class="layui-input" type="text" placeholder="流水订单号"/>
+                            	</div>
+                            	 <div class="layui-inline">
+                                	<input id="account" class="layui-input" type="text" placeholder="商户账号"/>
+                            	</div>
+                            	<div class="layui-inline">
+	                                 <select id ="payMethodType" name="payMethodType" lay-verify="">
+									  <option value="">请选择支付通道</option>
+										 <option value="1">支付宝</option>
+										 <option value="2">微信</option>
+										 <option value="3">银行卡</option>
+										 <option value="4">云闪付</option>
+										 <option value="5">支付宝账号转账</option>
+										 <option value="6">微信账号转账</option>
+										 <option value="7">支付宝转银行卡</option>
+										 <option value="8">微信转银行卡</option>
+										 <option value="9">微信赞赏码</option>
+									</select> 
+	                            </div> 
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="完成时间"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                            	 <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="buyCoinOrderTable" lay-filter="buyCoinOrderTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

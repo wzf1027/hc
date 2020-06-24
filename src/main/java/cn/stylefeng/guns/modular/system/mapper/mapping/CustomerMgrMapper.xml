@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.CustomerMgrMapper">
+ 
+ <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.Customer">
+        <id column="CUSTOMER_ID" property="customerId" />
+        <result column="QQ_NO" property="qqNo" />
+        <result column="EMAIL" property="email" />
+        <result column="WEIXIN_ACCOUNT" property="weixinAccount" />
+        <result column="WX_QRCODE" property="wxQrCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+   		CUSTOMER_ID AS customerId,
+   		QQ_NO AS qqNo,
+   		EMAIL AS email,
+   		WEIXIN_ACCOUNT AS weixinAccount,
+   		WX_QRCODE AS wxQrCode
+   	</sql>
+
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from customer
+    </select>
+    
+   
+</mapper>

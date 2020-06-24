@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellerPayMethodMapper">
+
+     <select id="list" resultType="map">
+         SELECT
+         spm.PAY_METHOD_ID payMethodId,
+         spm.SELLER_ID sellerId,
+         sr.ACCOUNT sellerAccount,
+         sr.PHONE phone,
+         spm.TYPE type,
+         spm.IS_SOLD_OUT isSoldOut,
+         spm.SOLD_OUT_TIME soldOutTime,
+         spm.IS_CHECK isCheck,
+         (CASE
+         WHEN spm.TYPE =1
+         THEN '支付宝'
+         WHEN spm.TYPE =2
+         THEN '微信'
+         WHEN spm.TYPE =3
+         THEN '银行卡'
+         WHEN spm.TYPE =4
+         THEN '云闪付'
+         WHEN spm.TYPE =5
+         THEN '支付宝账号转账'
+         WHEN spm.TYPE =6
+         THEN '微信手机号码转账'
+         WHEN spm.TYPE =7
+         THEN '支付宝转银行卡'
+         WHEN spm.TYPE =8
+         THEN '微信转银行卡'
+         WHEN spm.TYPE =9
+         THEN '微信赞赏码'
+         ELSE	''
+         END )
+         typeName,
+         spm.ACCOUNT account,
+         spm.CARD_BANK cardBank,
+         spm.CARD_BANK_NAME cardBankName,
+         spm.`NAME` name,
+         spm.QR_CODE qrCode,
+         IFNULL(spm.SUCCESS_RATIO,0) successRatio,
+         spm.REMARK nickName,
+         (
+         CASE
+         WHEN so.ORDER_ID IS NULL OR so.ORDER_ID =0
+         THEN '离线'
+         WHEN  spm.IS_CHECK IS NULL OR spm.IS_CHECK = 0
+         THEN '离线'
+         ELSE	'在线'
+         END
+         ) lineStatus,
+         (SELECT COUNT(*) FROM seller_buyer_coin_order WHERE   `STATUS` = 4 AND SELLER_ID=spm.SELLER_ID) successNumber,
+         (SELECT COUNT(*) FROM seller_buyer_coin_order WHERE TO_DAYS(CREATE_TIME) = TO_DAYS(NOW())  AND SELLER_ID=spm.SELLER_ID) todayTotalNumber,
+         (SELECT IFNULL(SUM(NUMBER),0) FROM seller_buyer_coin_order WHERE TO_DAYS(CREATE_TIME) = TO_DAYS(NOW()) and  `STATUS` = 4 AND SELLER_ID=spm.SELLER_ID) successPrice
+         FROM
+         seller_pay_method spm
+         INNER JOIN seller sr on sr.SELLER_ID = spm.SELLER_ID
+         LEFT JOIN seller_order so ON so.SELLER_ID = spm.SELLER_ID
+         <if test="isCheck == null or isCheck ==''">
+          and so.`STATUS` = 0
+         </if>
+        <where>
+            <if test="isCheck != null and isCheck == 1">
+                and so.`STATUS` = 0 and spm.IS_CHECK = #{isCheck}
+            </if>
+            <if test="isCheck != null and isCheck == 0">
+                and spm.IS_CHECK = #{isCheck}
+            </if>
+            <if test="account != null and account != ''">
+                and sr.ACCOUNT = #{account}
+            </if>
+            <if test="phone != null and phone !=''">
+                and sr.PHONE = #{phone}
+            </if>
+            <if test="payMethodName != null and payMethodName !=''">
+                and spm.`NAME` = #{payMethodName}
+            </if>
+            <if test="payMethodType != null and payMethodType !=''">
+                and spm.TYPE = #{payMethodType}
+            </if>
+            <if test="nickName != null and nickName !=''">
+                and spm.REMARK = #{nickName}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="onLineNumberByType" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+        seller_pay_method spm
+        LEFT JOIN seller_order so ON so.SELLER_ID = spm.SELLER_ID
+        WHERE
+        spm.IS_CHECK = 1 and so.`STATUS` = 0 AND spm.TYPE = #{type}
+    </select>
+
+</mapper>

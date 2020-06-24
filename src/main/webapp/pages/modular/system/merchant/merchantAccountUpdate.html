@@ -1,0 +1,76 @@
+@layout("/common/_container.html",{plugins:["ztree"],js:["/assets/modular/system/merchant/accountUpdateRecord.js"]}){
+<div class="layui-body-header">
+    <span class="layui-body-header-title">商户账户变动列表</span>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+	                <div class="layui-form toolbar">
+	                        <div class="layui-form-item">
+	                        	<div class="layui-inline">
+	                                <input id="serialno" class="layui-input" type="text" placeholder="会员流水订单号"/>
+	                            </div>
+	                              <div class="layui-inline">
+	                                <input id="phone" class="layui-input" type="text" placeholder="商户账号（手机号码）"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="payMethodType" name="payMethodType" lay-verify="">
+										 <option value="">支付通道</option>
+										 <option value="1">支付宝</option>
+										 <option value="2">微信</option>
+										 <option value="3">银行卡</option>
+										 <option value="4">云闪付</option>
+										 <option value="5">支付宝手机账号转账</option>
+										 <option value="6">微信手机账号转账</option>
+										 <option value="7">支付宝转银行卡</option>
+										 <option value="8">微信转银行卡</option>
+										 <option value="9">微信赞赏码</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="source" name="source" lay-verify="">
+									  <option value="">请选择资产</option>
+									  <option value="商户USDT">商户USDT</option>
+									  <option value="商户HC">商户HC</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="code" name="code" lay-verify="">
+									  <option value="">请选择币种</option>
+									  <option value="HC">HC</option>
+									  <option value="USDT">USDT</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                 <select id ="type" name="type" lay-verify="">
+									  <option value="">请选择类型</option>
+										 <option value="返补单扣除">返补单扣除</option>
+									  <option value="接单交易">接单交易</option>
+									  <option value="自动出售">自动出售</option>
+									   <option value="手动出售">手动出售</option>
+									   <option value="撤销出售">撤销出售</option>
+									   <option value="充币">充币</option>
+									   <option value="提币">提币</option>
+										 <option value="兑换USDT">兑换USDT</option>
+										 <option value="兑换HC">兑换HC</option>
+									</select> 
+	                            </div>
+	                            <div class="layui-inline">
+	                                <input id="timeLimit" class="layui-input" type="text" placeholder="时间" style="min-width: 300px;"/>
+	                            </div>
+	                            <div class="layui-inline">
+	                                <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+	                                <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <table class="layui-table" id="accountUpdateRecordTable" lay-filter="accountUpdateRecordTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@}

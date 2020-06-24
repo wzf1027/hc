@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>注册页</title>
+		<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/weui.css" />
+		<link rel="stylesheet" href="${ctxPath}/assets/modular/frame/register.css" />
+		<style>
+			.agreement-div{
+				position: fixed;
+				z-index: 5000;
+				top: 50%;
+				left: 14px;
+				right: 14px;
+				-webkit-transform: translate(0, -50%);
+				transform: translate(0, -50%);
+				background-color: #FFFFFF;
+				text-align: center;
+				border-radius: 10px;
+			}
+			.agreement-box h2{
+				color: #364F9C;
+				text-align: center;
+				height: 55px;
+				line-height: 55px;
+			}
+			.agreement-content{
+				border-top: 1px solid #DCDCDC;
+				border-bottom: 1px solid #DCDCDC;
+				padding: 20px 10px;
+				line-height: 30px;
+				font-size: 14px;
+			}
+			.agreement-box button{
+				cursor: pointer;
+				background: #364F9C;
+				color: #FFFFFF;
+				margin: 10px auto;
+				width: 120px;
+				padding: 10px 20px;
+			}
+			.lastBtn{
+				text-align: center;
+				padding: 10px 0;
+			}
+			.agreement-mask{
+				position: fixed;
+				z-index: 1000;
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.6);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="weui-cells weui-cells_form">
+			<h2 class="LoginName">注册</h2>
+			<div class="formInput">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="registerTel" type="text"  placeholder="请输入用户名">
+						<input class="weui-input" id="androidUrl" type="hidden"  value="${androidUrl}">
+						<input class="weui-input" id="iosUrl" type="hidden"  value="${iosUrl}">
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="registerPwd" type="password"  placeholder="请设置登录密码">
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="registerrePwd" type="password"  placeholder="请重复登录密码">
+					</div>
+				</div>
+				<div class="weui-cell weui-cell_vcode">
+				    <div class="weui-cell__bd">
+				      <input class="weui-input" id="getCode" type="text" placeholder="请输入验证码">
+				    </div>
+				    <div class="weui-cell__ft">
+						<img id="captchaimg"  alt="如果看不清楚，请单击图片刷新！" class="pointer" >
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="registervite" type="text"  placeholder="请输入邀请码">
+					</div>
+				</div>
+				<p class="registerB">注册即阅读并同意<a href="${ctxPath}/app/agreementPage">《HC用户协议》</a></p>
+			</div>
+			<button class="weui-btn mybgBtn" id="registerBtn">注册</button>
+		</div>
+		<script src="${ctxPath}/assets/common/plugins/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="${ctxPath}/assets/common/plugins/jquery/weui.min.js" ></script>
+		<script type="text/javascript" src="${ctxPath}/assets/common/layui/layui.js"></script>
+		<script type="text/javascript" src="${ctxPath}/assets/modular/frame/register.js" ></script>
+	</body>
+</html>

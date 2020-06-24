@@ -1,0 +1,22 @@
+@layout("/common/_container.html",{bg:"bg-white"}){
+<form id="payMethodForm" lay-filter="payMethodForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">持卡人姓名</label>
+        <div class="layui-input-block">
+            <input name="accountName" value="${accountName}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行卡号</label>
+        <div class="layui-input-block">
+            <input name="account" value="${account}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">银行名称</label>
+        <div class="layui-input-block">
+            <input name="cardBankName" value="${cardBankName}" readonly="readonly" type="text" class="layui-input"/>
+        </div>
+    </div>
+</form>
+@}

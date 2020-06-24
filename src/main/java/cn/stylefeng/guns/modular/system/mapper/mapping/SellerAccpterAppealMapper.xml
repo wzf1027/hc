@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.SellerAccpterAppealMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.SellerAccpterAppeal">
+        <id column="APPEAL_ID" property="appealId"/>
+        <result column="SELLER_ID" property="sellerId"/>
+        <result column="NAME" property="name"/>
+        <result column="IDCARD_NO" property="idCardNo"/>
+        <result column="PHONE" property="phone"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        APPEAL_ID AS appealId, SELLER_ID AS sellerId,NAME as name,IDCARD_NO as idCardNo,PHONE as phone,CREATE_TIME as createTime
+        ,UPDATE_TIME updateTime,STATUS as status,USER_ACCOUNT userAccount
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from seller_accpter_appeal
+        <where>
+	        <if test="idcardNo != null and idcardNo != ''">
+	             and IDCARD_NO = #{idcardNo}
+	        </if>
+	        <if test="name != null and name != ''">
+	             and NAME = #{name}
+	        </if>
+	         <if test="status != null">
+	             and STATUS = #{status}
+	        </if>
+	        <if test="phone != null and phone !=''">
+	        	and SELLER_ID = (
+	        		SELECT SELLER_ID from seller where ACCOUNT = #{phone}
+	        	)
+	        </if>
+	         <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+          		 and (CREATE_TIME between #{beginTime} and #{endTime})
+      		 </if> 
+        </where>
+        order by CREATE_TIME desc
+    </select>
+
+</mapper>

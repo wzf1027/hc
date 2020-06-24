@@ -1,0 +1,32 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/user/userRechargeCoinAppeal.js"]}){
+<form id="userRechargeCoinAppealForm" lay-filter="userRechargeCoinAppealForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">USDT地址<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="address" value="${address}"  type="text" class="layui-input" readonly="readonly" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数量<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="number" placeholder="请输入数量" type="number" min="0" value="0" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">hash值<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="hashValue" placeholder="请输入hash值" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">交易密码<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input name="tradePwd" placeholder="请输入交易密码" type="text" class="layui-input" lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

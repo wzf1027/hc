@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.MerchantUserMoneyMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.UserAccountFlowRecord">
+        <id column="FLOW_RECORD_ID" property="flowRecordId" />
+        <result column="SOURCE" property="source" />
+        <result column="PRICE" property="price" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="SELLER_ID" property="sellerId" />
+        <result column="USER_ID" property="userId" />
+         <result column="CODE" property="code" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        FLOW_RECORD_ID AS flowRecordId,
+         SOURCE AS source, 
+         PRICE AS price,
+          CREATE_TIME AS createTime,
+           SELLER_ID AS sellerId,
+           USER_ID as userId,
+           CODE as code
+    </sql>
+
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from user_account_flow_record
+        <where>
+          <if test="userId != null and userId !=''">
+        		and USER_ID = #{userId}
+        	</if>
+        </where>
+        order by CREATE_TIME DESC
+    </select>
+    
+   
+</mapper>

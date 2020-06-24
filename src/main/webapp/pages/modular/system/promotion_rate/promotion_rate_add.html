@@ -1,0 +1,25 @@
+@layout("/common/_container.html",{bg:"bg-white",js:["/assets/modular/system/promotion_rate/promotion_rate_add.js"]}){
+<form id="configForm" lay-filter="configForm" class="layui-form model-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">比例(%)<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <input id="bonusRatio" name="bonusRatio" type="number" class="layui-input" lay-verify="required" required autocomplete="off"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付类型<span style="color: red;">*</span></label>
+        <div class="layui-input-block">
+            <select id ="type" name="type" lay-verify="">
+                <option value="1">支付宝</option>
+                <option value="2">微信</option>
+                <option value="3">银行卡</option>
+                <option value="4">云闪付</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="btnSubmit" lay-submit>保存</button>
+    </div>
+</form>
+@}

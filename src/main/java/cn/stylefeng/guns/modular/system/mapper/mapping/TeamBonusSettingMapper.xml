@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.system.mapper.TeamBonusSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.stylefeng.guns.modular.system.entity.TeamBonusSetting">
+        <id column="SETTING_ID" property="settingId"/>
+        <result column="MAX_PRICE" property="maxPrice"/>
+        <result column="MIN_PRICE" property="minPrice"/>
+        <result column="BONUS_RATIO" property="bonusRatio"/>
+        <result column="CREATE_TIME" property="creatTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        LEVEL AS level ,SETTING_ID AS settingId, MAX_PRICE AS maxPrice,MIN_PRICE as minPrice,BONUS_RATIO bonusRatio,CREATE_TIME as creatTime,UPDATE_TIME as updateTime 
+      </sql>
+
+     <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from team_bonus_setting
+        order by LEVEL ASC
+    </select>
+    
+    <select id="getLastTeamBonusSettingOne"  resultType="cn.stylefeng.guns.modular.system.entity.TeamBonusSetting">
+    	select 
+    	<include refid="Base_Column_List"></include>
+    	from team_bonus_setting  order by LEVEL desc limit 1 
+    </select>
+    
+    <update id="updateSettingById">
+    	update team_bonus_setting set MAX_PRICE  = #{maxPrice} ,MIN_PRICE = #{minPrice},BONUS_RATIO = #{bonusRatio} where SETTING_ID = #{settingId}
+    </update>
+
+</mapper>

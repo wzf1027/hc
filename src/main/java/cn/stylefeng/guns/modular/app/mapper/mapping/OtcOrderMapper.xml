@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stylefeng.guns.modular.app.mapper.OtcOrderMapper">
+	<!-- 获取otc订单的总条数 -->
+	<select id="getOtcOrderByToday" resultType="long">
+        <![CDATA[  
+        	SELECT COUNT(*) from otcp_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <select id="getUserRechargeCoinAppealOrderByToday" resultType="long">
+        <![CDATA[  
+        	SELECT COUNT(*) from user_charger_coin_appeal_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <select id="getSellerWithDrawCoinAppealOrderByToday" resultType="long">
+    	 <![CDATA[  
+        	SELECT COUNT(*) from seller_withdraw_coin_appeal_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <select id="getSellerBuyerCoinOrderByToday" resultType="long">
+    	  <![CDATA[  
+        	SELECT COUNT(*) from seller_buyer_coin_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+      <select id="getUserWithDrawCoinAppealOrderByToday" resultType="long">
+        <![CDATA[  
+        	SELECT COUNT(*) from user_withdraw_coin_appeal_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    
+    <select id="getSellOtcpOrderByToday" resultType="long">
+    	 <![CDATA[  
+        	SELECT COUNT(*) from sell_otcp_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <select id="getSellerOrderByToday" resultType="long">
+    	 <![CDATA[  
+        	SELECT COUNT(*) from seller_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <select id="findSellerBuyCoinOrderByOutOrder" resultType="int">
+    	select count(*) from seller_buyer_coin_order where USER_ORDER_NO = #{userOrderNo}
+    </select>
+    
+    <select id="findSellerBuyCoinOrder" resultType="int">
+    	select
+    		count(*)
+    	 from seller_order
+    	 where SELLER_ID = #{sellerId} and STATUS =0
+    </select>
+    
+    <select id="selectSellerBuyCoinOrder" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+    	select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+		from seller_buyer_coin_order
+    	 where SELLER_ID = #{sellerId}
+    </select>
+    <!-- 订单开启的订单余额 -->
+    <select id="findSellerorderBySellerId" resultType="cn.stylefeng.guns.modular.system.entity.SellerOrder">
+    	select 
+			ORDER_ID orderId,
+			SERIAL_NO serialNo,
+			SELLER_ID sellerId,
+			NUMBER AS number,
+			STATUS as status, 
+			TYPE type,
+			CREATE_TIME createTime,
+			CLOSE_TIME as closeTime,
+			FINISH_TIME as finishTime,
+			UPDATE_TIME as updateTime,
+			VERSION AS version
+			from seller_order
+		where SELLER_ID = #{sellerId} AND STATUS =0
+    </select>
+    
+    <!-- 获取充币记录今天的条数 -->
+    <select id="getSellerRechargeAppealOrderByToday" resultType="long">
+    	 <![CDATA[  
+        	SELECT COUNT(*) from seller_charger_coin_appeal_order  WHERE DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') >= DATE_FORMAT(#{now}, '%Y-%m-%d')
+				and  DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') <  DATE_FORMAT(#{tomorrow}, '%Y-%m-%d') 
+		]]>
+    </select>
+    
+    <!-- 添加otc订单记录 -->
+    <insert id="addSellOtcpOrder">
+    	insert into sell_otcp_order
+    	(
+    		SERIALNO,
+    		USER_ID,
+    		NUMBER,
+    		SUP_NUMBER,
+    		MIN_NUMBER,
+    		MAX_NUMBER,
+    		ROLE_ID,
+    		SELLER_ID,
+    		PAY_METHOD_IDS,
+    		FEE_PRICE,
+    		FEE_RATIO,
+    		STATUS,
+    		PRICE,
+    		CREATE_TIME,
+    		TOTAL_PRICE,
+    		TYPE,
+    		AUTO_MERCHANT
+    	)
+    	values
+    	(
+    		#{serialno},
+    		#{userId},
+    		#{number},
+    		#{supNumber},
+    		#{minNumber},
+    		#{maxNumber},
+    		#{roleId},
+    		#{sellerId},
+    		#{payMethodIds},
+    		#{feePrice},
+    		#{feeRatio},
+    		#{status},
+    		#{price},
+    		#{createTime},
+    		#{totalPrice},
+    		#{type},
+    		#{autoMerchant}
+    	)
+    </insert>
+	<!-- 查询某个OTC订单记录 -->
+	<select id="findSellerOtcpOrderById" resultType="cn.stylefeng.guns.modular.system.entity.SellOtcpOrder">
+		select 
+			ORDER_ID as orderId,
+			SERIALNO as serialNo,
+    		USER_ID as userId,
+    		NUMBER as number,
+    		SUP_NUMBER supNumber,
+    		MIN_NUMBER minNumber,
+    		MAX_NUMBER maxNumber,
+    		ROLE_ID roleId,
+    		SELLER_ID sellerId,
+    		PAY_METHOD_IDS payMethodIds,
+    		FEE_PRICE feePrice,
+    		FEE_RATIO as feeRatio,
+    		STATUS status,
+    		PRICE price,
+    		CREATE_TIME createTime,
+    		TOTAL_PRICE totalPrice,
+    		TYPE AS type,
+    		AUTO_MERCHANT as autoMerchant,
+    		VERSION AS version,
+    		SYMBOLS symbols
+		 from sell_otcp_order where ORDER_ID = #{id} 
+	</select>	
+	
+	<select id="findSellerOtcpOrderByAutoMerchantAndType" resultType="cn.stylefeng.guns.modular.system.entity.SellOtcpOrder">
+		select 
+			ORDER_ID as orderId,
+			SERIALNO as serialNo,
+    		USER_ID as userId,
+    		NUMBER as number,
+    		SUP_NUMBER supNumber,
+    		MIN_NUMBER minNumber,
+    		MAX_NUMBER maxNumber,
+    		ROLE_ID roleId,
+    		SELLER_ID sellerId,
+    		PAY_METHOD_IDS payMethodIds,
+    		FEE_PRICE feePrice,
+    		FEE_RATIO as feeRatio,
+    		STATUS status,
+    		PRICE price,
+    		CREATE_TIME createTime,
+    		TOTAL_PRICE totalPrice,
+    		TYPE AS type,
+    		AUTO_MERCHANT autoMerchant,
+    		VERSION version
+		 from sell_otcp_order where TYPE = #{type} and AUTO_MERCHANT = #{autoMerchant} and USER_ID= #{userId} and `STATUS`  =1
+	</select>
+	
+	<!-- 更新OTC订单状态 -->
+	<update id="updateSellOtcpOrder">
+		update sell_otcp_order
+		<set>
+			<if test="status != null and status !=''">
+				 STATUS = #{status},
+			</if>
+			<if test="supNumber !=null">
+				SUP_NUMBER = #{supNumber},
+			</if>
+			<if test="number != null">
+				NUMBER = #{number},
+			</if>
+			<if test="minNumber != null ">
+				MIN_NUMBER = #{minNumber},
+			</if>
+			<if test="maxNumber != null">
+				MAX_NUMBER = #{maxNumber},
+			</if>
+			<if test="updateTime != null">
+				 UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="payMethodIds != null">
+				PAY_METHOD_IDS = #{payMethodIds},
+			</if>
+			<if test="totalPrice != null">
+				TOTAL_PRICE = #{totalPrice},
+			</if>
+			<if test="price != null">
+				PRICE = #{price},
+			</if>
+			<if test="version != null">
+				VERSION = #{version}+1,
+			</if>
+		</set>
+		where ORDER_ID = #{orderId} and VERSION = #{version}
+	</update>
+	<!-- 添加购买otc订单 -->
+	<insert id="addOtcpOrder" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
+		insert into otcp_order
+		(
+			SERIALNO,
+			BUYER_ID,
+			SELLER_ID,
+			PRICE,
+			NUMBER,
+			TOTAL_PRICE,
+			STATUS,
+			CREATE_TIME,
+			PAY_METHOD_IDS,
+			IS_APPEAL,
+			TYPE,
+			REMARK,
+			BUY_SELL_TYPE,
+			OTC_ORDER_ID,
+			BUYER_PHONE,
+			SELLER_PHONE,
+			SYMBOLS
+		)
+		values
+		(
+			#{serialno},
+			#{buyerId},
+			#{sellerId},
+			#{price},
+			#{number},
+			#{totalPrice},
+			#{status},
+			#{createTime},
+			#{payMethodIds},
+			#{isAppeal},
+			#{type},
+			#{remark},
+			#{buySellType},
+			#{otcOrderId},
+			#{buyerPhone},
+			#{sellerPhone},
+			#{symbols}
+		)
+	</insert>
+	<!-- 根据id查询我购买的订单 -->
+	<select id="findOtcOrderById" resultType="cn.stylefeng.guns.modular.system.entity.OtcpOrder">
+		select 
+			ORDER_ID as orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			PRICE price,
+			NUMBER number,
+			TOTAL_PRICE totalPrice,
+			STATUS status,
+			CREATE_TIME createTime,
+			UPDATE_TIME as updateTime,
+			CANNEL_TIME as cannelTime,
+			PAY_METHOD_IDS payMethodIds,
+			CERTIFICATE as certificate,
+			IS_APPEAL isAppeal,
+			CLOSE_TIME as closeTime,
+			TYPE type,
+			BUY_SELL_TYPE as buySellType,
+			OTC_ORDER_ID as otcOrderId,
+			APPEAL_CONTENT as appealContent,
+			OTC_ORDER_ID as otcOrderId,
+			REMARK remark,
+			PAY_METHOD_ID AS payMethodId,
+			PAY_CERTIFICATE payCertificate,
+			PAY_METHOD_TYPE AS payMethodType,
+            SYMBOLS as symbols
+		from otcp_order where ORDER_ID = #{id}
+	</select>
+	
+	<select id="findOtcpOrderOrderByNoStatus" resultType="cn.stylefeng.guns.modular.system.entity.OtcpOrder">
+		select 
+			ORDER_ID as orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			PRICE price,
+			NUMBER number,
+			TOTAL_PRICE totalPrice,
+			STATUS status,
+			CREATE_TIME createTime,
+			UPDATE_TIME as updateTime,
+			CANNEL_TIME as cannelTime,
+			PAY_METHOD_IDS payMethodIds,
+			CERTIFICATE as certificate,
+			IS_APPEAL isAppeal,
+			CLOSE_TIME as closeTime,
+			TYPE type,
+			BUY_SELL_TYPE as buySellType,
+			OTC_ORDER_ID as otcOrderId,
+			APPEAL_CONTENT as appealContent,
+			OTC_ORDER_ID as otcOrderId,
+			REMARK remark,
+			PAY_METHOD_ID AS payMethodId,
+			PAY_CERTIFICATE payCertificate,
+			PAY_METHOD_TYPE AS payMethodType,
+            SYMBOLS as symbols
+		from otcp_order where STATUS =1
+	</select>
+	
+	<!-- 添加恶意取消交易记录 -->
+	<insert id="addOtcpOrderCannelNumberRecord">
+		insert into otcp_order_cannel_number_record
+		(
+			SELLER_ID,
+			NUMBER,
+			CREATE_TIME,
+			UPDATE_TIME
+		)
+		values
+		(
+			#{sellerId},
+			#{number},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	<!-- 更新恶意取消交易的次数 -->
+	<update id="updateOtcpOrderCannelNumberRecord">
+		update otcp_order_cannel_number_record 
+		<set>
+			<if test="number != null ">
+				NUMBER = #{number},
+			</if>
+			<if test="updateTime != null ">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</set>
+		where RECORD_ID = #{recordId}
+	</update>
+	
+	<!-- 更新我的出售订单信息 -->
+	<update id="updateOtcpOrder">
+		update otcp_order
+		<set>
+			<if test="status !=null">
+				STATUS = #{status},
+			</if>
+			<if test="payMethodId !=null">
+				PAY_METHOD_ID = #{payMethodId},
+			</if>
+			<if test="payMethodType !=null">
+				PAY_METHOD_TYPE = #{payMethodType},
+			</if>
+			<if test="appealerId !=null">
+				APPEALER_ID = #{appealerId},
+			</if>
+			<if test="noAppealStatus !=null">
+				NO_APPEAL_STATUS = #{noAppealStatus},
+			</if>
+			<if test="appealerRole !=null">
+				APPEALER_ROLE = #{appealerRole},
+			</if>
+			<if test="appealContent !=null">
+				APPEAL_CONTENT = #{appealContent},
+			</if>
+			<if test="certificate !=null">
+				CERTIFICATE = #{certificate},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="cannelTime != null">
+				CANNEL_TIME = #{cannelTime},
+			</if>
+			<if test="isAppeal != null">
+				IS_APPEAL = #{isAppeal},
+			</if>
+			<if test="appealTime != null">
+				APPEAL_TIME = #{appealTime},
+			</if>
+			<if test="closeTime != null">
+				CLOSE_TIME = #{closeTime},
+			</if>
+		</set>
+		where ORDER_ID = #{orderId}
+	</update>
+	
+	<!-- 查询当天某个用户取消交易的次数 -->
+	<select id="findOtcpOrderCannelBySellerIdToday" resultType="cn.stylefeng.guns.modular.system.entity.OtcpOrderCannelNumberRecord">
+		select 
+			RECORD_ID as recordId,
+			SELLER_ID as sellerId,
+			NUMBER as number,
+			CREATE_TIME as createTime
+		 from otcp_order_cannel_number_record where date(CREATE_TIME) = curdate() AND SELLER_ID = #{sellerId};
+	</select>
+	
+	<insert id="addSellerOrder" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
+		insert into seller_order
+		(
+			SERIAL_NO,
+			SELLER_ID,
+			NUMBER,
+			STATUS,
+			TYPE,
+			CREATE_TIME,
+			VERSION,
+			IP
+		)
+		values
+		(
+			#{serialNo},
+			#{sellerId},
+			#{number},
+			#{status},
+			#{type},
+			#{createTime},
+			#{version},
+			#{ip}
+		)
+			
+	</insert>
+	
+	<select id="findSellerbuyCoinOrderByToday" resultType="map">
+		     SELECT
+		      COUNT(*) todayNumber ,
+		      IFNULL(SUM(NUMBER),0)  todayPrice,
+		      IFNULL(SUM(BONUS_NUMER),0) todayBonus 
+		     FROM seller_buyer_coin_order WHERE date(CREATE_TIME) = curdate() and `STATUS` = 4 and SELLER_ID=#{sellerId}
+	</select>
+	
+	<select id="findSellerOrderByNoStatus" resultType="cn.stylefeng.guns.modular.system.entity.SellerOrder">
+		select 
+			ORDER_ID orderId,
+			SERIAL_NO serialNo,
+			SELLER_ID sellerId,
+			NUMBER AS number,
+			STATUS as status, 
+			TYPE type,
+			CREATE_TIME createTime,
+			CLOSE_TIME as closeTime,
+			FINISH_TIME as finishTime,
+			UPDATE_TIME as updateTime,
+			VERSION AS version,
+			IP ip
+			from seller_order
+			where STATUS = 0
+			order by CREATE_TIME asc
+	</select>
+	
+	<select id="findSellerOrderByNoStatusAndPrice" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+		from seller_buyer_coin_order
+		where  STATUS  in (1,2) and  SELLER_ID = #{sellerId} and NUMBER = #{price}
+	</select>
+	
+	<insert id="addSellerBuyerCoinOrder" parameterType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		INSERT into seller_buyer_coin_order
+		(
+			SERIALNO,
+			BUYER_ID,
+			SELLER_ID,
+			NUMBER,
+			STATUS,
+			CREATE_TIME,
+			PAY_METHOD_ID,
+			PAY_METHOD_ACCOUNT,
+			PAY_METHOD_NAME,
+			PAY_METHOD_TYPE,
+			PAY_METHOD_CARD_BANK,
+			PAY_METHOD_CARD_BANK_NAME,
+			PAY_METHOD_NICK_NAME,
+			PAY_METHOD_QRCODE,
+			NOTIFY_URL,
+			USER_ORDER_NO,
+			CUID,
+			MATCHING_TIME,
+			IS_APPEAL,
+			IS_SUCCESS,
+			SELLER_ORDER_ID,
+			RETURN_URL,
+			SELLER_IP,
+			MERCHANT_IP,
+			ORDER_CODE,
+			UPDATE_USER,
+			MERCHANT_CITY,
+			SELLER_CITY,
+			DEALER
+		)
+		values
+		(
+			#{serialno},
+			#{buyerId},
+			#{sellerId},
+			#{number},
+			#{status},
+			#{createTime},
+			#{payMethodId},
+			#{payMethodAccount},
+			#{payMethodName},
+			#{payMethodType},
+			#{payMethodCardBank},
+			#{payMethodCardBankName},
+			#{payMethodNickName},
+			#{payMethodQrcode},
+			#{notifyUrl},
+			#{userOrderNo},
+			#{cuid},
+			#{matchingTime},
+			#{isAppeal},
+			#{isSuccess},
+			#{sellerOrderId},
+			#{returnUrl},
+			#{sellerIp},
+			#{merchantIp},
+			#{orderCode},
+			#{updateUser},
+			#{merchantCity},
+			#{sellerCity},
+			#{dealer}
+		)
+	</insert>
+	
+	<update id="updateSellerOrder" parameterType="cn.stylefeng.guns.modular.system.entity.SellerOrder">
+		update seller_order
+		<set>
+			<if test="number != null">
+				NUMBER = #{number},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="version != null">
+				VERSION = #{version}+1,
+			</if>
+			<if test="updateTime  !=null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="closeTime  !=null">
+				CLOSE_TIME = #{closeTime},
+			</if>
+		</set>
+		where ORDER_ID = #{orderId} and VERSION = #{version}
+	</update>
+	
+	<select id="findSellerBuyerOrderBySerialNo" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			PAY_METHOD_ID as payMethodId,
+			PAY_METHOD_ACCOUNT as payMethodAccount,
+			PAY_METHOD_NAME as payMethodName,
+			PAY_METHOD_TYPE as payMethodType,
+			PAY_METHOD_CARD_BANK as payMethodCardBank,
+			PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName,
+			PAY_METHOD_QRCODE as payMethodQrcode,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime,
+			BONUS_NUMER as bonusNumber,
+			FEE_PRICE as feePrice,
+			MATCHING_TIME AS matchingTime,
+			IS_SUCCESS AS isSuccess,
+			RETURN_URL as returnUrl,
+			NOTIFY_URL as notifyUrl,
+			USER_ORDER_NO as userOrderNo,
+			CUID as cuid,
+			REMARK remark
+		from seller_buyer_coin_order
+		where SERIALNO = #{serialno}
+	</select>
+
+	<select id="findsellerBuyerOrderByStatusAndNoSuccess" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			PAY_METHOD_ID as payMethodId,
+			PAY_METHOD_ACCOUNT as payMethodAccount,
+			PAY_METHOD_NAME as payMethodName,
+			PAY_METHOD_TYPE as payMethodType,
+			PAY_METHOD_CARD_BANK as payMethodCardBank,
+			PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName,
+			PAY_METHOD_QRCODE as payMethodQrcode,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime,
+			BONUS_NUMER as bonusNumber,
+			FEE_PRICE as feePrice,
+			MATCHING_TIME AS matchingTime,
+			IS_SUCCESS AS isSuccess,
+			RETURN_URL as returnUrl,
+			NOTIFY_URL as notifyUrl,
+			USER_ORDER_NO as userOrderNo,
+			CUID as cuid
+		from seller_buyer_coin_order
+		where  STATUS = #{status} and IS_SUCCESS = #{isSuccess}
+	</select>
+	
+	<select id="findSellerBuyCoinByPriceAndType" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			PAY_METHOD_ID as payMethodId,
+			PAY_METHOD_ACCOUNT as payMethodAccount,
+			PAY_METHOD_NAME as payMethodName,
+			PAY_METHOD_TYPE as payMethodType,
+			PAY_METHOD_CARD_BANK as payMethodCardBank,
+			PAY_METHOD_CARD_BANK_NAME as payMethodCardBankName,
+			PAY_METHOD_QRCODE as payMethodQrcode,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime,
+			BONUS_NUMER as bonusNumber,
+			FEE_PRICE as feePrice,
+			MATCHING_TIME AS matchingTime,
+			IS_SUCCESS AS isSuccess,
+			RETURN_URL as returnUrl,
+			NOTIFY_URL as notifyUrl,
+			USER_ORDER_NO as userOrderNo,
+			CUID as cuid
+		from seller_buyer_coin_order
+		where
+		 	SELLER_ID = #{sellerId} 
+		 	AND  NUMBER = #{price} 
+		 	AND  PAY_METHOD_ID = #{payMethodId}
+		 	AND STATUS IN(1,2,3)
+		 LIMIT 1
+	</select>
+	
+	<update id="updateSellerBuyerCoinOrder">
+		update seller_buyer_coin_order
+		<set>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="bonusNumber != null and bonusNumber !=''">
+				BONUS_NUMER = #{bonusNumber},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="closeTime != null">
+				CLOSE_TIME = #{closeTime},
+			</if>
+			<if test="isSuccess != null">
+				IS_SUCCESS = #{isSuccess},
+			</if>
+			<if test="feePrice != null">
+				 FEE_PRICE= #{feePrice},
+			</if>
+			<if test="agentFeePrice != null">
+				 AGENT_FEE_PRICE= #{agentFeePrice},
+			</if>
+			<if test="intoNumber != null">
+				INTO_NUMBER = #{intoNumber},
+			</if>
+			<if test="updateUser != null">
+			UPDATE_USER = #{updateUser},
+		</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="orderCode != null">
+				ORDER_CODE = #{orderCode},
+			</if>
+		</set>
+		where ORDER_ID = #{orderId}
+	</update>
+	
+	<select id="findUsedPayMethodRecord" resultType="cn.stylefeng.guns.modular.system.entity.BuyCoinUsedPayMethodRecord">
+		select 
+			RECORD_ID as recordId,
+			SELLER_ID as sellerId,
+			TYPE as type,
+			PAY_METHOD_ID as payMethodId,
+			CREATE_TIME as createTime
+			from buy_coin_used_pay_method_record
+		<where>
+			<if test="sellerId != null">
+				and SELLER_ID =#{sellerId}
+			</if>
+			<if test="payMethodId != null">
+				and PAY_METHOD_ID = #{payMethodId}
+			</if>
+			<if test="type!= null ">
+				and TYPE = #{type}
+			</if>
+		</where>
+		order by CREATE_TIME DESC
+	</select>
+	
+	<insert id="addBuyCoinUsedPayMethodRecord" parameterType="cn.stylefeng.guns.modular.system.entity.BuyCoinUsedPayMethodRecord">
+		INSERT INTO buy_coin_used_pay_method_record
+		(
+			SELLER_ID,
+			TYPE,
+			PAY_METHOD_ID,
+			CREATE_TIME
+		)
+		VALUES
+		(
+			#{sellerId},
+			#{type},
+			#{payMethodId},
+			#{createTime}
+		)
+	</insert>
+	
+	<select id="findSellerBuyerCoinOrderNoStatus" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+		from seller_buyer_coin_order
+		where  STATUS  in (1,2) and IS_APPEAL =0
+	</select>
+	
+	<select id="findSellerbuyCoinOrderByIsAppealCount" resultType="Double">
+		SELECT
+			IFNULL(SUM(NUMBER),0)
+		FROM
+		seller_buyer_coin_order
+		WHERE
+			IS_APPEAL =1 AND SELLER_ID =#{sellerId}
+			and status in(1,2)
+	</select>
+	
+	<select id="findSellerbuyCoinOrderByRunning" resultType="Double">
+		SELECT
+			IFNULL(SUM(NUMBER),0)
+		FROM
+		seller_buyer_coin_order
+		WHERE
+			SELLER_ID =#{sellerId} and `STATUS` in(1,2,3) and IS_APPEAL  = 0
+	</select>
+	
+	<select id="findSellerBuyCoinOrderListByOutOrderId" resultType="cn.stylefeng.guns.modular.system.entity.SellerBuyerCoinOrder">
+		select 
+			ORDER_ID orderId,
+			SERIALNO serialno,
+			BUYER_ID buyerId,
+			SELLER_ID sellerId,
+			NUMBER number,
+			STATUS status,
+			PAY_METHOD_ID payMethodId,
+			CREATE_TIME createTime,
+			UPDATE_TIME updateTime,
+			CANNEL_TIME cannelTime,
+			APPEAL_CONTENT appealContent,
+			CERTIFICATE certificate,
+			IS_APPEAL isAppeal,
+			APPEAL_TIME as  appealTime,
+			CLOSE_TIME as closeTime
+		 from
+		 	seller_buyer_coin_order
+		  where STATUS in(1,2,3) and SELLER_ORDER_ID = #{orderId}
+	</select>
+	
+		<select id="findSellerBuyCoinTeamByRecommdId" resultType="cn.stylefeng.guns.modular.app.dto.TeamBuyCoinDto">
+		SELECT
+			s.SELLER_ID sellerId,
+			IFNULL(SUM(sbco.NUMBER), 0) totalNumber
+		FROM
+			seller s
+		LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID
+		AND TO_DAYS(NOW()) - TO_DAYS(sbco.CREATE_TIME) = 1
+		AND sbco.`STATUS` = 4
+		WHERE
+			s.REFERCE_ID = #{recommendId}
+		GROUP BY
+			s.SELLER_ID
+	</select>
+	
+	<select id="findMyselfBuyCoinInfoByNoRecommend" resultType="cn.stylefeng.guns.modular.app.dto.TeamBuyCoinDto">
+		SELECT
+			s.SELLER_ID sellerId,
+			IFNULL(SUM(sbco.NUMBER), 0) totalNumber
+		FROM
+			seller s
+		LEFT JOIN seller_buyer_coin_order sbco ON s.SELLER_ID = sbco.SELLER_ID
+		AND TO_DAYS(NOW()) - TO_DAYS(sbco.CREATE_TIME) = 1
+		AND sbco.`STATUS` = 4
+		WHERE
+			(
+				ISNULL(s.REFERCE_ID)
+				OR s.REFERCE_ID = 0
+			)
+		GROUP BY
+			s.SELLER_ID
+	</select>
+	
+	
+	<select id="findTeamBuyCoinInfoByRecommendId" resultType="Double">
+			SELECT
+			IFNULL(SUM(co.NUMBER), 0)
+		FROM
+			seller_buyer_coin_order co
+		WHERE
+			co.`STATUS` = 4
+		AND TO_DAYS(NOW()) - TO_DAYS(co.CREATE_TIME) = 1
+		AND co.SELLER_ID IN (
+			SELECT
+				s.SELLER_ID
+			FROM
+				seller s
+			WHERE
+				s.REFERCE_IDS LIKE CONCAT('%,' ,#{sellerId}, ',%') 
+		)
+	</select>
+	
+	<delete id="deleteBuyCoinUsedPayMethodRecordNoPayMethodId">
+		delete  from  buy_coin_used_pay_method_record where SELLER_ID = #{sellerId} and TYPE = #{type}
+	</delete>
+
+	<select id="findBuyerOrderByPayMethodAndStatus" resultType="int">
+		select  count(*) from seller_buyer_coin_order
+		where
+		STATUS IN(1,2,3)
+		<if test="payMethodId != null and payMethodId !=''">
+			and PAY_METHOD_ID = #{payMethodId}
+		</if>
+	</select>
+
+</mapper>

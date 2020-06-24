@@ -1,0 +1,55 @@
+.realName,.successE,.failE{
+	margin: 30px 40px;
+}
+.real-list{
+	margin: 10px 80px;
+	width: 50%;
+}
+.real-list ul li{
+	margin-bottom: 10px;
+}
+.layui-form-label{
+	width: 140px;
+	text-align: left;
+	padding: 9px 0;
+}
+.fluidBox{
+	margin-top: 10px;
+}
+.fluidBox p{
+	text-align: center;
+	margin: 10px 0;
+}
+.fluidImg{
+	height: 120px;
+	position: relative;
+}
+.upImg input{
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+}
+.fluidImg img{
+	width: 96%;
+	height: 100%;
+	border-radius: 10px;
+}
+.realNopass{
+	width: 218px;
+	margin-top: 40px;
+}
+.successTxt,.failTxt{
+	margin: 10px 80px;
+}
+.successTxt p,.failTxt p{
+	margin-top: 30px;
+}
+#successBtn{
+	width: 200px;
+	background-color: #4359FF !important;
+	text-align: center !important;
+	display: initial !important; 
+	margin-top: 60px;
+}
